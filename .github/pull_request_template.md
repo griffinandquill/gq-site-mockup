@@ -21,6 +21,6 @@ Paste the output of `npm run verify`:
 
 ## Kids and data
 
-Any new network call, storage, text input, or third-party script? (should be **none**)
+Any chat, personal-info collection, storage or sending of typed text, new network call beyond the repo's own files, or third-party script? (should be **none**)
 
 - none
