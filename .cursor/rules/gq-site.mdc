@@ -1,0 +1,8 @@
+---
+description: Read AGENTS.md first; run npm run verify before every push
+alwaysApply: true
+---
+
+Read [AGENTS.md](../../AGENTS.md) first and follow it. Do not copy those rules here.
+
+Before every push, run `npm run verify`.
