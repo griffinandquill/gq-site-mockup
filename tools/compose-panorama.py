@@ -6,8 +6,9 @@ Native size is 640 by 256. The page shows the top 224 rows at 2x
 Positions below are hand placed on that grid. Light comes from the upper
 left, so highlights sit on left edges and shadows fall to the lower right.
 
-No prop sprites shipped with the buildings, so the trees, lamps, and
-fountain are drawn here in the brand palette.
+The back row is three-quarter scale. The front row is full size. Trees,
+lamps, the fountain, and the street props are drawn here in the brand
+palette. No prop sprites shipped with the buildings.
 
     python3 tools/compose-panorama.py
 """
@@ -22,6 +23,10 @@ OUT = ROOT / "img" / "quillhaven"
 
 W, H = 640, 256
 FRAME = 224
+
+# Front doors share this line. The sidewalk starts here. The Academy
+# stands a few pixels higher and its steps stop on this line.
+BASE = 188
 
 NAVY = (31, 42, 68)
 INK = (20, 28, 48)
@@ -41,6 +46,7 @@ STONE_L = (236, 224, 196)
 COBBLE = (74, 66, 56)
 COBBLE_L = (118, 104, 82)
 COBBLE_D = (42, 38, 34)
+COBBLE_W = (146, 128, 102)
 MORTAR = (36, 32, 28)
 WATER = (42, 72, 104)
 WATER_L = (168, 196, 210)
@@ -48,6 +54,12 @@ LEAF = (24, 52, 34)
 LEAF_L = (58, 96, 58)
 LEAF_B = (92, 36, 40)
 LEAF_BL = (138, 72, 48)
+WOOD = (132, 86, 48)
+WOOD_D = (78, 50, 30)
+WOOD_L = (176, 132, 76)
+PATH = (154, 122, 78)
+PATH_D = (108, 84, 54)
+GLOW = (176, 128, 48)
 
 
 def blank():
@@ -63,6 +75,24 @@ def fill_rect(im, x, y, w, h, color):
     for yy in range(y, y + h):
         for xx in range(x, x + w):
             set_px(im, xx, yy, color)
+
+
+def tint(im, x, y, color, amount):
+    if not (0 <= x < W and 0 <= y < H):
+        return
+    r, g, b, a = im.getpixel((x, y))
+    if a < 180:
+        return
+    t = amount / 255
+    im.putpixel(
+        (x, y),
+        (
+            int(r * (1 - t) + color[0] * t),
+            int(g * (1 - t) + color[1] * t),
+            int(b * (1 - t) + color[2] * t),
+            a,
+        ),
+    )
 
 
 def opaque_box(im):
@@ -115,17 +145,55 @@ def push_navy(im, mix):
     return out
 
 
-def half(im):
-    return im.resize((im.width // 2, im.height // 2), Image.Resampling.NEAREST)
+def is_window(r, g, b, a):
+    """Gold or amber glass, not timber and not pale stone."""
+    if a < 200 or b > 170:
+        return False
+    if r > 210 and g > 150 and r - b > 70 and g - b > 30:
+        return True
+    if r > 210 and 110 < g < 190 and b < 90 and r - g > 15:
+        return True
+    return False
+
+
+def window_mask(im):
+    px = im.load()
+    width, height = im.size
+    found = []
+    for y in range(height):
+        for x in range(width):
+            if is_window(*px[x, y]):
+                found.append((x, y))
+    return found
+
+
+def apply_windows(im, mask):
+    """Relight glass after the distance tint. Left panes catch the sun."""
+    px = im.load()
+    width = im.size[0]
+    for x, y in mask:
+        r, g, b, a = px[x, y]
+        if x < width * 0.62:
+            px[x, y] = (255, 214, 120, a)
+        else:
+            px[x, y] = (186, 124, 42, a)
+
+
+def scale_three_quarter(im):
+    return im.resize((im.width * 3 // 4, im.height * 3 // 4), Image.Resampling.NEAREST)
 
 
 def load_building(name, scale="full", distant=False):
     im = Image.open(BUILDINGS / name).convert("RGBA")
-    if scale == "half":
-        im = half(im)
+    if scale == "threeq":
+        im = scale_three_quarter(im)
+    windows = window_mask(im) if distant else []
     if distant:
-        im = push_navy(im, 0.42)
-    return shade_light(im)
+        im = push_navy(im, 0.2)
+    im = shade_light(im)
+    if windows:
+        apply_windows(im, windows)
+    return im
 
 
 def paste_foot(layer, im, foot_x, foot_y, label):
@@ -225,11 +293,11 @@ def stamp_cloud(im, x, y, big):
 
 
 def near_crest(x):
-    return 112 + ((x - 300) * (x - 300)) // 4800
+    return 104 + ((x - 280) * (x - 280)) // 5200
 
 
 def far_crest(x):
-    return 86 + ((x - 180) * (x - 180)) // 9000
+    return 78 + ((x - 180) * (x - 180)) // 9000
 
 
 def paint_hills(im):
@@ -239,29 +307,41 @@ def paint_hills(im):
         near_y = near_crest(x)
         for y in range(far_y, H):
             if y < near_y:
-                # Sparse stipple, so the far ridge does not pick up a diagonal.
                 color = (18, 28, 36) if (x % 11 == 0 and y % 5 == 0) else HILL_FAR
             else:
                 band = y - near_y
-                tuft = x % 17 == 0 and y % 4 == 0 and band < 18
+                tuft = x % 17 == 0 and y % 4 == 0 and band < 22
                 shade = x % 23 == 0 and y % 5 == 2
-                if tuft and x < 340:
+                if tuft and x < 360:
                     color = GRASS_L
-                elif shade or band >= 16:
+                elif shade or band >= 22:
                     color = HILL_D
                 else:
                     color = HILL
-            # Ragged crest so the ridge is not a smooth curve of single pixels.
             if y == far_y and (x % 5 == 0):
                 continue
             px[x, y] = (*color, 255)
 
 
+def hill_shelf(im, x0, x1, y):
+    """A flat terrace on the hill so the back row shares one path."""
+    for x in range(x0, x1):
+        set_px(im, x, y, GRASS_L if x % 2 == 0 else GRASS)
+        for dy in range(1, 8):
+            set_px(im, x, y + dy, HILL if dy < 3 else HILL_D)
+
+
+def hill_path(im, x0, x1, y):
+    for x in range(x0, x1):
+        set_px(im, x, y, PATH_D)
+        set_px(im, x, y + 1, PATH if x % 4 else PATH_D)
+        set_px(im, x, y + 2, PATH_D)
+
+
 def paint_ground(im):
     px = im.load()
-    grass_top = 148
-    curb = 168
-    for y in range(grass_top, curb):
+    grass_top = 166
+    for y in range(grass_top, BASE):
         for x in range(W):
             ragged = 1 if (x * 3) % 7 == 0 else 0
             if y < grass_top + ragged:
@@ -271,41 +351,43 @@ def paint_ground(im):
             elif (x + y) % 11 == 0:
                 color = GRASS_D
             else:
-                color = GRASS if y < curb - 6 else GRASS_D
+                color = GRASS if y < BASE - 6 else GRASS_D
             px[x, y] = (*color, 255)
 
-    # Academy terrace, raised above the street. Left faces catch the sun.
-    terrace_l, terrace_r = 274, 370
-    for y in range(150, 162):
-        for x in range(terrace_l, terrace_r):
-            edge = x < terrace_l + 3
-            color = STONE_L if edge or x % 9 < 2 else STONE if x < 330 else STONE_D
-            px[x, y] = (*color, 255)
-    # Two steps down to the grass, centered on the door.
-    for step, (y0, y1, inset) in enumerate(((162, 165, 10), (165, 168, 22))):
-        for y in range(y0, y1):
-            for x in range(terrace_l + inset, terrace_r - inset):
-                color = STONE_L if x < terrace_l + inset + 2 else STONE if step == 0 else STONE_D
-                px[x, y] = (*color, 255)
+    paint_sidewalk(im, BASE, BASE + 8)
+    paint_curb(px, BASE + 8)
+    paint_cobbles(px, BASE + 10, BASE + 28)
+    paint_verge(px, BASE + 28, H)
+    wear_and_puddles(im)
 
-    # Stone walk from the steps into the street.
-    for y in range(168, 186):
-        for x in range(308, 332):
-            px[x, y] = (*(STONE_L if x < 312 else STONE_D if x > 326 else STONE), 255)
-
-    for x in range(W):
-        px[x, curb] = (*STONE_L, 255)
-        px[x, curb + 1] = (*STONE_D, 255)
-
-    paint_cobbles(px, curb + 2, H)
-
-    # A few flowers on the bank, left of the light.
     for x, y, color in (
-        (52, 160, GOLD), (53, 160, GOLD), (70, 164, BURGUNDY),
-        (188, 162, GOLD), (240, 158, BURGUNDY), (430, 161, GOLD),
-        (468, 157, BURGUNDY), (530, 163, GOLD), (600, 159, BURGUNDY),
+        (40, 176, GOLD), (41, 176, GOLD), (64, 180, BURGUNDY),
+        (150, 174, GOLD), (210, 178, BURGUNDY), (300, 172, GOLD),
+        (455, 176, BURGUNDY), (540, 174, GOLD), (610, 178, BURGUNDY),
     ):
         set_px(im, x, y, color)
+
+
+def paint_sidewalk(im, y0, y1):
+    """Stone slabs. A mortar joint every 11 pixels. Left edge of each slab is lit."""
+    for y in range(y0, y1):
+        for x in range(W):
+            cell = x % 11
+            if y == y1 - 1:
+                color = STONE_D
+            elif cell == 10 or y == y0:
+                color = STONE_D if cell == 10 else STONE_L
+            elif cell < 2:
+                color = STONE_L
+            else:
+                color = STONE if cell < 7 else STONE_D
+            set_px(im, x, y, color)
+
+
+def paint_curb(px, y):
+    for x in range(W):
+        px[x, y] = (*STONE_L, 255)
+        px[x, y + 1] = (*STONE_D, 255)
 
 
 def paint_cobbles(px, y0, y1):
@@ -315,17 +397,74 @@ def paint_cobbles(px, y0, y1):
         in_row = (y - y0) % stone_h
         shift = 3 if row % 2 else 0
         for x in range(W):
-            if 308 <= x < 332 and y < 186:
-                continue
             cell = (x + shift) % (stone_w + 1)
+            stone_id = (x + shift) // (stone_w + 1) + row * 5
             if in_row == stone_h - 1 or cell == stone_w:
                 color = MORTAR
             elif cell < 2:
                 color = COBBLE_L
+            elif stone_id % 9 == 0:
+                color = COBBLE_W
+            elif stone_id % 7 == 0:
+                color = COBBLE_D
             else:
-                vary = (x // 8 + row * 3) % 4
-                color = COBBLE_D if vary == 0 else COBBLE
+                color = COBBLE
+            # A chip in the middle of a worn stone.
+            if stone_id % 11 == 0 and cell == 3 and in_row == 1:
+                color = MORTAR
             px[x, y] = (*color, 255)
+
+
+def paint_verge(px, y0, y1):
+    for y in range(y0, y1):
+        for x in range(W):
+            if (x * 3 + y) % 13 == 0:
+                color = GRASS_L
+            elif (x + y) % 9 == 0:
+                color = GRASS_D
+            else:
+                color = GRASS_D if y > y0 + 4 else GRASS
+            px[x, y] = (*color, 255)
+
+
+def wear_and_puddles(im):
+    # Highlights sit on the upper-left of each puddle. Light is from that side.
+    puddles = ((96, BASE + 16), (214, BASE + 18), (338, BASE + 15), (488, BASE + 17), (590, BASE + 16))
+    for x, y in puddles:
+        for dx, dy in ((-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0), (-1, 1), (0, 1), (1, 1), (0, -1)):
+            color = WATER_L if dx < 1 and dy <= 0 else WATER
+            set_px(im, x + dx, y + dy, color)
+        set_px(im, x - 1, y - 1, (210, 220, 214))
+
+
+def plaza(im, x0, x1, y0, y1):
+    """Stone court whose front edge is the shared building baseline."""
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            if y == y1 - 1:
+                color = STONE_D
+            elif x < x0 + 2 or (x + y) % 9 == 0:
+                color = STONE_L
+            elif x > (x0 + x1) // 2:
+                color = STONE_D
+            else:
+                color = STONE
+            set_px(im, x, y, color)
+
+
+def academy_steps(im, span):
+    """Steps drop from the Academy door and stop on the baseline. They do not enter the street."""
+    left, _top, right, bottom = span
+    door = (left + right) // 2
+    y = bottom
+    half = 10
+    while y < BASE:
+        for x in range(door - half, door + half):
+            color = STONE_L if x < door - half + 2 else STONE if y % 2 == 0 else STONE_D
+            set_px(im, x, y, color)
+        y += 1
+        if (y - bottom) % 2 == 0:
+            half += 3
 
 
 def tree(im, x, y, kind):
@@ -367,6 +506,15 @@ def bush(im, x, y):
             set_px(im, x + lx + i, y + ly, LEAF_L if i < 2 else LEAF)
 
 
+def hedge(im, x, y, length):
+    for i in range(length):
+        leaf = LEAF_L if i % 5 < 2 else LEAF
+        set_px(im, x + i, y - 4, LEAF_L if i % 3 == 0 else LEAF)
+        set_px(im, x + i, y - 3, leaf)
+        set_px(im, x + i, y - 2, LEAF)
+        set_px(im, x + i, y - 1, GRASS_D)
+
+
 def lamp(im, x, y):
     for i in range(16):
         set_px(im, x, y - 16 + i, CHARCOAL)
@@ -377,36 +525,105 @@ def lamp(im, x, y):
     set_px(im, x + 1, y - 20, CREAM)
     set_px(im, x - 1, y - 23, CHARCOAL)
     set_px(im, x + 2, y - 23, CHARCOAL)
-    # Warm pool on the street, longer to the right.
-    for dx, alpha in ((3, 170), (4, 150), (5, 120), (6, 90)):
-        set_px(im, x + dx, y, (150, 112, 40, alpha))
-        set_px(im, x + dx, y + 1, (120, 88, 32, alpha - 30))
+    # Pool on the sidewalk, longer to the lower right.
+    glow = (
+        (-1, 0, 90), (0, 0, 150), (1, 0, 170), (2, 0, 180), (3, 0, 160),
+        (4, 0, 130), (5, 0, 100), (6, 0, 70), (7, 0, 46), (8, 0, 28),
+        (1, 1, 120), (2, 1, 140), (3, 1, 110), (4, 1, 80), (5, 1, 50),
+        (2, 2, 70), (3, 2, 50), (0, 1, 80),
+    )
+    for dx, dy, amount in glow:
+        tint(im, x + dx, y + dy, GLOW, amount)
+    # A few solid pixels so the pool still reads on pale stone.
+    for dx, color in ((1, (236, 196, 96)), (2, (210, 160, 64)), (3, (176, 128, 48)), (4, (140, 96, 40))):
+        set_px(im, x + dx, y, color)
+        set_px(im, x + dx, y + 1, color)
 
 
 def fountain(im, x, y):
-    """Stone basin on the cobbles. y is the foot. Light hits the left rim."""
-    fill_rect(im, x - 18, y - 5, 36, 5, STONE_D)
-    fill_rect(im, x - 16, y - 9, 32, 4, STONE)
-    for i in range(6):
-        set_px(im, x - 18 + i, y - 8, STONE_L)
-        set_px(im, x - 18 + i, y - 7, STONE_L)
-    for row, half in ((-10, 13), (-11, 11), (-12, 9), (-13, 7)):
+    """Basin on the plaza. y is the foot, on the same line as the other buildings."""
+    fill_rect(im, x - 14, y - 4, 28, 4, STONE_D)
+    fill_rect(im, x - 12, y - 7, 24, 3, STONE)
+    for i in range(5):
+        set_px(im, x - 14 + i, y - 6, STONE_L)
+        set_px(im, x - 14 + i, y - 5, STONE_L)
+    for row, half in ((-8, 10), (-9, 8), (-10, 6)):
         for i in range(-half, half + 1):
-            if i < -half + 4:
+            if i < -half + 3:
                 color = WATER_L
             elif i > half - 3:
                 color = NAVY
             else:
                 color = WATER
             set_px(im, x + i, y + row, color)
-    for i in range(16):
-        set_px(im, x, y - 29 + i, STONE_L if i < 5 else STONE)
-        set_px(im, x + 1, y - 29 + i, STONE_D)
-    for dx in range(-4, 5):
-        set_px(im, x + dx, y - 31, WATER_L if dx < 2 else WATER)
-        set_px(im, x + dx, y - 17, WATER_L if dx < 1 else NAVY)
-    for dx in range(-2, 3):
-        set_px(im, x + dx, y - 33, CREAM if dx < 1 else WATER_L)
+    for i in range(12):
+        set_px(im, x, y - 22 + i, STONE_L if i < 4 else STONE)
+        set_px(im, x + 1, y - 22 + i, STONE_D)
+    for dx in range(-3, 4):
+        set_px(im, x + dx, y - 23, WATER_L if dx < 1 else WATER)
+    for dx in range(-1, 2):
+        set_px(im, x + dx, y - 24, CREAM if dx < 1 else WATER_L)
+
+
+def signpost(im, x, y):
+    for i in range(13):
+        set_px(im, x, y - 13 + i, WOOD_D)
+    fill_rect(im, x - 7, y - 20, 11, 7, BURGUNDY)
+    fill_rect(im, x - 6, y - 19, 9, 5, (96, 32, 36))
+    for dx in range(-2, 2):
+        set_px(im, x + dx, y - 17, GOLD)
+    set_px(im, x + 1, y - 18, GOLD)
+    set_px(im, x + 1, y - 16, GOLD)
+
+
+def crates(im, x, y):
+    def crate(cx, cy, cw, ch):
+        fill_rect(im, cx, cy - ch, cw, ch, WOOD)
+        for i in range(ch):
+            set_px(im, cx, cy - ch + i, WOOD_L)
+            set_px(im, cx + cw - 1, cy - ch + i, WOOD_D)
+        for i in range(cw):
+            set_px(im, cx + i, cy - 1, WOOD_D)
+            set_px(im, cx + i, cy - ch // 2, WOOD_D)
+    crate(x, y, 9, 7)
+    crate(x + 1, y - 7, 7, 6)
+
+
+def bench(im, x, y):
+    fill_rect(im, x - 8, y - 8, 16, 2, WOOD)
+    fill_rect(im, x - 8, y - 6, 16, 2, WOOD_L)
+    for lx in (x - 6, x + 5):
+        set_px(im, lx, y - 4, WOOD_D)
+        set_px(im, lx, y - 3, WOOD_D)
+        set_px(im, lx, y - 2, WOOD_D)
+        set_px(im, lx, y - 1, WOOD_D)
+    set_px(im, x - 8, y - 6, WOOD_L)
+    set_px(im, x + 7, y - 6, WOOD_D)
+
+
+def cart(im, x, y):
+    """A hand cart: round wheels under a bed, a crate, and a handle to the right."""
+    def wheel(wx):
+        set_px(im, wx, y - 4, CHARCOAL)
+        set_px(im, wx - 1, y - 3, CHARCOAL)
+        set_px(im, wx + 1, y - 3, CHARCOAL)
+        set_px(im, wx - 1, y - 2, CHARCOAL)
+        set_px(im, wx, y - 2, (120, 108, 92))
+        set_px(im, wx + 1, y - 2, CHARCOAL)
+        set_px(im, wx, y - 1, CHARCOAL)
+    wheel(x - 6)
+    wheel(x + 5)
+    fill_rect(im, x - 8, y - 8, 16, 4, WOOD)
+    for i in range(4):
+        set_px(im, x - 8, y - 8 + i, WOOD_L)
+        set_px(im, x + 7, y - 8 + i, WOOD_D)
+    fill_rect(im, x - 2, y - 12, 6, 4, (168, 116, 62))
+    set_px(im, x - 2, y - 12, WOOD_L)
+    set_px(im, x + 3, y - 12, WOOD_D)
+    set_px(im, x + 8, y - 7, WOOD_D)
+    set_px(im, x + 9, y - 8, WOOD_L)
+    set_px(im, x + 10, y - 9, WOOD_L)
+    set_px(im, x + 11, y - 9, WOOD_L)
 
 
 def build():
@@ -417,51 +634,66 @@ def build():
     paint_hills(far)
     paint_ground(town)
 
-    town_hall = load_building("town-hall.png", "half", distant=True)
-    tower = load_building("map-room-tower.png", "half", distant=True)
-    lab = load_building("science-lab.png", "half", distant=True)
+    town_hall = load_building("town-hall.png", "threeq", distant=True)
+    tower = load_building("map-room-tower.png", "threeq", distant=True)
+    lab = load_building("science-lab.png", "threeq", distant=True)
     academy = load_building("academy.png")
     printers = load_building("printers-shop.png")
     cottage = load_building("cottage.png")
     market = load_building("market-stall.png")
 
     print("back row")
-    # Feet sit on the near hill, in the gaps the front row leaves open.
-    cast_shadow(far, 138, near_crest(138) + 6, 14)
-    paste_foot(far, town_hall, 138, near_crest(138) + 6, "town hall")
-    cast_shadow(far, 248, near_crest(248) + 4, 10)
-    paste_foot(far, tower, 248, near_crest(248) + 4, "map room")
-    cast_shadow(far, 572, near_crest(572) + 6, 12)
-    paste_foot(far, lab, 572, near_crest(572) + 6, "lab")
-    tree(far, 64, near_crest(64) + 2, "pine")
-    tree(far, 470, near_crest(470) + 2, "round")
-    bush(far, 530, near_crest(530) + 2)
+    hill_shelf(far, 78, 276, 150)
+    hill_path(far, 96, 268, 154)
+    # Feet share the shelf. The path runs through the cluster.
+    cast_shadow(far, 118, 156, 18)
+    paste_foot(far, town_hall, 118, 156, "town hall")
+    cast_shadow(far, 178, 156, 12)
+    paste_foot(far, tower, 178, 156, "map room")
+    cast_shadow(far, 236, 156, 14)
+    paste_foot(far, lab, 236, 156, "lab")
+    tree(far, 78, 156, "pine")
+    bush(far, 156, 156)
+    tree(far, 208, 156, "round")
+    bush(far, 262, 156)
+    tree(far, 430, 158, "pine")
+    tree(far, 560, 162, "round")
 
     print("front row")
-    cast_shadow(town, 86, 166, 16)
-    paste_foot(town, cottage, 86, 166, "cottage")
-    cast_shadow(town, 196, 166, 22)
-    paste_foot(town, printers, 196, 166, "printers")
-    cast_shadow(town, 322, 158, 30)
-    paste_foot(town, academy, 322, 158, "academy")
-    cast_shadow(town, 508, 166, 16)
-    paste_foot(town, market, 508, 166, "market")
+    # Plaza in front of the Academy, front edge on the shared baseline.
+    plaza(town, 360, 424, BASE - 10, BASE)
+    cast_shadow(town, 54, BASE, 14)
+    paste_foot(town, cottage, 54, BASE, "cottage")
+    cast_shadow(town, 470, BASE, 20)
+    paste_foot(town, printers, 470, BASE, "printers")
+    cast_shadow(town, 320, BASE - 6, 28)
+    academy_span = paste_foot(town, academy, 320, BASE - 6, "academy")
+    academy_steps(town, academy_span)
+    cast_shadow(town, 568, BASE, 14)
+    paste_foot(town, market, 568, BASE, "market")
 
-    tree(town, 28, 166, "pine")
-    tree(town, 124, 166, "autumn")
-    tree(town, 256, 166, "round")
-    bush(town, 292, 166)
-    tree(town, 430, 166, "pine")
-    tree(town, 468, 166, "autumn")
-    bush(town, 548, 166)
-    tree(town, 616, 166, "pine")
+    tree(town, 24, BASE, "pine")
+    hedge(town, 78, BASE, 18)
+    tree(town, 100, BASE, "autumn")
+    hedge(town, 250, BASE, 16)
+    tree(town, 268, BASE, "round")
+    tree(town, 538, BASE, "autumn")
+    hedge(town, 592, BASE, 14)
+    tree(town, 618, BASE, "pine")
 
-    lamp(town, 58, 170)
-    lamp(town, 150, 170)
-    lamp(town, 384, 170)
-    lamp(town, 444, 170)
-    lamp(town, 560, 170)
-    fountain(town, 408, 206)
+    lamp(town, 40, BASE + 2)
+    lamp(town, 148, BASE + 2)
+    lamp(town, 292, BASE + 2)
+    lamp(town, 448, BASE + 2)
+    lamp(town, 548, BASE + 2)
+    lamp(town, 608, BASE + 2)
+
+    cast_shadow(town, 396, BASE, 12)
+    fountain(town, 396, BASE)
+    signpost(town, 88, BASE + 4)
+    crates(town, 128, BASE + 4)
+    bench(town, 424, BASE + 4)
+    cart(town, 516, BASE + 4)
 
     flat = Image.alpha_composite(sky, far)
     flat = Image.alpha_composite(flat, town)
@@ -471,7 +703,7 @@ def build():
     far.save(OUT / "far.png")
     town.save(OUT / "town.png")
     flat.save(OUT / "panorama.png")
-    print(f"wrote {W}x{H} layers to {OUT} (frame {FRAME})")
+    print(f"wrote {W}x{H} layers to {OUT} (frame {FRAME}, street {18}px)")
 
 
 if __name__ == "__main__":
