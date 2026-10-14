@@ -71,16 +71,19 @@
           <span class="cloud c2"></span>
           <span class="cloud c3"></span>
         </div>
-        <div class="qh-town" data-parallax="1">
-          <img class="pixel-sprite sprite-bldg-128" src="img/buildings/academy.png" width="256" height="256" alt="">
-          <img class="pixel-sprite sprite-bldg-128" src="img/buildings/town-hall.png" width="256" height="256" alt="">
-          <img class="pixel-sprite sprite-bldg-96" src="img/buildings/map-room-tower.png" width="192" height="192" alt="">
-          <img class="pixel-sprite sprite-bldg-96" src="img/buildings/printers-shop.png" width="192" height="192" alt="">
-          <img class="pixel-sprite sprite-bldg-96" src="img/buildings/science-lab.png" width="192" height="192" alt="">
-          <img class="pixel-sprite sprite-bldg-64" src="img/buildings/cottage.png" width="128" height="128" alt="">
-          <img class="pixel-sprite sprite-bldg-64" src="img/buildings/market-stall.png" width="128" height="128" alt="">
+        <div class="qh-town">
+          <div class="qh-town-shift" data-parallax="1">
+            <img class="pixel-sprite sprite-bldg-128 foot-academy" src="img/buildings/academy.png" width="256" height="256" alt="">
+            <img class="pixel-sprite sprite-bldg-128 foot-town-hall" src="img/buildings/town-hall.png" width="256" height="256" alt="">
+            <img class="pixel-sprite sprite-bldg-96 foot-map-room" src="img/buildings/map-room-tower.png" width="192" height="192" alt="">
+            <img class="pixel-sprite sprite-bldg-96 foot-printers" src="img/buildings/printers-shop.png" width="192" height="192" alt="">
+            <img class="pixel-sprite sprite-bldg-96 foot-science" src="img/buildings/science-lab.png" width="192" height="192" alt="">
+            <img class="pixel-sprite sprite-bldg-64 foot-cottage" src="img/buildings/cottage.png" width="128" height="128" alt="">
+            <img class="pixel-sprite sprite-bldg-64 foot-market" src="img/buildings/market-stall.png" width="128" height="128" alt="">
+            <span class="qh-ground"></span>
+            <span class="accent-gryphon"></span>
+          </div>
         </div>
-        <span class="accent-gryphon"></span>
         <span class="spark spark-a"></span>
         <span class="spark spark-b"></span>
         <span class="spark spark-c"></span>
@@ -103,13 +106,13 @@
         <div class="rule" aria-hidden="true"><span></span></div>
         <p class="section-intro">These are the buildings of Quillhaven so far. Nothing here is playable.</p>
         <div class="town-map">
-          <div class="plot" style="--i:1"><img class="pixel-sprite sprite-bldg-128" src="img/buildings/academy.png" width="256" height="256" alt="Quillhaven Academy"><p>Academy</p></div>
-          <div class="plot" style="--i:2"><img class="pixel-sprite sprite-bldg-128" src="img/buildings/town-hall.png" width="256" height="256" alt="Quillhaven Town Hall"><p>Town Hall</p></div>
-          <div class="plot" style="--i:3"><img class="pixel-sprite sprite-bldg-96" src="img/buildings/map-room-tower.png" width="192" height="192" alt="Quillhaven Map Room tower"><p>Map Room</p></div>
-          <div class="plot" style="--i:4"><img class="pixel-sprite sprite-bldg-96" src="img/buildings/printers-shop.png" width="192" height="192" alt="Quillhaven Printer’s Shop"><p>Printer’s Shop</p></div>
-          <div class="plot" style="--i:5"><img class="pixel-sprite sprite-bldg-96" src="img/buildings/science-lab.png" width="192" height="192" alt="Quillhaven Science Lab"><p>Science Lab</p></div>
-          <div class="plot" style="--i:6"><img class="pixel-sprite sprite-bldg-64" src="img/buildings/cottage.png" width="128" height="128" alt="Quillhaven Cottage"><p>Cottage</p></div>
-          <div class="plot" style="--i:7"><img class="pixel-sprite sprite-bldg-64" src="img/buildings/market-stall.png" width="128" height="128" alt="Quillhaven Market Stall"><p>Market Stall</p></div>
+          <div class="plot" style="--i:1"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-128 foot-academy" src="img/buildings/academy.png" width="256" height="256" alt="Quillhaven Academy"><span class="plot-ground"></span></div><p>Academy</p></div>
+          <div class="plot" style="--i:2"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-128 foot-town-hall" src="img/buildings/town-hall.png" width="256" height="256" alt="Quillhaven Town Hall"><span class="plot-ground"></span></div><p>Town Hall</p></div>
+          <div class="plot" style="--i:3"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-96 foot-map-room" src="img/buildings/map-room-tower.png" width="192" height="192" alt="Quillhaven Map Room tower"><span class="plot-ground"></span></div><p>Map Room</p></div>
+          <div class="plot" style="--i:4"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-96 foot-printers" src="img/buildings/printers-shop.png" width="192" height="192" alt="Quillhaven Printer’s Shop"><span class="plot-ground"></span></div><p>Printer’s Shop</p></div>
+          <div class="plot" style="--i:5"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-96 foot-science" src="img/buildings/science-lab.png" width="192" height="192" alt="Quillhaven Science Lab"><span class="plot-ground"></span></div><p>Science Lab</p></div>
+          <div class="plot" style="--i:6"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-64 foot-cottage" src="img/buildings/cottage.png" width="128" height="128" alt="Quillhaven Cottage"><span class="plot-ground"></span></div><p>Cottage</p></div>
+          <div class="plot" style="--i:7"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-64 foot-market" src="img/buildings/market-stall.png" width="128" height="128" alt="Quillhaven Market Stall"><span class="plot-ground"></span></div><p>Market Stall</p></div>
         </div>
       </div>
     </section>
@@ -121,17 +124,17 @@
         <p class="section-intro">Tahne, Merlin, and Winston Wolf keep Quillhaven. The pixel-art town logo is still reserved.</p>
         <div class="grid-3">
           <article class="card">
-            <img class="pixel-sprite sprite-adult sprite-bob" src="img/characters/tahne.png" width="128" height="128" alt="Tahne, the gryphon who founded Quillhaven">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-tahne" src="img/characters/tahne.png" width="128" height="128" alt="Tahne, the gryphon who founded Quillhaven"><span class="sprite-ground"></span></div>
             <h3>Tahne</h3>
             <p>Tahne is the gryphon who founded Quillhaven. He is wise, brave, and encouraging: a guide and a guardian of knowledge, not a monster. He holds a quill, and he greets new heroes in the town plaza.</p>
           </article>
           <article class="card">
-            <img class="pixel-sprite sprite-adult sprite-bob" src="img/characters/merlin.png" width="128" height="128" alt="Merlin, the portal keeper at Quillhaven Academy">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-merlin" src="img/characters/merlin.png" width="128" height="128" alt="Merlin, the portal keeper at Quillhaven Academy"><span class="sprite-ground"></span></div>
             <h3>Merlin</h3>
             <p>Merlin is the wizard who keeps the Academy portals. Each portal opens on a subject. He does not hand you the answer. He hands you the way in.</p>
           </article>
           <article class="card">
-            <img class="pixel-sprite sprite-adult sprite-bob" src="img/characters/winston.png" width="128" height="128" alt="Winston Wolf, the night watchman of Quillhaven">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-winston" src="img/characters/winston.png" width="128" height="128" alt="Winston Wolf, the night watchman of Quillhaven"><span class="sprite-ground"></span></div>
             <h3>Winston Wolf</h3>
             <p>Winston Wolf is the night watchman. Lantern in hand, he keeps watch over Quillhaven after dark and asks whether you can still prove what you learned that day.</p>
           </article>
@@ -160,17 +163,17 @@
         <p class="section-intro">Brittany, Ruth, and Rudy are the student heroes who explore Quillhaven, step through the portals, and go on learning quests. The idea is that every kid who plays gets to write their own legend.</p>
         <div class="grid-3">
           <article class="card">
-            <img class="pixel-sprite sprite-kid sprite-bob" src="img/characters/brittany.png" width="96" height="96" alt="Brittany, a student hero of Quillhaven">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-kid sprite-bob foot-brittany" src="img/characters/brittany.png" width="96" height="96" alt="Brittany, a student hero of Quillhaven"><span class="sprite-ground"></span></div>
             <h3>Brittany</h3>
             <p>Brittany explores Quillhaven, steps through the portals, and goes on learning quests.</p>
           </article>
           <article class="card">
-            <img class="pixel-sprite sprite-kid sprite-bob" src="img/characters/ruth.png" width="96" height="96" alt="Ruth, a student hero of Quillhaven">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-kid sprite-bob foot-ruth" src="img/characters/ruth.png" width="96" height="96" alt="Ruth, a student hero of Quillhaven"><span class="sprite-ground"></span></div>
             <h3>Ruth</h3>
             <p>Ruth explores Quillhaven, steps through the portals, and goes on learning quests.</p>
           </article>
           <article class="card">
-            <img class="pixel-sprite sprite-kid sprite-bob" src="img/characters/rudy.png" width="96" height="96" alt="Rudy, a student hero of Quillhaven">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-kid sprite-bob foot-rudy" src="img/characters/rudy.png" width="96" height="96" alt="Rudy, a student hero of Quillhaven"><span class="sprite-ground"></span></div>
             <h3>Rudy</h3>
             <p>Rudy explores Quillhaven, steps through the portals, and goes on learning quests.</p>
           </article>
