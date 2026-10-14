@@ -1091,12 +1091,20 @@ legend { padding: 0 0.3rem; }
 }
 
 .pixel-sprite {
-  width: 72px;
-  height: 72px;
   display: block;
-  shape-rendering: crispEdges;
+  margin: 0 0 0.85rem;
+  image-rendering: crisp-edges;
   image-rendering: pixelated;
-  margin-bottom: 0.75rem;
+}
+
+.sprite-adult {
+  width: 128px;
+  height: 128px;
+}
+
+.sprite-kid {
+  width: 96px;
+  height: 96px;
 }
 
 .town-banner {
@@ -1323,6 +1331,9 @@ legend { padding: 0 0.3rem; }
   .cover h1 { position: relative; }
 
   .accent-gryphon { animation: gryphon-bob 2.6s ease-in-out 3; }
+  .sprite-bob { animation: gryphon-bob 2.8s ease-in-out 3; }
+  .grid-3 .card:nth-child(2) .sprite-bob { animation-delay: 0.25s; }
+  .grid-3 .card:nth-child(3) .sprite-bob { animation-delay: 0.5s; }
   .spark { animation: spark-twinkle 1.6s ease-in-out 3; }
   .spark-b { animation-delay: 0.35s; }
   .spark-c { animation-delay: 0.7s; }

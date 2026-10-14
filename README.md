@@ -68,7 +68,7 @@ JavaScript opens the mobile menu, shows a thank-you note on forms, reveals secti
 ## Placeholders that need real content
 
 - **Logo.** Header, footer, and the home hero use the final griffin-and-quill icon (`assets/logo-icon.svg`): white gryphon, gold quill, navy field. Favicon files in `/assets/icons/` are the designer’s web set (`favicon.ico`, `favicon-32.png`, `apple-touch-icon-180.png`). `site.webmanifest` points at the icons that ship with this mockup.
-- **Quillhaven art.** The Quillhaven page reserves a note for a pixel-art town logo. The skyline and map are motion accents, not that logo. Tahne, Merlin, and Winston Wolf are named. The pixel figures on that page are stand-ins, not final character art. Brittany, Ruth, and Rudy are named as student heroes. Their portraits are not drawn yet.
+- **Quillhaven art.** The Quillhaven page reserves a note for a pixel-art town logo. The skyline and map are motion accents, not that logo. Tahne, Merlin, Winston Wolf, Brittany, Ruth, and Rudy use the pixel sprites in `img/characters/`. Adults render at 128px (2× a 64px canvas) and the kids at 96px (2× a 48px canvas).
 - **Founder bio.** The About page names Ryan Mayer, Battery Creek High School, the four social studies courses, more than seven years of teaching, and a Master’s in History Education. A photo and any longer bio are still open.
 - **Pricing.** Tutoring rates match the Stripe test products and are shown as published prices. Checkout links are Stripe test-mode payment links. They do not charge a live card. Shop prices are still samples.
 - **TPT links.** "View on TPT" and "Follow our TPT store" use `href="#"`. The TPT store name and URL are still open. Product cards are sample titles for the layout, not a catalog.
