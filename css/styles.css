@@ -938,3 +938,95 @@ legend {
   background: var(--navy);
   color: var(--cream);
 }
+
+/* Home gryphon intro. Placeholder mark only. Motion is transform and opacity. */
+.logo-slot:has(.logo-mark) {
+  position: relative;
+  padding: 0.22rem;
+}
+
+.logo-mark {
+  display: block;
+  width: 100%;
+  aspect-ratio: 160 / 96;
+  line-height: 0;
+}
+
+.logo-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+html.intro-pending .logo-mark,
+html.intro-pending .brand > .wordmark {
+  opacity: 0;
+}
+
+html.intro-landed .logo-mark {
+  opacity: 1;
+}
+
+.intro-flyer {
+  position: fixed;
+  z-index: 50;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  transform-origin: center center;
+}
+
+.intro-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.intro-layer svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.intro-blur {
+  filter: blur(2.5px);
+}
+
+.intro-flyer .wing {
+  transform-box: view-box;
+  transform-origin: 98px 50px;
+}
+
+.intro-flyer .wing-front {
+  animation: gryphon-wing 0.6s ease-in-out 3;
+}
+
+.intro-flyer .wing-back {
+  transform-origin: 90px 50px;
+  animation: gryphon-wing 0.6s ease-in-out 3;
+}
+
+@keyframes gryphon-wing {
+  0%,
+  100% { transform: rotate(0deg); }
+  42% { transform: rotate(-22deg); }
+}
+
+.intro-spark {
+  position: fixed;
+  z-index: 52;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  margin-top: -3.5px;
+  background: #c9a227;
+  pointer-events: none;
+  border-radius: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.intro-pending .logo-mark,
+  html.intro-pending .brand > .wordmark {
+    opacity: 1;
+  }
+}
