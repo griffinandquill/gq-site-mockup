@@ -1,0 +1,21 @@
+{
+  "name": "Griffin & Quill",
+  "short_name": "Griffin & Quill",
+  "description": "Placeholder manifest. Replace the icon files in this folder with the final set.",
+  "icons": [
+    {
+      "src": "/assets/icons/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icons/apple-touch-icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#1F2A44",
+  "background_color": "#FAF6EA",
+  "display": "standalone",
+  "start_url": "/"
+}

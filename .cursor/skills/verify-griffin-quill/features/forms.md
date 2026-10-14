@@ -12,7 +12,7 @@ Five forms render on the mockup. A valid submit stays on the page and shows `Tha
 
 - Home, section `Notes from the studio`, button `Join the list`.
 - Tutoring, section `Book a free consult`, button `Request a consult`.
-- Worlds, section `Waitlist`, button `Join the waitlist`.
+- Quillhaven (`worlds.html`), section `Waitlist`, button `Join the waitlist`.
 - Schools, section `Inquiry form`, button `Send inquiry`.
 - Contact, section `Message`, button `Send message`.
 

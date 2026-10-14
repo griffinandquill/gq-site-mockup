@@ -3,6 +3,42 @@
   var nav = document.querySelector("#site-nav");
   var label = toggle ? toggle.querySelector(".nav-toggle-label") : null;
 
+  function esc(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function renderProducts() {
+    var root = document.querySelector("[data-product-catalog]");
+    if (!root || !window.GQ_PRODUCTS) return;
+    root.innerHTML = window.GQ_PRODUCTS.map(function (item) {
+      var control = item.action === "buy"
+        ? '<a class="btn btn-primary" href="#">Buy on TPT<span class="visually-hidden">: ' + esc(item.title) + ', sample product</span></a>'
+        : '<button type="button" class="btn btn-soon" aria-disabled="true">Coming soon<span class="visually-hidden">: ' + esc(item.title) + '</span></button>';
+      var priceNote = item.action === "buy"
+        ? '<span class="price-note"> Sample price. Not for sale on this mockup.</span>'
+        : '<span class="price-note"> Sample. Price not set.</span>';
+      return (
+        '<article class="card product">' +
+          '<p class="stamp">Sample</p>' +
+          '<h3>' + esc(item.title) + '</h3>' +
+          '<p>' + esc(item.summary) + '</p>' +
+          '<dl class="meta">' +
+            '<div><dt>Grade</dt><dd>' + esc(item.grade) + '</dd></div>' +
+            '<div><dt>Standard</dt><dd>' + esc(item.standard) + '</dd></div>' +
+            '<div><dt>Price</dt><dd>' + esc(item.price) + priceNote + '</dd></div>' +
+          '</dl>' +
+          '<div class="card-actions">' + control + '</div>' +
+        '</article>'
+      );
+    }).join("");
+  }
+
+  renderProducts();
+
   function setOpen(open) {
     if (!toggle || !nav) return;
     nav.classList.toggle("is-open", open);
@@ -69,6 +105,12 @@
       note.setAttribute("role", "status");
       note.textContent = "Placeholder link. Nothing opens on this mockup.";
       link.insertAdjacentElement("afterend", note);
+    });
+  });
+
+  document.querySelectorAll(".btn-soon").forEach(function (button) {
+    button.addEventListener("click", function (event) {
+      event.preventDefault();
     });
   });
 })();

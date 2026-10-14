@@ -8,7 +8,7 @@ export const copy = {
 export const pages = [
   {
     file: "index.html",
-    title: "Griffin & Quill | History tutoring, resources, and games",
+    title: "Griffin & Quill | Write your own legend",
     nav: "Home",
   },
   {
@@ -18,13 +18,13 @@ export const pages = [
   },
   {
     file: "resources.html",
-    title: "Classroom resources | Griffin & Quill",
-    nav: "Resources",
+    title: "Shop | Griffin & Quill",
+    nav: "Shop",
   },
   {
     file: "worlds.html",
-    title: "Worlds | Griffin & Quill",
-    nav: "Worlds",
+    title: "Quillhaven | Griffin & Quill",
+    nav: "Quillhaven",
   },
   {
     file: "schools.html",
