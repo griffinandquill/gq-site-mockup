@@ -40,46 +40,50 @@
     <div class="header-bar">
       <div class="container header-inner">
         <a class="brand" href="index.html">
-          <!-- PLACEHOLDER gryphon. Not the final logo. Replay the fly-in with ?intro=1 -->
+          <!-- Layered mark: img/gryphon-logo.svg. Replay the fly-in with ?intro=1 -->
           <span class="logo-slot">
             <span class="logo-mark" data-logo-mark>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 96" aria-hidden="true" focusable="false">
-                <title>Placeholder gryphon icon</title>
-                <desc>Placeholder geometric gryphon holding a quill on a navy badge. Not the final Griffin and Quill mark.</desc>
-                <rect width="160" height="96" rx="18" fill="#1B2A4A"/>
-                <rect x="3.5" y="3.5" width="153" height="89" rx="15" fill="none" stroke="#C9A227" stroke-width="2"/>
-                <g class="wing wing-back">
-                  <path fill="#CDB98A" d="M90 46c-6-10-28-24-52-26 4 6 6 8 4 12 14 2 32 10 48 18z"/>
-                  <path fill="#CDB98A" d="M92 52c-8-4-40-10-64-4 6 6 12 8 18 6 14 0 32 0 46 2z"/>
+              <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 96">
+                <title>Griffin and Quill mark</title>
+                <desc>Layered gryphon and quill. The body, near wing, and far wing are separate paths.</desc>
+                <rect width="160" height="96" rx="20" fill="#1F2A44"/>
+                <rect x="3.25" y="3.25" width="153.5" height="89.5" rx="17" fill="none" stroke="#C9A227" stroke-width="1.75"/>
+                <g class="wing wing-far" data-pivot="78 56">
+                  <path fill="#C4A06A" d="M78 50C64 34 40 32 28 44C40 46 58 50 78 58Z"/>
+                  <path fill="#8D6A3A" d="M76 56C62 50 42 54 30 64C44 64 60 60 76 62Z"/>
                 </g>
                 <g class="gryphon-body">
-                  <path fill="#E6D7B8" d="M54 62c-14-2-28 6-32 2 6 8 18 8 28 4 2 6-2 12 4 14 6-2 8-8 6-14 2 1 6 2 8 0-4-2-8-4-14-6z"/>
-                  <path fill="#F7F2E6" d="M60 54c-4 10-2 24 10 30 8 4 18 2 26-2 10 6 24 4 32-4 6-8 4-18-2-24-8-4-18-2-26 2-6-6-16-10-26-8-6 0-12 2-14 6z"/>
-                  <path fill="#F4EBDA" d="M72 78c-2 6-4 12-2 14h10c0-6 2-10 4-14-4 0-8 0-12 0z"/>
-                  <path fill="#F4EBDA" d="M102 68c2 8 2 14 6 16-2-6-2-12 0-16-2 0-4 0-6 0z"/>
-                  <path fill="#E6D7B8" d="M106 82l3 6 4-1-2-6-5 1z"/>
+                  <path fill="none" stroke="#F4EBDA" stroke-width="3.5" stroke-linecap="round" d="M46 58C30 62 18 52 12 40"/>
+                  <path fill="#F4EBDA" d="M14 38C8 32 14 26 18 32C16 38 14 42 14 38Z"/>
+                  <path fill="#F7F2E8" d="M102 60C106 46 92 40 76 42C60 42 48 50 46 60C36 56 28 66 32 78C36 88 52 90 60 82C56 76 64 72 70 74C66 80 82 82 94 76C102 72 104 66 102 60Z"/>
+                  <path fill="#E7D6B2" d="M54 56C42 58 34 68 36 78C40 86 52 86 56 78C58 68 60 60 54 56Z"/>
+                  <path fill="#F4EBDA" d="M92 64C98 74 110 82 122 80C118 74 108 66 98 60Z"/>
+                  <path fill="#E7D6B2" d="M112 76L120 84L124 80L116 74Z"/>
+                  <path fill="#C9A227" d="M116 74L124 82L127 78L118 72Z"/>
+                  <path fill="#E7D6B2" d="M34 82h8l-1 5h-6z"/>
+                  <path fill="#E7D6B2" d="M43 82h7l-1 5h-5z"/>
                 </g>
-                <g class="wing wing-front">
-                  <path fill="#FBF7EE" d="M98 42c-4-12-26-26-50-28 6 7 8 10 4 14 16 2 32 10 46 18z"/>
-                  <path fill="#F4E7C8" d="M100 50c-6-4-34-12-58-8 8 7 16 8 24 6 12 0 24 2 34 6z"/>
-                  <path fill="#FBF7EE" d="M100 56c-8-2-28-2-46 4 6 6 14 8 22 6 8 0 18-2 24-4 0-2 0-4 0-6z"/>
+                <g class="wing wing-near" data-pivot="102 52">
+                  <path fill="#FBF8F2" d="M102 48C86 30 54 28 36 38C48 46 74 48 102 56Z"/>
+                  <path fill="#F0E1C4" d="M100 54C82 48 52 52 38 64C50 68 76 60 100 62Z"/>
+                  <path fill="none" stroke="#1F2A44" stroke-linecap="round" stroke-width="0.9" opacity="0.22" d="M48 44C66 46 84 50 100 52"/>
                 </g>
                 <g class="gryphon-head">
-                  <path fill="#F7F2E6" d="M108 50c6-4 12-12 16-20 5 1 8 8 6 14-4 8-12 12-20 12-1-2-2-4-2-6z"/>
-                  <circle cx="128" cy="30" r="11" fill="#FBF7EE"/>
-                  <path fill="#FBF7EE" d="M120 22l5-12 6 11-11 1z"/>
-                  <path fill="#C9A227" d="M136 26l18 2-6 6-8-2 4 6-8-2c2-4 2-8 0-10z"/>
-                  <circle cx="130" cy="28" r="2.5" fill="#1B2A4A"/>
-                  <circle cx="130.8" cy="27.2" r="0.8" fill="#FBF7EE"/>
+                  <path fill="#F7F2E8" d="M98 56C108 48 116 42 124 40L130 48C118 52 108 58 102 62Z"/>
+                  <path fill="#FBF8F2" d="M118 42C118 30 132 26 142 34C148 40 144 50 134 50C124 50 118 46 118 42Z"/>
+                  <path fill="#F0E4CC" d="M122 36C116 28 112 26 116 34C118 32 120 34 122 36Z"/>
+                  <path fill="#C9A227" d="M134 34C146 28 154 34 152 42C144 40 138 42 134 46C142 48 144 52 136 50C132 44 130 38 134 34Z"/>
+                  <path fill="none" stroke="#8A6C10" stroke-linecap="round" stroke-width="1" d="M136 38C142 40 146 41 148 43"/>
+                  <circle cx="128" cy="40" r="2.2" fill="#1F2A44"/>
+                  <circle cx="128.8" cy="39.2" r="0.7" fill="#FBF8F2"/>
                 </g>
                 <g class="quill">
-                  <path fill="#C9A227" d="M108 74c10 1 22 6 30 14-8 1-16 0-24-4-6-3-10-8-12-12 2 0 4 1 6 2z"/>
-                  <path stroke="#E8C96A" stroke-width="1.7" stroke-linecap="round" d="M116 80l28 12"/>
-                  <path fill="#F0D78A" d="M140 88l12 5-6 3-8-5z"/>
+                  <path fill="#C9A227" d="M114 70C124 74 134 80 144 84C136 80 124 74 114 68Z"/>
+                  <path stroke="#F4E2A0" stroke-linecap="round" stroke-width="1.4" d="M118 72L142 84"/>
+                  <path fill="#F4E2A0" d="M138 82L148 85L144 89L136 84Z"/>
                 </g>
               </svg>
             </span>
-            <span class="visually-hidden">Logo coming soon</span>
           </span>
           <span class="wordmark">
             <span class="wordmark-name">Griffin &amp; Quill</span>

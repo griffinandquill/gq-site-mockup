@@ -1,8 +1,9 @@
-/* Home-page gryphon fly-in. Placeholder art. First visit only.
+/* Home-page gryphon fly-in. First visit only.
    Replay with ?intro=1. Skips on click, tap, or keypress, and does not
    run when prefers-reduced-motion is set. Motion uses the Web Animations
    API (transform and opacity only) and lands with a FLIP measure of the
-   header mark so the last frame matches that box. */
+   header mark so the last frame matches that box.
+   Knobs: DURATION, START_SCALE, the swoop bow, and the wing up/down degrees. */
 (function () {
   "use strict";
 
@@ -70,6 +71,7 @@
   var wordAnim = null;
   var sparkAnims = [];
   var sparkNodes = [];
+  var wingAnims = [];
   var flyer = null;
   var observer = null;
   var retargetQueued = false;
@@ -243,12 +245,48 @@
     document.removeEventListener("keydown", onKey, true);
   }
 
+  function wingPose(up, down) {
+    function turn(deg) {
+      return "rotate(" + deg.toFixed(2) + "deg)";
+    }
+    return [
+      { transform: turn(0), offset: 0 },
+      { transform: turn(down), offset: 0.08 },
+      { transform: turn(up), offset: 0.16 },
+      { transform: turn(down * 0.82), offset: 0.26 },
+      { transform: turn(up * 0.88), offset: 0.36 },
+      { transform: turn(down * 0.5), offset: 0.46 },
+      { transform: turn(up * 0.5), offset: 0.57 },
+      { transform: turn(down * 0.16), offset: 0.67 },
+      { transform: turn(up * 0.14), offset: 0.76 },
+      { transform: turn(0), offset: 0.88 },
+      { transform: turn(0), offset: 1 }
+    ];
+  }
+
+  function playWings(root) {
+    root.querySelectorAll(".wing").forEach(function (wing) {
+      var pivot = (wing.getAttribute("data-pivot") || "0 0").split(/\s+/);
+      wing.style.transformBox = "view-box";
+      wing.style.transformOrigin = pivot[0] + "px " + pivot[1] + "px";
+      var near = wing.classList.contains("wing-near");
+      var anim = wing.animate(near ? wingPose(15, -10) : wingPose(10, -7), {
+        duration: DURATION,
+        delay: near ? 0 : 50,
+        easing: "linear",
+        fill: "forwards"
+      });
+      wingAnims.push(anim);
+    });
+  }
+
   function finishQuiet() {
     phase = "done";
     generation += 1;
     if (flyAnim) flyAnim.cancel();
     if (blurAnim) blurAnim.cancel();
     if (wordAnim) wordAnim.cancel();
+    wingAnims.forEach(function (anim) { anim.cancel(); });
     removeSparks();
     if (flyer && flyer.parentNode) flyer.remove();
     clearIntroClasses();
@@ -387,6 +425,7 @@
     ], { duration: DURATION, easing: "linear", fill: "both" });
 
     playFly(0, null);
+    playWings(flyer);
     armSkip();
     window.addEventListener("resize", queueRetarget);
     window.addEventListener("scroll", queueRetarget, { passive: true });

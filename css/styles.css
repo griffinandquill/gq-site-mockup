@@ -939,10 +939,15 @@ legend {
   color: var(--cream);
 }
 
-/* Home gryphon intro. Placeholder mark only. Motion is transform and opacity. */
+/* Home gryphon intro. The mark is the layered SVG. Motion is transform and opacity. */
 .logo-slot:has(.logo-mark) {
   position: relative;
-  padding: 0.22rem;
+  width: 4.9rem;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
 }
 
 .logo-mark {
@@ -994,22 +999,6 @@ html.intro-landed .logo-mark {
 
 .intro-flyer .wing {
   transform-box: view-box;
-  transform-origin: 98px 50px;
-}
-
-.intro-flyer .wing-front {
-  animation: gryphon-wing 0.6s ease-in-out 3;
-}
-
-.intro-flyer .wing-back {
-  transform-origin: 90px 50px;
-  animation: gryphon-wing 0.6s ease-in-out 3;
-}
-
-@keyframes gryphon-wing {
-  0%,
-  100% { transform: rotate(0deg); }
-  42% { transform: rotate(-22deg); }
 }
 
 .intro-spark {
