@@ -1107,6 +1107,28 @@ legend { padding: 0 0.3rem; }
   height: 96px;
 }
 
+.sprite-bldg-128,
+.sprite-bldg-96,
+.sprite-bldg-64 {
+  max-width: none;
+  flex: none;
+}
+
+.sprite-bldg-128 {
+  width: 256px;
+  height: 256px;
+}
+
+.sprite-bldg-96 {
+  width: 192px;
+  height: 192px;
+}
+
+.sprite-bldg-64 {
+  width: 128px;
+  height: 128px;
+}
+
 .town-banner {
   font-family: var(--serif);
   font-size: clamp(1.35rem, 2.5vw, 1.8rem);
@@ -1165,12 +1187,14 @@ legend { padding: 0 0.3rem; }
 
 .qh-scene {
   position: relative;
-  height: 240px;
+  height: 328px;
   margin: 0 0 1.35rem;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   border: 4px solid #0b1020;
   background: #243456;
   image-rendering: pixelated;
+  scrollbar-color: #b8860b #1a243c;
 }
 
 .qh-sky,
@@ -1203,21 +1227,34 @@ legend { padding: 0 0.3rem; }
 .cloud.c2 { top: 52px; left: 46%; transform: scale(0.8); }
 .cloud.c3 { top: 22px; left: 72%; transform: scale(0.65); }
 
-.qh-town { top: auto; height: 62%; }
-
-.bldg {
+.qh-town {
   position: absolute;
-  bottom: 18px;
-  background: #1f2a44;
-  border: 3px solid #b8860b;
-  box-shadow: inset 6px 10px 0 #faf6ea, inset 16px 10px 0 #faf6ea, inset 6px 22px 0 #faf6ea;
+  inset: auto;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  width: max-content;
+  min-width: 100%;
+  height: auto;
+  padding: 0 8px 26px;
+  box-sizing: border-box;
 }
 
-.bldg.b1 { left: 8%; width: 46px; height: 72px; }
-.bldg.b2 { left: 24%; width: 64px; height: 96px; background: #7a2e2e; }
-.bldg.tower { left: 42%; width: 36px; height: 128px; }
-.bldg.b3 { left: 56%; width: 78px; height: 80px; }
-.bldg.b4 { left: 78%; width: 52px; height: 64px; background: #2b2b2b; }
+@media (min-width: 1180px) {
+  .qh-scene { overflow: hidden; }
+  .qh-town {
+    width: 100%;
+    gap: 0;
+  }
+  .qh-town .pixel-sprite + .pixel-sprite { margin-left: -44px; }
+}
+
+.qh-town .pixel-sprite { margin: 0; }
 
 .qh-scene .accent-gryphon { left: 12px; bottom: 28px; top: auto; }
 .qh-scene .spark-a { top: 18px; left: 30%; }
@@ -1226,7 +1263,7 @@ legend { padding: 0 0.3rem; }
 
 .town-map {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
   gap: 0.85rem;
   margin-top: 1rem;
   padding: 0.85rem;
@@ -1239,23 +1276,18 @@ legend { padding: 0 0.3rem; }
 }
 
 .plot {
-  min-height: 7.5rem;
-  padding: 0.7rem 0.55rem 0.45rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem 0.65rem 0.55rem;
   background: var(--cream);
   border: 3px solid #0b1020;
   box-shadow: 4px 4px 0 var(--gold);
   text-align: center;
 }
 
-.plot .roof {
-  display: block;
-  width: 2.4rem;
-  height: 2.6rem;
-  margin: 0 auto 0.45rem;
-  background: #1f2a44;
-  border: 3px solid #b8860b;
-  box-shadow: inset 0 -10px 0 #7a2e2e;
-}
+.plot .pixel-sprite { margin: 0 0 0.45rem; }
 
 .qh-scene::after {
   content: "";
@@ -1269,12 +1301,11 @@ legend { padding: 0 0.3rem; }
   z-index: 2;
 }
 
-.plot:nth-child(3n) .roof { height: 3.1rem; width: 1.5rem; }
-.plot:nth-child(3n+2) .roof { background: #7a2e2e; height: 2rem; }
-.plot:nth-child(4) .roof { width: 2.8rem; background: #2b2b2b; }
-.plot:nth-child(7) .roof { width: 3rem; height: 1.7rem; background: #1f2a44; box-shadow: inset 0 -8px 0 #b8860b; }
-
-.page-quillhaven main .plot p { color: var(--navy); }
+.page-quillhaven main .plot p {
+  color: var(--navy);
+  margin: 0;
+  font-weight: 700;
+}
 
 @media (prefers-reduced-motion: no-preference) and (hover: hover) {
   .page-quillhaven main .card:hover,
