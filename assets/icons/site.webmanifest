@@ -1,7 +1,6 @@
 {
   "name": "Griffin & Quill",
-  "short_name": "Griffin & Quill",
-  "description": "Placeholder manifest. Replace the icon files in this folder with the final set.",
+  "short_name": "G&Q",
   "icons": [
     {
       "src": "/assets/icons/favicon-32.png",
@@ -15,7 +14,7 @@
     }
   ],
   "theme_color": "#1F2A44",
-  "background_color": "#FAF6EA",
+  "background_color": "#1F2A44",
   "display": "standalone",
   "start_url": "/"
 }

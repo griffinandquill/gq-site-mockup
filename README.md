@@ -63,21 +63,22 @@ Merriweather and Lato are self-hosted in `fonts/`. Offline, the pages fall back 
 
 Shared files: `css/styles.css`, `js/main.js`, `js/products.js`, `fonts/`, `assets/`, `favicon.svg`.
 
-JavaScript only opens the mobile menu and shows a thank-you note on forms. Forms do not send anywhere.
+JavaScript opens the mobile menu, shows a thank-you note on forms, reveals sections on scroll, types the home tagline, and shifts the Quillhaven skyline. Forms do not send anywhere. Motion is skipped when the browser asks for reduced motion.
 
 ## Placeholders that need real content
 
-- **Logo.** Header, footer, and the home hero use an inline SVG labeled as a placeholder. Swap it for the final griffin-and-quill SVG. Favicon link tags point at `/assets/icons/` (`favicon.ico`, `favicon-32.png`, `apple-touch-icon-180.png`, `site.webmanifest`). Those files are placeholders until the real icon set is dropped in.
-- **Quillhaven art.** The Quillhaven page reserves a slot for a pixel-art town logo. Tahne, Merlin, and Winston Wolf are named in the brief. The pixel figures on that page are stand-ins, not final character art.
-- **Founder bio.** The About page names Ryan Mayer as a social studies teacher at Battery Creek High School and leaves `[Founder bio TBD]` plus a photo slot. Do not invent the longer bio.
-- **Pricing.** Every tutoring price is an example. Real rates, session length, and group size are not set.
-- **TPT links.** "View on TPT" and "Follow our TPT store" use `href="#"`. Replace them with the live store URLs. Product cards are sample titles for the layout, not a catalog.
+- **Logo.** Header, footer, and the home hero use the final griffin-and-quill icon (`assets/logo-icon.svg`): white gryphon, gold quill, navy field. Favicon files in `/assets/icons/` are the designer’s web set (`favicon.ico`, `favicon-32.png`, `apple-touch-icon-180.png`). `site.webmanifest` points at the icons that ship with this mockup.
+- **Quillhaven art.** The Quillhaven page reserves a note for a pixel-art town logo. The skyline and map are motion accents, not that logo. Tahne, Merlin, and Winston Wolf are named. The pixel figures on that page are stand-ins, not final character art. Brittany, Ruth, and Rudy are named as student heroes. Their portraits are not drawn yet.
+- **Founder bio.** The About page names Ryan Mayer, Battery Creek High School, the four social studies courses, more than seven years of teaching, and a Master’s in History Education. A photo and any longer bio are still open.
+- **Pricing.** Tutoring rates match the Stripe test products and are shown as published prices. Checkout links are Stripe test-mode payment links. They do not charge a live card. Shop prices are still samples.
+- **TPT links.** "View on TPT" and "Follow our TPT store" use `href="#"`. The TPT store name and URL are still open. Product cards are sample titles for the layout, not a catalog.
 - **Free sample.** The Resources callout is a placeholder until a real freebie exists on TPT.
-- **Email.** `hello@griffinandquill.com` is the studio contact. There is no street address and no phone number on purpose. Forms still do not send.
+- **Email.** `hello@griffinandquill.com` is the studio contact. X is `@griffinandquill`. There is no street address and no phone number on purpose. Forms still do not send.
 - **Legal pages.** Privacy and Terms show the banner "Draft placeholder, pending attorney review." The privacy page states that the kids' games are designed to collect no personal data (COPPA-minded). A lawyer still has to review both pages.
 - **Quillhaven.** The town page, academy portals, and the three scene cards (Westward Expansion, Economic Systems, Two Sources) are placeholders. Nothing is playable. The demo button joins the waitlist layout.
 - **Testimonials.** The home strip is labeled as empty placeholder slots. They are not reviews.
-- **Stripe.** The tutoring “Book tutoring” button is a placeholder link. It does not open a checkout.
+- **Stripe.** Each tutoring package links to its Stripe test-mode payment link. Test mode does not charge a live card. Swap those URLs for live payment links before a public launch.
+- **Motion.** Scroll reveal, a typewriter tagline, ink underlines, card lifts, a Quillhaven parallax skyline, a map reveal, and a short page fade run only when the visitor has not asked for reduced motion. They are CSS and a few lines of vanilla JS.
 - **Forms.** Consult, newsletter, waitlist, schools inquiry, and contact all stop on the page with "Thanks! (mockup: form not connected)". Wire them up only on the real site.
 - **Search engines.** Pages send `noindex`, and `robots.txt` disallows everything. Remove both before any public launch.
 - **Fonts.** Merriweather and Lato ship with the site. A later pass can still change the type if Ryan wants a different pair.
