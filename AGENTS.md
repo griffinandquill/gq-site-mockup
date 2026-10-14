@@ -31,3 +31,32 @@ Fixes to the same build are replies on that build. After two fix rounds, stop an
 Do not drop AI art into the logo or the mascot. Those slots stay "coming soon" until a person delivers the mark. The gryphon-and-quill mark is with a human artist. Do not name the mascot until the trademark check in the README is finished.
 
 AI art that Griffin & Quill will ship and own needs a hand-edited pass first. Raw model output is not the asset. The Option 4 logo is not in this repo. It goes on the site when the designer delivers it.
+
+## Stack
+
+Plain static HTML, CSS, and JS (tutoring, store for sellable units and lessons, Quillhaven page). Playwright for verify. No framework or build step without Ryan's OK.
+
+## Branches and pull requests
+
+- Branch names: `feature/...`, `fix/...`, `art/...`, `chore/...`. One task per branch.
+- Every change goes through a pull request into `main`. No direct pushes to `main`.
+- `main` must stay deployable at all times.
+- Verify (and CI, where configured) must pass before a PR is ready for review.
+- After 2 fix rounds on the same PR, stop and escalate to Ryan.
+- Ryan merges. Agents open and update PRs; they do not merge them.
+
+## Kid-safety baseline (all G&Q repos)
+
+- No chat or messaging between students.
+- No personal data collection beyond what a feature strictly needs.
+- No third-party trackers, ad SDKs, or analytics scripts.
+
+## Brand colors
+
+| Name | Hex |
+|---|---|
+| Navy | `#1F2A44` |
+| Gold | `#B8860B` |
+| Cream | `#FAF6EA` |
+| Burgundy | `#7A2E2E` |
+| Charcoal | `#2B2B2B` |
