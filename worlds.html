@@ -3,28 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Coming soon: browser history games in a 1930s rubberhose style, plus a waitlist.">
+  <meta name="description" content="Quillhaven is Griffin &amp; Quill’s fantasy town, where knowledge is power and every street holds a new adventure.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#1F2A44">
-  <title>Worlds | Griffin &amp; Quill</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&amp;family=Merriweather:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+  <title>Quillhaven | Griffin &amp; Quill</title>
+  <meta property="og:title" content="Quillhaven | Griffin &amp; Quill">
+  <meta property="og:description" content="Quillhaven is Griffin &amp; Quill’s fantasy town, where knowledge is power and every street holds a new adventure.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.griffinandquill.com/worlds.html">
+  <meta property="og:image" content="assets/og.png">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Placeholder icons. Replace the files in /assets/icons/ with the final set. -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon-180.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <link rel="preload" href="fonts/merriweather-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
 </head>
-<body id="top">
+<body id="top" class="page-quillhaven">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <p class="mockup-bar">Design mockup for owner review. Forms are not connected.</p>
     <div class="header-bar">
       <div class="container header-inner">
         <a class="brand" href="index.html">
-          <span class="logo-slot">Logo coming soon</span>
+          <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark">
             <span class="wordmark-name">Griffin &amp; Quill</span>
-            <span class="wordmark-meta">South Carolina</span>
+            <span class="wordmark-meta">An Edtech Company</span>
           </span>
         </a>
         <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
@@ -35,8 +46,8 @@
           <ul class="nav-list">
             <li><a href="index.html">Home</a></li>
             <li><a href="tutoring.html">Tutoring</a></li>
-            <li><a href="resources.html">Resources</a></li>
-            <li><a href="worlds.html" aria-current="page">Worlds</a></li>
+            <li><a href="resources.html">Shop</a></li>
+            <li><a href="worlds.html" aria-current="page">Quillhaven</a></li>
             <li><a href="schools.html">Schools</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="faq.html">FAQ</a></li>
@@ -48,109 +59,134 @@
   </header>
   <main id="main" tabindex="-1">
     <noscript>
-      <p class="container note">JavaScript is off, so the menu button and the thank-you note will not run. Page links still work. Forms are not connected to a server.</p>
+      <p class="container note">JavaScript is off, so the menu button, the shop cards, and the thank-you note will not run. Page links still work. Forms are not connected to a server.</p>
     </noscript>
 
     <div class="container page-hero">
-      <p class="eyebrow">EdTech</p>
-      <p class="ribbon">Coming soon</p>
-      <h1>A solar system of subject worlds.</h1>
-      <p class="lede">The long-term idea is a hub students can explore. They travel between illustrated worlds, and each world is a subject. History is first. The art is 1930s rubberhose: round forms, thick ink, and motion with a bounce.</p>
-      <div class="cluster">
-        <a class="btn btn-primary" href="#waitlist">Join the waitlist</a>
-        <a class="btn btn-secondary" href="schools.html">Note for schools</a>
+      <p class="eyebrow">Quillhaven · Demo coming soon</p>
+      <div class="qh-scene" aria-hidden="true">
+        <div class="qh-panorama">
+          <img class="qh-layer" data-parallax="0.12" src="img/quillhaven/sky.png" width="1280" height="512" alt="">
+          <img class="qh-layer" data-parallax="0.38" src="img/quillhaven/far.png" width="1280" height="512" alt="">
+          <img class="qh-layer" data-parallax="0.8" src="img/quillhaven/town.png" width="1280" height="512" alt="">
+        </div>
       </div>
+      <div>
+          <h1>Quillhaven</h1>
+          <p class="town-banner">Where knowledge is power and every street holds a new adventure.</p>
+          <p class="lede">A cozy pixel fantasy town from Griffin &amp; Quill. You walk in, you learn something that matters on that street, and you prove you can carry it back out.</p>
+          <div class="cluster">
+            <a class="btn btn-primary" href="#waitlist">Demo coming soon</a>
+            <a class="btn btn-secondary" href="schools.html">Note for schools</a>
+        </div>
+      </div>
+      <p class="note">Pixel-art Quillhaven logo: slot still reserved. This panorama is a dusk view of the town. It is not the final town logo.</p>
     </div>
 
-    <section class="section" aria-labelledby="vision-title">
+    <section class="section" id="town-map" aria-labelledby="map-title">
       <div class="container">
-        <h2 id="vision-title">The vision</h2>
-        <p class="section-intro">Kids move through illustrated scenes, meet a short moment from the past, and practice the same skills as tutoring: reading a source, weighing a claim, and explaining a choice. Other subjects become more worlds in the same solar system. Only History is in progress.</p>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="system-title">
-      <div class="container">
-        <h2 id="system-title">Subject worlds</h2>
-        <p class="section-intro">History is lit. The other worlds stay quiet until we build them, and each one is marked coming later.</p>
-        <div class="sky">
-          <ol class="system">
-            <li class="world world-now">
-            <div class="orb" aria-hidden="true"></div>
-            <h3>History</h3>
-            <p>The first world. A teaser is below.</p>
-            <p class="world-state">In progress</p>
-          </li><li class="world">
-            <div class="orb" aria-hidden="true"></div>
-            <h3>Geography</h3>
-            <p>Places and movement.</p>
-            <p class="world-state">Coming later</p>
-          </li><li class="world">
-            <div class="orb" aria-hidden="true"></div>
-            <h3>Civics</h3>
-            <p>Rules, rights, and government.</p>
-            <p class="world-state">Coming later</p>
-          </li><li class="world">
-            <div class="orb" aria-hidden="true"></div>
-            <h3>Economics</h3>
-            <p>Choices and tradeoffs.</p>
-            <p class="world-state">Coming later</p>
-          </li><li class="world">
-            <div class="orb" aria-hidden="true"></div>
-            <h3>Science</h3>
-            <p>A later subject world.</p>
-            <p class="world-state">Coming later</p>
-          </li>
-          </ol>
+        <h2 id="map-title">Town map</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
+        <p class="section-intro">These are the buildings of Quillhaven so far. Nothing here is playable.</p>
+        <div class="town-map">
+          <div class="plot" style="--i:1"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-128 foot-academy" src="img/buildings/academy.png" width="256" height="256" alt="Quillhaven Academy"><span class="plot-ground"></span></div><p>Academy</p></div>
+          <div class="plot" style="--i:2"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-128 foot-town-hall" src="img/buildings/town-hall.png" width="256" height="256" alt="Quillhaven Town Hall"><span class="plot-ground"></span></div><p>Town Hall</p></div>
+          <div class="plot" style="--i:3"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-96 foot-map-room" src="img/buildings/map-room-tower.png" width="192" height="192" alt="Quillhaven Map Room tower"><span class="plot-ground"></span></div><p>Map Room</p></div>
+          <div class="plot" style="--i:4"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-96 foot-printers" src="img/buildings/printers-shop.png" width="192" height="192" alt="Quillhaven Printer’s Shop"><span class="plot-ground"></span></div><p>Printer’s Shop</p></div>
+          <div class="plot" style="--i:5"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-96 foot-science" src="img/buildings/science-lab.png" width="192" height="192" alt="Quillhaven Science Lab"><span class="plot-ground"></span></div><p>Science Lab</p></div>
+          <div class="plot" style="--i:6"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-64 foot-cottage" src="img/buildings/cottage.png" width="128" height="128" alt="Quillhaven Cottage"><span class="plot-ground"></span></div><p>Cottage</p></div>
+          <div class="plot" style="--i:7"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-64 foot-market" src="img/buildings/market-stall.png" width="128" height="128" alt="Quillhaven Market Stall"><span class="plot-ground"></span></div><p>Market Stall</p></div>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="teaser-title">
-      <div class="container teaser">
-        <div>
-          <h2 id="teaser-title">History world teaser</h2>
-          <p>History is the first world. A student should be able to walk through a scene, make one choice, and say what changed because of it.</p>
-          <ul class="plain-list">
-            <li>Illustrated scenes you can move through.</li>
-            <li>A choice with a consequence you can explain.</li>
-            <li>The tutoring skills, in play: source, claim, evidence.</li>
-          </ul>
-          <p>There is no build to open yet.</p>
-        </div>
-        <div class="art-slot art-slot-lg">
-          <p>History world teaser</p>
-          <p>Art coming soon</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="games-title">
+    <section class="section" aria-labelledby="tahne-title">
       <div class="container">
-        <h2 id="games-title">Games we are sketching</h2>
-        <p class="section-intro">Placeholder cards. There is nothing to play, and these titles can change.</p>
+        <h2 id="tahne-title">The town</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
+        <p class="section-intro">Tahne, Merlin, and Winston Wolf keep Quillhaven. The pixel-art town logo is still reserved.</p>
         <div class="grid-3">
           <article class="card">
-            <div class="art-slot art-slot-sm"><p>Scene art coming soon</p></div>
+            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-tahne" src="img/characters/tahne.png" width="128" height="128" alt="Tahne, the gryphon who founded Quillhaven"><span class="sprite-ground"></span></div>
+            <h3>Tahne</h3>
+            <p>Tahne is the gryphon who founded Quillhaven. He is wise, brave, and encouraging: a guide and a guardian of knowledge, not a monster. He holds a quill, and he greets new heroes in the town plaza.</p>
+          </article>
+          <article class="card">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-merlin" src="img/characters/merlin.png" width="128" height="128" alt="Merlin, the portal keeper at Quillhaven Academy"><span class="sprite-ground"></span></div>
+            <h3>Merlin</h3>
+            <p>Merlin is the wizard who keeps the Academy portals. Each portal opens on a subject. He does not hand you the answer. He hands you the way in.</p>
+          </article>
+          <article class="card">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-winston" src="img/characters/winston.png" width="128" height="128" alt="Winston Wolf, the night watchman of Quillhaven"><span class="sprite-ground"></span></div>
+            <h3>Winston Wolf</h3>
+            <p>Winston Wolf is the night watchman. Lantern in hand, he keeps watch over Quillhaven after dark and asks whether you can still prove what you learned that day.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="academy-title">
+      <div class="container">
+        <h2 id="academy-title">Quillhaven Academy</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
+        <p class="section-intro">Quillhaven Academy sits at the heart of town. Magic portals lead to subject worlds. Social studies is the first portal, because that is Ryan’s specialty. The plan is to open a portal for every subject. These four line up with the courses Griffin &amp; Quill tutors.</p>
+        <div class="card-grid cols-4">
+          <article class="card"><p class="stamp">First portal</p><h3>U.S. History</h3><p>Arguments, sources, and the people who had to live with the outcome.</p></article>
+          <article class="card"><p class="stamp">Portal</p><h3>Government</h3><p>Rules, rights, and who gets to write them.</p></article>
+          <article class="card"><p class="stamp">Portal</p><h3>Economics</h3><p>Choices, tradeoffs, and what a town gives up.</p></article>
+          <article class="card"><p class="stamp">Portal</p><h3>AP Human Geography</h3><p>Movement, place, and the map that argues.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="heroes-title">
+      <div class="container">
+        <h2 id="heroes-title">Student heroes</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
+        <p class="section-intro">Brittany, Ruth, and Rudy are the student heroes who explore Quillhaven, step through the portals, and go on learning quests. The idea is that every kid who plays gets to write their own legend.</p>
+        <div class="grid-3">
+          <article class="card">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-kid sprite-bob foot-brittany" src="img/characters/brittany.png" width="96" height="96" alt="Brittany, a student hero of Quillhaven"><span class="sprite-ground"></span></div>
+            <h3>Brittany</h3>
+            <p>Brittany explores Quillhaven, steps through the portals, and goes on learning quests.</p>
+          </article>
+          <article class="card">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-kid sprite-bob foot-ruth" src="img/characters/ruth.png" width="96" height="96" alt="Ruth, a student hero of Quillhaven"><span class="sprite-ground"></span></div>
+            <h3>Ruth</h3>
+            <p>Ruth explores Quillhaven, steps through the portals, and goes on learning quests.</p>
+          </article>
+          <article class="card">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-kid sprite-bob foot-rudy" src="img/characters/rudy.png" width="96" height="96" alt="Rudy, a student hero of Quillhaven"><span class="sprite-ground"></span></div>
+            <h3>Rudy</h3>
+            <p>Rudy explores Quillhaven, steps through the portals, and goes on learning quests.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="prove-title">
+      <div class="container">
+        <h2 id="prove-title">Play and prove</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
+        <p class="section-intro">Placeholder scenes. There is nothing to play, and these titles can change. A scene is not finished until the player can prove the idea.</p>
+        <div class="grid-3">
+          <article class="card">
             <p class="stamp">Placeholder</p>
             <h3>Westward Expansion</h3>
-            <p>A choices sim about routes, supplies, and the people who already lived on the land. Students have to say who gains and who pays.</p>
+            <p>A choices scene about routes, supplies, and the people who already lived on the land. The player has to say who gains and who pays.</p>
             <p class="price-note">Nothing to play yet.</p>
-            <p>Example audience: class or home, middle and high school. Not a final grade band.</p>
-          </article><article class="card">
-            <div class="art-slot art-slot-sm"><p>Scene art coming soon</p></div>
+          </article>
+          <article class="card">
             <p class="stamp">Placeholder</p>
             <h3>Economic Systems</h3>
             <p>A town tries different ways to make and trade goods, then lives with the result. Prices, shortages, and rules show up as choices.</p>
             <p class="price-note">Nothing to play yet.</p>
-            <p>Example audience: class or home, middle and high school. Not a final grade band.</p>
-          </article><article class="card">
-            <div class="art-slot art-slot-sm"><p>Scene art coming soon</p></div>
+          </article>
+          <article class="card">
             <p class="stamp">Placeholder</p>
             <h3>Two Sources</h3>
-            <p>A short game about two documents that disagree. The player says which claim the evidence can hold.</p>
+            <p>Two documents disagree. The player says which claim the evidence can hold, and why.</p>
             <p class="price-note">Nothing to play yet.</p>
-            <p>Example audience: class or home, middle and high school. Not a final grade band.</p>
           </article>
         </div>
       </div>
@@ -160,7 +196,7 @@
       <div class="container">
         <div class="callout">
           <h2 id="school-note-title">A note for schools</h2>
-          <p>The games are not licensed yet. If you are a school or a district, tell us what you would need. We will not sell a license from this mockup.</p>
+          <p>Quillhaven is not licensed yet. If you are a school or a district, tell us what you would need. We will not sell a license from this mockup.</p>
           <p><a class="btn btn-on-dark" href="schools.html">Schools and districts</a></p>
         </div>
       </div>
@@ -169,8 +205,8 @@
     <section class="section" id="waitlist" aria-labelledby="wait-title">
       <div class="container">
         <div class="form-card form-wrap">
-          <h2 id="wait-title">Waitlist</h2>
-          <p>Leave an adult email if you want a note when the History world has something to try. Use a parent, teacher, or school address, not a child's.</p>
+          <h2 id="wait-title">Demo coming soon</h2>
+          <p>Leave an adult email if you want a note when Quillhaven has something to try. Use a parent, teacher, or school address, not a child’s.</p>
           <form data-mockup action="#">
             <p class="thanks" data-thanks tabindex="-1" hidden>Thanks! (mockup: form not connected)</p>
             <div class="field">
@@ -194,26 +230,24 @@
         </div>
       </div>
     </section>
-
   </main>
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
         <a class="footer-brand" href="index.html">
-          <span class="logo-slot">Logo coming soon</span>
+          <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark-name">Griffin &amp; Quill</span>
         </a>
-        <p>A South Carolina studio for history tutoring, classroom resources, and games on the way.</p>
+        <p>Griffin &amp; Quill LLC is a South Carolina edtech company. Write your own legend. Learn it. Live it. Prove it.</p>
         <p><a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a></p>
-        <p>Placeholder email.</p>
       </div>
       <div>
         <p class="footer-label" id="foot-learn">Learn</p>
         <ul class="footer-links" aria-labelledby="foot-learn">
               <li><a href="index.html">Home</a></li>
               <li><a href="tutoring.html">Tutoring</a></li>
-              <li><a href="resources.html">Resources</a></li>
-              <li><a href="worlds.html" aria-current="page">Worlds</a></li>
+              <li><a href="resources.html">Shop</a></li>
+              <li><a href="worlds.html" aria-current="page">Quillhaven</a></li>
               <li><a href="schools.html">Schools</a></li>
         </ul>
       </div>
@@ -235,7 +269,7 @@
       </div>
     </div>
     <div class="container">
-      <p class="fineprint">© 2026 Griffin &amp; Quill LLC. Design mockup. Example prices, quotes, and product cards are not real offers or reviews.</p>
+      <p class="fineprint">© 2026 Griffin &amp; Quill LLC. Design mockup. Tutoring rates are published. Shop prices and quote slots are samples, not reviews.</p>
     </div>
   </footer>
   <script src="js/main.js"></script>

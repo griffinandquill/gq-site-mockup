@@ -2,7 +2,7 @@
 
 Design mockup for Griffin & Quill LLC, a new South Carolina edtech studio. This is a review site for the owner. It is not a launch. The mockup is published at https://www.griffinandquill.com and stays noindex until you say to launch.
 
-Plain static HTML, CSS, and a small JavaScript file. No build step, no framework, no analytics, no cookies, and no third-party scripts except Google Fonts. It can be published as-is on GitHub Pages or Cloudflare Pages by serving this folder.
+Plain static HTML, CSS, and a small JavaScript file. No build step, no framework, no analytics, no cookies, and no third-party scripts. It can be published as-is on GitHub Pages or Cloudflare Pages by serving this folder.
 
 ## Preview locally
 
@@ -43,7 +43,7 @@ A passing run prints green tests and writes `verify-results/report/index.html`. 
 
 The local checker is not `python3 -m http.server`. Python does not serve `404.html` for a bad path. `npm run verify` starts its own server on port 4173 and stops it when the run finishes. Leave `BASE_URL` unset for that local server. Set `BASE_URL` only when you mean the live origin.
 
-Merriweather and Lato load from Google Fonts when you are online. Offline, the pages fall back to Georgia and Arial.
+Merriweather and Lato are self-hosted in `fonts/`. Offline, the pages fall back to Georgia and Arial. There is no third-party font request.
 
 ## Pages
 
@@ -51,8 +51,8 @@ Merriweather and Lato load from Google Fonts when you are online. Offline, the p
 | --- | --- |
 | Home | `index.html` |
 | Tutoring | `tutoring.html` |
-| Classroom resources (TPT) | `resources.html` |
-| EdTech / Worlds | `worlds.html` |
+| Shop (TPT resources) | `resources.html` |
+| Quillhaven | `worlds.html` |
 | For schools and districts | `schools.html` |
 | About | `about.html` |
 | Contact | `contact.html` |
@@ -61,28 +61,30 @@ Merriweather and Lato load from Google Fonts when you are online. Offline, the p
 | Terms of Use (draft) | `terms.html` |
 | 404 | `404.html` |
 
-Shared files: `css/styles.css`, `js/main.js`, `favicon.svg`.
+Shared files: `css/styles.css`, `js/main.js`, `js/products.js`, `fonts/`, `assets/`, `favicon.svg`.
 
-JavaScript only opens the mobile menu and shows a thank-you note on forms. Forms do not send anywhere.
+JavaScript opens the mobile menu, shows a thank-you note on forms, reveals sections on scroll, types the home tagline, and shifts the Quillhaven panorama. Forms do not send anywhere. Motion is skipped when the browser asks for reduced motion.
 
 ## Placeholders that need real content
 
-- **Logo.** Header and footer use a box labeled "Logo coming soon". The About page repeats it. The gryphon-and-quill mark is still with a human artist. Do not drop in AI art.
-- **Mascot.** Boxes are labeled "Mascot art coming soon". Do not name the mascot on the site until the trademark check is finished. Do not use AI art.
-- **Founder bio.** The About page says `[Founder bio TBD]`. Do not add a school or employer name until the real bio is approved.
-- **Pricing.** Every tutoring price is an example. Real rates, session length, and group size are not set.
-- **TPT links.** "View on TPT" and "Follow our TPT store" use `href="#"`. Replace them with the live store URLs. Product cards are sample titles for the layout, not a catalog.
+- **Logo.** Header, footer, and the home hero use the final griffin-and-quill icon (`assets/logo-icon.svg`): white gryphon, gold quill, navy field. Favicon files in `/assets/icons/` are the designer’s web set (`favicon.ico`, `favicon-32.png`, `apple-touch-icon-180.png`). `site.webmanifest` points at the icons that ship with this mockup.
+- **Quillhaven art.** The Quillhaven page reserves a note for a pixel-art town logo. The hero is a pre-composed dusk panorama (`tools/compose-panorama.py` writes `img/quillhaven/sky.png`, `far.png`, and `town.png` at 640×256). The page shows those layers at 2× with pixelated scaling, and narrow screens pan across that same picture. The town map still uses the building sprites in `img/buildings/` at 2× (256px, 192px, and 128px), with each sprite’s foot padding pulled down onto its plot. Tahne, Merlin, Winston Wolf, Brittany, Ruth, and Rudy use the pixel sprites in `img/characters/`. Adults render at 128px (2× a 64px canvas) and the kids at 96px (2× a 48px canvas), standing on a ground line in their cards.
+- **Founder bio.** The About page names Ryan Mayer, Battery Creek High School, the four social studies courses, more than seven years of teaching, and a Master’s in History Education. A photo and any longer bio are still open.
+- **Pricing.** Tutoring rates match the Stripe test products and are shown as published prices. Checkout links are Stripe test-mode payment links. They do not charge a live card. Shop prices are still samples.
+- **TPT links.** "View on TPT" and "Follow our TPT store" use `href="#"`. The TPT store name and URL are still open. Product cards are sample titles for the layout, not a catalog.
 - **Free sample.** The Resources callout is a placeholder until a real freebie exists on TPT.
-- **Email.** `hello@griffinandquill.com` is a placeholder. There is no street address and no phone number on purpose.
+- **Email.** `hello@griffinandquill.com` is the studio contact. X is `@griffinandquill`. There is no street address and no phone number on purpose. Forms still do not send.
 - **Legal pages.** Privacy and Terms show the banner "Draft placeholder, pending attorney review." The privacy page states that the kids' games are designed to collect no personal data (COPPA-minded). A lawyer still has to review both pages.
-- **Games.** The History world teaser, scene boxes, and the three game cards (Westward Expansion, Economic Systems, Two Sources) are placeholders. Nothing is playable.
-- **Testimonials.** The home strip is labeled as example quotes. They are not reviews and not real customers.
+- **Quillhaven.** The town page, academy portals, and the three scene cards (Westward Expansion, Economic Systems, Two Sources) are placeholders. Nothing is playable. The demo button joins the waitlist layout.
+- **Testimonials.** The home strip is labeled as empty placeholder slots. They are not reviews.
+- **Stripe.** Each tutoring package links to its Stripe test-mode payment link. Test mode does not charge a live card. Swap those URLs for live payment links before a public launch.
+- **Motion.** Scroll reveal, a typewriter tagline, ink underlines, card lifts, a Quillhaven parallax panorama, a map reveal, and a short page fade run only when the visitor has not asked for reduced motion. They are CSS and a few lines of vanilla JS.
 - **Forms.** Consult, newsletter, waitlist, schools inquiry, and contact all stop on the page with "Thanks! (mockup: form not connected)". Wire them up only on the real site.
 - **Search engines.** Pages send `noindex`, and `robots.txt` disallows everything. Remove both before any public launch.
-- **Fonts.** Decide whether Google Fonts stay or the font files are hosted with the site.
+- **Fonts.** Merriweather and Lato ship with the site. A later pass can still change the type if Ryan wants a different pair.
 
 ## Brand
 
 - Navy `#1F2A44`, gold `#B8860B`, cream `#FAF6EA`, charcoal `#2B2B2B`, burgundy `#7A2E2E`.
-- Gold is used for borders, shadows, and the History planet. It is not used for text, because gold on cream does not pass WCAG AA.
+- Gold is used for rules, the quill, and large bold tagline text on navy. It is not used for small text, or for any text on cream, because gold on cream does not pass WCAG AA.
 - Titles: Merriweather. Body: Lato.

@@ -12,7 +12,7 @@ FAQ questions are disclosure widgets. More than one can be open. Placeholder sto
 
 - Open FAQ and choose a question summary.
 - Open Tutoring and choose a question under Tutoring questions.
-- Open Resources and choose `View on TPT` on a sample product card.
+- Open Shop (`resources.html`) and choose the sample product whose link name includes `The Road to Revolution`.
 
 ## Driving it with Playwright
 
@@ -23,7 +23,7 @@ Preconditions:
 
 - **Open two questions.** Run `npm run verify -- --grep "faq questions"`. The test clicks the first two summaries on `/faq.html`. Both `details` elements have `open` true, and both `.answer` blocks are visible.
 - **Open a tutoring question.** The same test opens the first question in `#tutoring-questions` on `/tutoring.html` and expects the answer to contain `online first`.
-- **Placeholder.** Run `npm run verify -- --grep "placeholder product"`. The link whose name contains `The Road to Revolution` is clicked twice. One status reads `Placeholder link. Nothing opens on this mockup.` The URL stays `/resources.html`.
+- **Placeholder.** Run `npm run verify -- --grep "placeholder product"`. The link whose name contains `The Road to Revolution` is clicked twice. One status reads `Placeholder link. Nothing opens on this mockup.` The URL stays `/resources.html`. The visible control says `Buy on TPT`.
 - **Proof.** The report rows for those two tests are green.
 
 ## Gotchas

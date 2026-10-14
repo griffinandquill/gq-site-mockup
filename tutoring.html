@@ -3,14 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Online 1:1 and small-group tutoring in history and social studies, with example pricing and a consult form.">
+  <meta name="description" content="Online tutoring in U.S. History, Government, Economics, and AP Human Geography from Griffin &amp; Quill in South Carolina.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#1F2A44">
   <title>Tutoring | Griffin &amp; Quill</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&amp;family=Merriweather:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+  <meta property="og:title" content="Tutoring | Griffin &amp; Quill">
+  <meta property="og:description" content="Online tutoring in U.S. History, Government, Economics, and AP Human Geography from Griffin &amp; Quill in South Carolina.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.griffinandquill.com/tutoring.html">
+  <meta property="og:image" content="assets/og.png">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Placeholder icons. Replace the files in /assets/icons/ with the final set. -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon-180.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <link rel="preload" href="fonts/merriweather-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
 </head>
@@ -21,10 +32,10 @@
     <div class="header-bar">
       <div class="container header-inner">
         <a class="brand" href="index.html">
-          <span class="logo-slot">Logo coming soon</span>
+          <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark">
             <span class="wordmark-name">Griffin &amp; Quill</span>
-            <span class="wordmark-meta">South Carolina</span>
+            <span class="wordmark-meta">An Edtech Company</span>
           </span>
         </a>
         <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
@@ -35,8 +46,8 @@
           <ul class="nav-list">
             <li><a href="index.html">Home</a></li>
             <li><a href="tutoring.html" aria-current="page">Tutoring</a></li>
-            <li><a href="resources.html">Resources</a></li>
-            <li><a href="worlds.html">Worlds</a></li>
+            <li><a href="resources.html">Shop</a></li>
+            <li><a href="worlds.html">Quillhaven</a></li>
             <li><a href="schools.html">Schools</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="faq.html">FAQ</a></li>
@@ -48,22 +59,38 @@
   </header>
   <main id="main" tabindex="-1">
     <noscript>
-      <p class="container note">JavaScript is off, so the menu button and the thank-you note will not run. Page links still work. Forms are not connected to a server.</p>
+      <p class="container note">JavaScript is off, so the menu button, the shop cards, and the thank-you note will not run. Page links still work. Forms are not connected to a server.</p>
     </noscript>
 
     <div class="container page-hero">
       <p class="eyebrow">Tutoring</p>
       <h1>One student, one plan, online.</h1>
-      <p class="lede">1:1 and small-group tutoring in history and social studies, plus study skills and test prep. You start with a free consult. Nothing is billed from this mockup.</p>
+      <p class="lede">1:1 and small-group tutoring in the social studies courses Ryan teaches at Battery Creek High School: U.S. History and the Constitution (USHC), Economics, AP Human Geography, and Government. A free consult comes before a paid plan.</p>
       <div class="cluster">
-        <a class="btn btn-primary" href="#book">Book a free consult</a>
-        <a class="btn btn-secondary" href="#pricing">Example pricing</a>
+        <a class="btn btn-primary" href="#pricing">See rates</a>
+        <a class="btn btn-secondary" href="#book">Request a consult</a>
       </div>
+      <p class="note">The rates below are the published prices. Each Book button opens that package on Stripe in test mode. Test mode does not charge a live card.</p>
     </div>
+
+    <section class="section" id="subjects" aria-labelledby="subjects-title">
+      <div class="container">
+        <h2 id="subjects-title">Subjects</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
+        <div class="card-grid cols-4">
+          <article class="card"><h3>U.S. History</h3><p>U.S. History and the Constitution (USHC): colonial arguments through modern policy, with the source beside the textbook story. A five-session end-of-course boot camp is on the rate card.</p></article>
+          <article class="card"><h3>Government</h3><p>How rules get made, who holds power, and how to read a founding text.</p></article>
+          <article class="card"><h3>Economics</h3><p>Scarcity, markets, and the choices a household or a town actually has.</p></article>
+          <article class="card"><h3>AP Human Geography</h3><p>Why people move, where they settle, and how a map argues. Often called APHG.</p></article>
+        </div>
+        <p class="section-intro space-top">World History, study skills, and test prep sit inside these courses. They are not a separate brand. Study skills means notes, reading a prompt, and turning a source into a paragraph. Test prep explains why an answer works.</p>
+      </div>
+    </section>
 
     <section class="section" id="offer" aria-labelledby="offer-title">
       <div class="container">
-        <h2 id="offer-title">What is offered</h2>
+        <h2 id="offer-title">Formats</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
         <div class="grid-2">
           <article class="card">
             <h3>1:1</h3>
@@ -71,24 +98,8 @@
           </article>
           <article class="card">
             <h3>Small group</h3>
-            <p>A small group, kept small enough that every student speaks. Useful when a few students are stuck on the same course.</p>
+            <p>A few students stuck on the same course. A group is 2 to 4 students, so every student speaks.</p>
           </article>
-        </div>
-        <p class="section-intro space-top">Study skills and test prep are part of tutoring, not a separate brand. They stay tied to the history or social studies course in front of the student.</p>
-      </div>
-    </section>
-
-    <section class="section" id="subjects" aria-labelledby="subjects-title">
-      <div class="container">
-        <h2 id="subjects-title">Subjects</h2>
-        <div class="card-grid">
-          <article class="card"><h3>U.S. History</h3><p>Colonial arguments through modern policy, with sources beside the textbook story.</p></article>
-<article class="card"><h3>World History</h3><p>Trade, empire, revolution, and the people who lived through them.</p></article>
-<article class="card"><h3>Government</h3><p>How rules get made, who holds power, and how to read a founding text.</p></article>
-<article class="card"><h3>Economics</h3><p>Scarcity, markets, and the choices a household or a town actually has.</p></article>
-<article class="card"><h3>Human Geography</h3><p>Why people move, where they settle, and how maps argue.</p></article>
-<article class="card"><h3>Study skills</h3><p>Notes, reading a prompt, and turning a source into a paragraph.</p></article>
-<article class="card"><h3>Test prep</h3><p>Practice that explains why an answer works, tied to the course the student is in.</p></article>
         </div>
       </div>
     </section>
@@ -96,6 +107,7 @@
     <section class="section" id="steps" aria-labelledby="steps-title">
       <div class="container">
         <h2 id="steps-title">How tutoring starts</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
         <ol class="steps grid-3">
           <li class="card">
             <p class="step-num" aria-hidden="true">1</p>
@@ -118,29 +130,63 @@
 
     <section class="section" id="pricing" aria-labelledby="pricing-title">
       <div class="container">
-        <h2 id="pricing-title">Example pricing</h2>
-        <p class="section-intro">These tiers show the layout only. They are not the rates Griffin &amp; Quill charges. Real prices, session length, and group size are not set. Do not budget from this page.</p>
+        <h2 id="pricing-title">Tutoring rates</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
+        <p class="section-intro">These are the published rates for online social studies tutoring. A Book button opens that package on Stripe in test mode, which does not charge a live card. The consult form on this mockup still does not send.</p>
         <div class="grid-3">
           <article class="card">
-            <p class="stamp">Example</p>
+            <h3>Intro session</h3>
+            <p class="price">$35 <span>for 60 minutes</span></p>
+            <p>First online session for a new family. One intro session per family.</p>
+            <p><a class="btn btn-primary" href="https://buy.stripe.com/test_fZu7sL2yY1zGcQWaMo9sk00">Book<span class="visually-hidden"> intro session, $35, Stripe test checkout</span></a></p>
+          </article>
+          <article class="card">
             <h3>Single session</h3>
-            <p class="price">$45 <span>per session</span></p>
-            <p class="price-note">Example price. Not a real rate.</p>
-            <p>One online meeting for one student. Example length used for this layout: 50 minutes.</p>
+            <p class="price">$50 <span>for 60 minutes</span></p>
+            <p>One online 1:1 social studies session.</p>
+            <p><a class="btn btn-primary" href="https://buy.stripe.com/test_28E6oHflK92804a9Ik9sk01">Book<span class="visually-hidden"> single session, $50, Stripe test checkout</span></a></p>
           </article>
           <article class="card">
-            <p class="stamp">Example</p>
-            <h3>Four-session block</h3>
-            <p class="price">$160 <span>for four sessions</span></p>
-            <p class="price-note">Example price. Not a real rate.</p>
-            <p>A sample monthly rhythm for the layout, plus a short plan. Not a package you can buy yet.</p>
+            <h3>Middle school session</h3>
+            <p class="price">$40 <span>for 45 minutes</span></p>
+            <p>One online 1:1 session for grades 6 to 8.</p>
+            <p><a class="btn btn-primary" href="https://buy.stripe.com/test_dRm8wPgpOfqw18e6w89sk02">Book<span class="visually-hidden"> middle school session, $40, Stripe test checkout</span></a></p>
           </article>
           <article class="card">
-            <p class="stamp">Example</p>
+            <h3>Essay and DBQ intensive</h3>
+            <p class="price">$75 <span>for 90 minutes</span></p>
+            <p>One online 1:1 session for essay and DBQ writing.</p>
+            <p><a class="btn btn-primary" href="https://buy.stripe.com/test_fZufZhflK4LS8AG3jW9sk03">Book<span class="visually-hidden"> essay and DBQ intensive, $75, Stripe test checkout</span></a></p>
+          </article>
+          <article class="card">
+            <h3>4-session pack</h3>
+            <p class="price">$180 <span>for four sessions</span></p>
+            <p>Four prepaid 60-minute online 1:1 sessions ($45 a session). Use them within 60 days.</p>
+            <p><a class="btn btn-primary" href="https://buy.stripe.com/test_aFadR96Pe7Y46syaMo9sk04">Book<span class="visually-hidden"> 4-session pack, $180, Stripe test checkout</span></a></p>
+          </article>
+          <article class="card">
+            <h3>8-session pack</h3>
+            <p class="price">$340 <span>for eight sessions</span></p>
+            <p>Eight prepaid 60-minute online 1:1 sessions ($42.50 a session). Use them within 90 days.</p>
+            <p><a class="btn btn-primary" href="https://buy.stripe.com/test_cNi9AT0qQcekaIO8Eg9sk05">Book<span class="visually-hidden"> 8-session pack, $340, Stripe test checkout</span></a></p>
+          </article>
+          <article class="card">
             <h3>Small-group seat</h3>
-            <p class="price">$25 <span>per student, per session</span></p>
-            <p class="price-note">Example price. Not a real rate.</p>
-            <p>Example group size used for this layout: 3 to 5 students. Not a final policy.</p>
+            <p class="price">$25 <span>per student</span></p>
+            <p>One seat in a 60-minute online small group of 2 to 4 students.</p>
+            <p><a class="btn btn-primary" href="https://buy.stripe.com/test_9B614n4H66U07wCaMo9sk06">Book<span class="visually-hidden"> small-group seat, $25, Stripe test checkout</span></a></p>
+          </article>
+          <article class="card">
+            <h3>USHC EOC boot camp</h3>
+            <p class="price">$125 <span>per student</span></p>
+            <p>Five 55-minute online sessions to prepare for the South Carolina U.S. History and Constitution end-of-course exam.</p>
+            <p><a class="btn btn-primary" href="https://buy.stripe.com/test_9B6cN53D21zGaIO3jW9sk07">Book<span class="visually-hidden"> USHC EOC boot camp, $125, Stripe test checkout</span></a></p>
+          </article>
+          <article class="card">
+            <h3>AP Human Geography boot camp</h3>
+            <p class="price">$150 <span>per student</span></p>
+            <p>Six 55-minute online sessions to prepare for the AP Human Geography exam.</p>
+            <p><a class="btn btn-primary" href="https://buy.stripe.com/test_fZu5kDflK3HO8AG8Eg9sk08">Book<span class="visually-hidden"> AP Human Geography boot camp, $150, Stripe test checkout</span></a></p>
           </article>
         </div>
       </div>
@@ -149,31 +195,32 @@
     <section class="section" id="tutoring-questions" aria-labelledby="tfaq-title">
       <div class="container">
         <h2 id="tfaq-title">Questions</h2>
+        <div class="rule" aria-hidden="true"><span></span></div>
         <div class="form-wrap">
           <details class="faq">
-          <summary>Is tutoring online?</summary>
-          <div class="answer"><p>Yes. Tutoring is online first. You meet by video. If you need a different setup, say so on the consult form. We will tell you if we can do it.</p></div>
-        </details>
-<details class="faq">
-          <summary>What subjects do you cover?</summary>
-          <div class="answer"><p>U.S. History, World History, Government, Economics, and Human Geography. Sessions can also focus on study skills and test prep for those courses.</p></div>
-        </details>
-<details class="faq">
-          <summary>Who is tutoring for?</summary>
-          <div class="answer"><p>Parents, homeschoolers, and students, including adults who want to study history for themselves. If you are a student, use a parent or guardian email on the form.</p></div>
-        </details>
-<details class="faq">
-          <summary>How does a new student start?</summary>
-          <div class="answer"><p>Three steps. A free consult, then a written plan, then sessions. The consult does not lock you into a paid plan.</p></div>
-        </details>
-<details class="faq">
-          <summary>Do you tutor small groups?</summary>
-          <div class="answer"><p>Yes. Small groups sit alongside 1:1 tutoring. A group stays small enough that every student speaks. The example pricing card shows a sample group rate, not a final price.</p></div>
-        </details>
-<details class="faq">
-          <summary>How much does tutoring cost?</summary>
-          <div class="answer"><p>Real rates are not set. The Tutoring page shows example tiers so you can see the layout. Each one is marked as an example. Do not budget from those numbers.</p></div>
-        </details>
+            <summary>Is tutoring online?</summary>
+            <div class="answer"><p>Yes. Tutoring is online first. You meet by video. If you need a different setup, say so on the consult form. We will tell you if we can do it.</p></div>
+          </details>
+          <details class="faq">
+            <summary>What subjects do you cover?</summary>
+            <div class="answer"><p>U.S. History, Government, Economics, and AP Human Geography. World History, study skills, and test prep can be the focus of a session when they belong to the course the student is in.</p></div>
+          </details>
+          <details class="faq">
+            <summary>Who is tutoring for?</summary>
+            <div class="answer"><p>Parents, homeschoolers, and students, including adults who want to study for themselves. If you are a student, use a parent or guardian email on the form.</p></div>
+          </details>
+          <details class="faq">
+            <summary>How does a new student start?</summary>
+            <div class="answer"><p>Three steps. A free consult, then a written plan, then sessions. The consult does not lock you into a paid plan.</p></div>
+          </details>
+          <details class="faq">
+            <summary>Do you tutor small groups?</summary>
+            <div class="answer"><p>Yes. A small-group seat is $25 per student for a 60-minute online session. A group is 2 to 4 students.</p></div>
+          </details>
+          <details class="faq">
+            <summary>How much does tutoring cost?</summary>
+            <div class="answer"><p>The published rates are on this page. A 60-minute intro session is $35, one per family. A 60-minute 1:1 session is $50. A 45-minute middle school session is $40. A 90-minute essay and DBQ intensive is $75. A 4-session pack is $180. An 8-session pack is $340. A small-group seat is $25. The USHC EOC boot camp is $125. The AP Human Geography boot camp is $150. Book buttons open Stripe in test mode and do not charge a live card.</p></div>
+          </details>
           <p><a href="faq.html">More questions</a></p>
         </div>
       </div>
@@ -183,7 +230,7 @@
       <div class="container">
         <div class="form-card form-wrap">
           <h2 id="book-title">Book a free consult</h2>
-          <p>Tell us who the sessions are for and which course is in the way. If you are a student, use a parent or guardian email.</p>
+          <p>Tell us who the sessions are for and which course is in the way. If you are a student, use a parent or guardian email. Paid packages are the Book buttons above. This consult form does not send.</p>
           <form data-mockup action="#">
             <p class="thanks" data-thanks tabindex="-1" hidden>Thanks! (mockup: form not connected)</p>
             <div class="form-grid two">
@@ -236,31 +283,29 @@
               <textarea id="consult-note" name="note"></textarea>
             </div>
             <button class="btn btn-primary" type="submit">Request a consult</button>
-            <p class="note">Do not include a child's full name or other private details. This form is a visual mockup and does not send.</p>
+            <p class="note">Do not include a child’s full name or other private details. This form is a visual mockup and does not send.</p>
           </form>
         </div>
       </div>
     </section>
-
   </main>
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
         <a class="footer-brand" href="index.html">
-          <span class="logo-slot">Logo coming soon</span>
+          <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark-name">Griffin &amp; Quill</span>
         </a>
-        <p>A South Carolina studio for history tutoring, classroom resources, and games on the way.</p>
+        <p>Griffin &amp; Quill LLC is a South Carolina edtech company. Write your own legend. Learn it. Live it. Prove it.</p>
         <p><a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a></p>
-        <p>Placeholder email.</p>
       </div>
       <div>
         <p class="footer-label" id="foot-learn">Learn</p>
         <ul class="footer-links" aria-labelledby="foot-learn">
               <li><a href="index.html">Home</a></li>
               <li><a href="tutoring.html" aria-current="page">Tutoring</a></li>
-              <li><a href="resources.html">Resources</a></li>
-              <li><a href="worlds.html">Worlds</a></li>
+              <li><a href="resources.html">Shop</a></li>
+              <li><a href="worlds.html">Quillhaven</a></li>
               <li><a href="schools.html">Schools</a></li>
         </ul>
       </div>
@@ -282,7 +327,7 @@
       </div>
     </div>
     <div class="container">
-      <p class="fineprint">© 2026 Griffin &amp; Quill LLC. Design mockup. Example prices, quotes, and product cards are not real offers or reviews.</p>
+      <p class="fineprint">© 2026 Griffin &amp; Quill LLC. Design mockup. Tutoring rates are published. Shop prices and quote slots are samples, not reviews.</p>
     </div>
   </footer>
   <script src="js/main.js"></script>
