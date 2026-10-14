@@ -1130,13 +1130,13 @@ legend { padding: 0 0.3rem; }
 }
 
 /* Source-pixel padding × 2, so the opaque foot lands on the ground line. */
-.foot-academy { --pad-l: 30; --pad-r: 40; --pad-b: 56; }
-.foot-town-hall { --pad-l: 50; --pad-r: 52; --pad-b: 40; }
-.foot-map-room { --pad-l: 58; --pad-r: 60; --pad-b: 30; }
-.foot-printers { --pad-l: 36; --pad-r: 34; --pad-b: 36; }
-.foot-science { --pad-l: 44; --pad-r: 46; --pad-b: 42; }
-.foot-cottage { --pad-l: 26; --pad-r: 32; --pad-b: 28; }
-.foot-market { --pad-l: 26; --pad-r: 24; --pad-b: 24; }
+.foot-academy { --pad-b: 56; }
+.foot-town-hall { --pad-b: 40; }
+.foot-map-room { --pad-b: 30; }
+.foot-printers { --pad-b: 36; }
+.foot-science { --pad-b: 42; }
+.foot-cottage { --pad-b: 28; }
+.foot-market { --pad-b: 24; }
 .foot-tahne { --pad-b: 6; }
 .foot-merlin { --pad-b: 2; }
 .foot-winston { --pad-b: 4; }
@@ -1158,8 +1158,7 @@ legend { padding: 0 0.3rem; }
 .plot-stage { padding-bottom: 14px; }
 
 .sprite-ground,
-.plot-ground,
-.qh-ground {
+.plot-ground {
   position: absolute;
   left: 0;
   right: 0;
@@ -1172,7 +1171,6 @@ legend { padding: 0 0.3rem; }
 
 .sprite-ground { height: 12px; left: 18%; right: 18%; }
 .plot-ground { height: 14px; }
-.qh-ground { height: var(--ground); box-shadow: inset 0 4px 0 #1a2e1c; }
 
 .sprite-stand .pixel-sprite,
 .plot-stage .pixel-sprite {
@@ -1238,80 +1236,35 @@ legend { padding: 0 0.3rem; }
 }
 
 .qh-scene {
-  --ground: 22px;
   position: relative;
-  height: 328px;
+  height: 456px;
   margin: 0 0 1.35rem;
   overflow-x: auto;
   overflow-y: hidden;
+  overscroll-behavior-x: contain;
   border: 4px solid #0b1020;
-  background: #243456;
-  image-rendering: pixelated;
+  background: #141c30;
   scrollbar-color: #b8860b #1a243c;
 }
 
-.qh-sky,
-.qh-clouds,
-.qh-town {
+.qh-panorama {
+  position: relative;
+  width: 1280px;
+  height: 512px;
+  max-width: none;
+}
+
+.qh-layer {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 512px;
+  max-width: none;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
   pointer-events: none;
 }
-
-.qh-sky {
-  background:
-    linear-gradient(#7f93b8, transparent 55%),
-    repeating-linear-gradient(0deg, rgba(250, 246, 234, 0.05) 0 2px, transparent 2px 8px);
-}
-
-.cloud {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: #faf6ea;
-  box-shadow:
-    8px 0 #faf6ea, 16px 0 #faf6ea, 24px 0 #faf6ea,
-    -8px 8px #faf6ea, 0 8px #faf6ea, 8px 8px #faf6ea, 16px 8px #faf6ea, 24px 8px #faf6ea, 32px 8px #faf6ea,
-    0 16px #faf6ea, 8px 16px #faf6ea, 16px 16px #faf6ea;
-  opacity: 0.92;
-}
-
-.cloud.c1 { top: 28px; left: 8%; }
-.cloud.c2 { top: 52px; left: 46%; transform: scale(0.8); }
-.cloud.c3 { top: 22px; left: 72%; transform: scale(0.65); }
-
-.qh-town {
-  position: absolute;
-  inset: auto;
-  left: 0;
-  bottom: 0;
-  z-index: 1;
-  width: max-content;
-  min-width: 100%;
-  height: auto;
-}
-
-.qh-town-shift {
-  position: relative;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 14px;
-  width: max-content;
-  min-width: 100%;
-  padding: 0 8px var(--ground);
-  box-sizing: border-box;
-}
-
-.qh-town-shift .pixel-sprite {
-  margin: 0 calc(var(--pad-r, 0) * -1px) calc(var(--pad-b, 0) * -1px) calc(var(--pad-l, 0) * -1px);
-}
-
-.qh-town-shift .accent-gryphon { left: 12px; bottom: 44px; top: auto; }
-.qh-scene .spark-a { top: 18px; left: 30%; }
-.qh-scene .spark-b { top: 46px; right: 18%; }
-.qh-scene .spark-c { top: 70px; left: 62%; }
 
 .town-map {
   display: grid;

@@ -173,12 +173,19 @@
 
   function setupParallax() {
     var scene = document.querySelector(".qh-scene");
-    if (!scene || reduceMotion) return;
+    if (!scene) return;
+    var frame = scene.querySelector(".qh-panorama");
+    if (frame) {
+      scene.scrollLeft = Math.round((frame.offsetWidth - scene.clientWidth) / 2);
+    }
+    if (reduceMotion) return;
     var layers = scene.querySelectorAll("[data-parallax]");
     var ticking = false;
     function apply() {
       var rect = scene.getBoundingClientRect();
-      var shift = Math.max(-70, Math.min(70, -rect.top * 0.2));
+      var viewH = window.innerHeight || document.documentElement.clientHeight;
+      var delta = rect.top + rect.height / 2 - viewH * 0.42;
+      var shift = Math.max(-36, Math.min(36, -delta * 0.06));
       layers.forEach(function (layer) {
         var depth = Number(layer.getAttribute("data-parallax")) || 0;
         layer.style.transform = "translate3d(0," + (shift * depth).toFixed(2) + "px,0)";
