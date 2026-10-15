@@ -3,6 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { inflateSync } from "node:zlib";
 import { copy, forms, pages, viewports } from "../verify/catalog.mjs";
 import { ROOT, publishedRelPaths, rootHtmlFiles } from "../verify/files.mjs";
 
@@ -202,6 +203,150 @@ test("a placeholder product link notes that nothing opens", async ({ page }) => 
   await link.click();
   await expect(note).toHaveCount(1);
   await expect(page).toHaveURL(/\/resources\.html$/);
+});
+
+const sceneNpcs = [
+  { name: "Bramble", selector: ".qh-bramble", sheet: "bramble-idle.png" },
+  { name: "Merlin", selector: ".qh-merlin", sheet: "merlin-idle.png" },
+  { name: "Tahne", selector: ".qh-tahne", sheet: "tahne-idle.png" },
+  { name: "Winston", selector: ".qh-winston-east", sheet: "winston-walk-east.png" },
+] as const;
+
+test("quillhaven npc sprites have size inside the panorama", async ({ page }) => {
+  for (const width of [1280, 375]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/worlds.html");
+    const scene = page.locator(".qh-scene");
+    await expect(scene).toBeVisible();
+    for (const npc of sceneNpcs) {
+      await scene.evaluate((el, selector) => {
+        const node = el.querySelector(selector);
+        if (!node) throw new Error(`missing ${selector}`);
+        const sceneBox = el.getBoundingClientRect();
+        const box = node.getBoundingClientRect();
+        const next = el.scrollLeft + (box.left - sceneBox.left) - (el.clientWidth - box.width) / 2;
+        el.scrollLeft = Math.max(0, next);
+      }, npc.selector);
+      const box = await scene.evaluate((el, selector) => {
+        const node = el.querySelector(selector);
+        if (!node) throw new Error(`missing ${selector}`);
+        const sceneBox = el.getBoundingClientRect();
+        const rect = node.getBoundingClientRect();
+        const style = getComputedStyle(node);
+        return {
+          width: rect.width,
+          height: rect.height,
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          sceneLeft: sceneBox.left,
+          sceneRight: sceneBox.right,
+          sceneTop: sceneBox.top,
+          sceneBottom: sceneBox.bottom,
+          opacity: style.opacity,
+          backgroundImage: style.backgroundImage,
+        };
+      }, npc.selector);
+      expect(box.width, `${npc.name} width at ${width}`).toBeGreaterThan(20);
+      expect(box.height, `${npc.name} height at ${width}`).toBeGreaterThan(20);
+      expect(box.opacity, npc.name).toBe("1");
+      expect(box.backgroundImage, npc.name).toContain(npc.sheet);
+      expect(box.left, `${npc.name} left`).toBeGreaterThanOrEqual(box.sceneLeft - 1);
+      expect(box.right, `${npc.name} right`).toBeLessThanOrEqual(box.sceneRight + 1);
+      expect(box.top, `${npc.name} top`).toBeGreaterThanOrEqual(box.sceneTop - 1);
+      expect(box.bottom, `${npc.name} bottom`).toBeLessThanOrEqual(box.sceneBottom + 1);
+      await expect(page.locator(npc.selector)).toBeVisible();
+    }
+  }
+});
+
+function creamPixelCount(png: Buffer) {
+  let offset = 8;
+  let width = 0;
+  let height = 0;
+  let colorType = 6;
+  const chunks: Buffer[] = [];
+  while (offset + 8 <= png.length) {
+    const length = png.readUInt32BE(offset);
+    const type = png.toString("ascii", offset + 4, offset + 8);
+    const data = png.subarray(offset + 8, offset + 8 + length);
+    if (type === "IHDR") {
+      width = data.readUInt32BE(0);
+      height = data.readUInt32BE(4);
+      colorType = data[9];
+    } else if (type === "IDAT") {
+      chunks.push(Buffer.from(data));
+    } else if (type === "IEND") {
+      break;
+    }
+    offset += 12 + length;
+  }
+  const channels = colorType === 2 ? 3 : 4;
+  const inflated = inflateSync(Buffer.concat(chunks));
+  const rowSize = width * channels;
+  const pixels = Buffer.alloc(width * height * channels);
+  let src = 0;
+  for (let y = 0; y < height; y += 1) {
+    const filter = inflated[src];
+    src += 1;
+    const rowStart = y * rowSize;
+    for (let i = 0; i < rowSize; i += 1) {
+      const raw = inflated[src];
+      src += 1;
+      const left = i >= channels ? pixels[rowStart + i - channels] : 0;
+      const up = y > 0 ? pixels[rowStart - rowSize + i] : 0;
+      const upLeft = y > 0 && i >= channels ? pixels[rowStart - rowSize + i - channels] : 0;
+      let value = raw;
+      if (filter === 1) value = (raw + left) & 255;
+      else if (filter === 2) value = (raw + up) & 255;
+      else if (filter === 3) value = (raw + Math.floor((left + up) / 2)) & 255;
+      else if (filter === 4) {
+        const guess = left + up - upLeft;
+        const leftDist = Math.abs(guess - left);
+        const upDist = Math.abs(guess - up);
+        const upLeftDist = Math.abs(guess - upLeft);
+        const predicted = leftDist <= upDist && leftDist <= upLeftDist ? left : upDist <= upLeftDist ? up : upLeft;
+        value = (raw + predicted) & 255;
+      }
+      pixels[rowStart + i] = value;
+    }
+  }
+  let cream = 0;
+  for (let i = 0; i < width * height; i += 1) {
+    const red = pixels[i * channels];
+    const green = pixels[i * channels + 1];
+    const blue = pixels[i * channels + 2];
+    if (red > 220 && green > 210 && blue > 190) cream += 1;
+  }
+  return cream;
+}
+
+async function forceVisited(page: Page, selector: string) {
+  const client = await page.context().newCDPSession(page);
+  await client.send("DOM.enable");
+  await client.send("CSS.enable");
+  const doc = await client.send("DOM.getDocument");
+  const { nodeId } = await client.send("DOM.querySelector", {
+    nodeId: doc.root.nodeId,
+    selector,
+  });
+  await client.send("CSS.forcePseudoState", {
+    nodeId,
+    forcedPseudoClasses: ["visited"],
+  });
+}
+
+test("visited current nav item keeps its label on the desktop bar", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/worlds.html");
+  const current = page.locator('#site-nav a[aria-current="page"]');
+  await expect(current).toHaveText("Quillhaven");
+  const before = creamPixelCount(await current.screenshot());
+  expect(before).toBeGreaterThan(40);
+  await forceVisited(page, '#site-nav a[aria-current="page"]');
+  const after = creamPixelCount(await current.screenshot());
+  expect(after).toBeGreaterThan(before * 0.5);
 });
 
 test("a bad path returns the 404 page", async ({ page }) => {
