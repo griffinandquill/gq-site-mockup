@@ -1411,6 +1411,11 @@ legend { padding: 0 0.3rem; }
   scrollbar-color: #b8860b #1a243c;
 }
 
+/* A window that cannot show the whole sidewalk at 2× fits the town instead of cropping townsfolk off the sides. */
+.qh-scene.is-fit {
+  overflow: hidden;
+}
+
 .qh-panorama {
   position: relative;
   width: 1280px;
@@ -1961,16 +1966,6 @@ legend { padding: 0 0.3rem; }
   to { opacity: 1; transform: none; }
 }
 
-@keyframes qh-steps-4 {
-  from { background-position: 0 0; }
-  to { background-position: calc(var(--sheet) * -1px) 0; }
-}
-
-@keyframes qh-steps-6 {
-  from { background-position: 0 0; }
-  to { background-position: calc(var(--sheet) * -1px) 0; }
-}
-
 @keyframes qh-patrol {
   0% { transform: translate3d(0, 0, 0); }
   50% { transform: translate3d(300px, 0, 0); }
@@ -2012,23 +2007,6 @@ legend { padding: 0 0.3rem; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .qh-breathe {
-    animation: qh-steps-4 2.6s steps(4) infinite;
-    animation-play-state: paused;
-  }
-
-  .qh-bramble,
-  .qh-actor[data-who="bramble"] .qh-npc { animation-duration: 2.5s; }
-  .qh-merlin,
-  .qh-actor[data-who="merlin"] .qh-npc { animation-duration: 2.9s; animation-delay: -0.55s; }
-  .qh-tahne,
-  .qh-actor[data-who="tahne"] .qh-npc { animation-duration: 2.7s; animation-delay: -1.05s; }
-
-  .qh-npc.is-walk {
-    animation: qh-steps-6 1.1s steps(6) infinite;
-    animation-play-state: paused;
-  }
-
   .qh-cloud {
     animation: qh-drift 46s linear infinite alternate;
     animation-play-state: paused;
@@ -2067,14 +2045,10 @@ legend { padding: 0 0.3rem; }
   .fly-d { animation-duration: 9s; animation-delay: -1.1s; }
   .fly-e { animation-duration: 7.6s; animation-delay: -4s; }
 
-  .qh-scene.is-live .qh-breathe,
-  .qh-scene.is-live .qh-npc.is-walk,
   .qh-scene.is-live .qh-cloud,
   .qh-scene.is-live .qh-lamp,
   .qh-scene.is-live .qh-window,
   .qh-scene.is-live .qh-fly,
-  .play-stage.is-live .qh-breathe,
-  .play-stage.is-live .qh-npc.is-walk,
   .play-stage.is-live .qh-lamp,
   .play-stage.is-live .qh-window,
   .play-stage.is-live .qh-fly {
