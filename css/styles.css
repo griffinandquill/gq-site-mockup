@@ -1610,24 +1610,24 @@ legend { padding: 0 0.3rem; }
 
 @media (prefers-reduced-motion: no-preference) {
   .qh-breathe {
-    animation: qh-steps-4 1.8s steps(4) infinite;
+    animation: qh-steps-4 2.6s steps(4) infinite;
     animation-play-state: paused;
   }
 
-  .qh-bramble { animation-duration: 1.7s; }
-  .qh-merlin { animation-duration: 2.15s; animation-delay: -0.55s; }
-  .qh-tahne { animation-duration: 1.95s; animation-delay: -1.05s; }
+  .qh-bramble { animation-duration: 2.5s; }
+  .qh-merlin { animation-duration: 2.9s; animation-delay: -0.55s; }
+  .qh-tahne { animation-duration: 2.7s; animation-delay: -1.05s; }
 
   .qh-walker {
-    animation: qh-patrol 16s linear infinite;
+    animation: qh-patrol 24s linear infinite;
     animation-play-state: paused;
   }
 
   .qh-winston-east,
   .qh-winston-west {
     animation:
-      qh-steps-6 0.8s steps(6) infinite,
-      qh-face-east 16s linear infinite;
+      qh-steps-6 1.1s steps(6) infinite,
+      qh-face-east 24s linear infinite;
     animation-play-state: paused, paused;
   }
 
@@ -1644,24 +1644,24 @@ legend { padding: 0 0.3rem; }
   .qh-cloud-c { animation-duration: 38s; }
 
   .qh-lamp {
-    animation: qh-flicker 1.8s linear infinite;
+    animation: qh-flicker 3.2s linear infinite;
     animation-play-state: paused;
   }
 
-  .lamp-b { animation-duration: 2.1s; animation-delay: -0.4s; }
-  .lamp-c { animation-duration: 1.5s; animation-delay: -0.9s; }
-  .lamp-d { animation-duration: 2.4s; animation-delay: -1.3s; }
-  .lamp-e { animation-duration: 1.7s; animation-delay: -0.2s; }
-  .lamp-f { animation-duration: 2.2s; animation-delay: -1.6s; }
+  .lamp-b { animation-duration: 3.5s; animation-delay: -0.4s; }
+  .lamp-c { animation-duration: 3.0s; animation-delay: -0.9s; }
+  .lamp-d { animation-duration: 4.0s; animation-delay: -1.3s; }
+  .lamp-e { animation-duration: 3.3s; animation-delay: -0.2s; }
+  .lamp-f { animation-duration: 3.7s; animation-delay: -1.6s; }
 
   .qh-window {
-    animation: qh-window 3.6s ease-in-out infinite;
+    animation: qh-window 5.4s ease-in-out infinite;
     animation-play-state: paused;
   }
 
   .window-academy-l { animation-delay: -0.8s; }
-  .window-academy-r { animation-duration: 4.4s; animation-delay: -2.1s; }
-  .window-printers { animation-duration: 3.1s; animation-delay: -1.4s; }
+  .window-academy-r { animation-duration: 6.0s; animation-delay: -2.1s; }
+  .window-printers { animation-duration: 5.0s; animation-delay: -1.4s; }
 
   .qh-fly {
     animation: qh-fly 7s ease-in-out infinite;
