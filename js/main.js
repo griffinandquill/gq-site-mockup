@@ -176,9 +176,32 @@
     var scene = document.querySelector(".qh-scene");
     if (!scene) return;
     var frame = scene.querySelector(".qh-panorama");
-    if (frame) {
-      scene.scrollLeft = Math.round((frame.offsetWidth - scene.clientWidth) / 2);
+    // Sprite boxes stay between these panorama pixels (Bramble's left side, Rudy's right side).
+    var castLeft = 160;
+    var castRight = 1140;
+    function layout(pass) {
+      if (!frame) return;
+      var width = scene.clientWidth;
+      if (!width) return;
+      var origin = (1280 - width) / 2;
+      var showsCast = origin <= castLeft && origin + width >= castRight;
+      if (showsCast) {
+        scene.classList.remove("is-fit");
+        scene.style.height = "";
+        frame.style.transform = "";
+        scene.scrollLeft = Math.round(Math.max(0, origin));
+        return;
+      }
+      var scale = width / 1280;
+      scene.classList.add("is-fit");
+      frame.style.transformOrigin = "top left";
+      frame.style.transform = "scale(" + scale + ")";
+      scene.style.height = Math.round(448 * scale + 8) + "px";
+      scene.scrollLeft = 0;
+      if (!pass && scene.clientWidth !== width) layout(true);
     }
+    layout(false);
+    window.addEventListener("resize", function () { layout(false); });
     if (reduceMotion) return;
     var layers = scene.querySelectorAll("[data-parallax]");
     var ticking = false;
