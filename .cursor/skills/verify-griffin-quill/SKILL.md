@@ -75,6 +75,6 @@ Cleanup does not delete `verify-results/`. Those files are the proof.
 
 ## Helpers
 
-`node verify/stage.mjs` copies root HTML, `css/`, `js/`, `favicon.svg`, `robots.txt`, and `.nojekyll` into `_site`. The Pages workflow runs that command and uploads `_site`. The copy is byte for byte. `_site` is not the proof directory. Delete `_site` when you want a clean tree. The next stage recreates it.
+`node verify/stage.mjs` copies root HTML, `css/`, `js/`, `favicon.svg`, `robots.txt`, and `.nojekyll` into `_site`. HTML and CSS gain `?v=` plus the short git commit on stylesheet, script, and sprite URLs. Every other file is copied byte for byte. The Pages workflow runs that command and uploads `_site`. `node verify/server.mjs` rewrites those same URLs when it serves a page. `_site` is not the proof directory. Delete `_site` when you want a clean tree. The next stage recreates it.
 
 `node verify/server.mjs` is the local site. Prefer `npm run verify` so the process is tied to the run. Use the server command only when doctor or a manual browser needs it. Stop it with Ctrl-C, which is the foreground process you started.

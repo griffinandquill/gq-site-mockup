@@ -1,12 +1,14 @@
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
+import { assetVersion, bustReferences } from "./bust.mjs";
 import { ROOT, publishedRelPaths } from "./files.mjs";
 
 const host = "127.0.0.1";
 const port = Number(process.env.PORT || 4173);
 const published = new Set(publishedRelPaths());
 const notFound = path.join(ROOT, "404.html");
+const version = assetVersion();
 
 function contentType(file) {
   if (file.endsWith(".html")) return "text/html; charset=utf-8";
@@ -22,7 +24,10 @@ function contentType(file) {
 }
 
 function sendFile(res, status, file) {
-  const body = fs.readFileSync(file);
+  let body = fs.readFileSync(file);
+  if (file.endsWith(".html") || file.endsWith(".css")) {
+    body = Buffer.from(bustReferences(body.toString("utf8"), version));
+  }
   res.writeHead(status, {
     "content-type": contentType(file),
     "content-length": body.length,

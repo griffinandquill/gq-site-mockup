@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { copy, forms, pages, viewports } from "../verify/catalog.mjs";
+import { assetVersion, bustReferences } from "../verify/bust.mjs";
 import { ROOT, publishedRelPaths, rootHtmlFiles } from "../verify/files.mjs";
 
 function collectErrors(page: Page) {
@@ -43,11 +44,26 @@ test("catalog lists every root html file", () => {
 
 test("stage copies site bytes and leaves the checker out", () => {
   execFileSync(process.execPath, ["verify/stage.mjs"], { cwd: ROOT });
+  const version = assetVersion();
   for (const rel of publishedRelPaths()) {
     const source = fs.readFileSync(path.join(ROOT, rel));
     const staged = fs.readFileSync(path.join(ROOT, "_site", rel));
-    expect(Buffer.compare(source, staged), rel).toBe(0);
+    const expected =
+      rel.endsWith(".html") || rel.endsWith(".css")
+        ? Buffer.from(bustReferences(source.toString("utf8"), version))
+        : source;
+    expect(Buffer.compare(expected, staged), rel).toBe(0);
   }
+  const worlds = fs.readFileSync(path.join(ROOT, "_site", "worlds.html"), "utf8");
+  const css = fs.readFileSync(path.join(ROOT, "_site", "css", "styles.css"), "utf8");
+  const shop = fs.readFileSync(path.join(ROOT, "_site", "resources.html"), "utf8");
+  expect(worlds).toContain(`href="css/styles.css?v=${version}"`);
+  expect(worlds).toContain(`src="js/main.js?v=${version}"`);
+  expect(worlds).toContain(`src="img/characters/tahne.png?v=${version}"`);
+  expect(worlds).toContain(`src="img/buildings/academy.png?v=${version}"`);
+  expect(worlds).toContain('src="assets/logo-icon.svg"');
+  expect(css).toContain(`bramble-idle.png?v=${version}`);
+  expect(shop).toContain(`src="js/products.js?v=${version}"`);
   expect(fs.existsSync(path.join(ROOT, "_site", "package.json"))).toBe(false);
   expect(fs.existsSync(path.join(ROOT, "_site", "verify"))).toBe(false);
   expect(fs.existsSync(path.join(ROOT, "_site", "tests"))).toBe(false);

@@ -2,7 +2,7 @@
 
 Design mockup for Griffin & Quill LLC, a new South Carolina edtech studio. This is a review site for the owner. It is not a launch. The mockup is published at https://www.griffinandquill.com and stays noindex until you say to launch.
 
-Plain static HTML, CSS, and a small JavaScript file. No build step, no framework, no analytics, no cookies, and no third-party scripts. It can be published as-is on GitHub Pages or Cloudflare Pages by serving this folder.
+Plain static HTML, CSS, and a small JavaScript file. No framework, no analytics, no cookies, and no third-party scripts. GitHub Pages runs `node verify/stage.mjs` before upload. That step, and the local verify server, add `?v=` plus the short git commit to every stylesheet, script, and sprite URL so a deploy is not stuck on a cached `styles.css`.
 
 ## Preview locally
 
