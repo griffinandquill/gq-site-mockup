@@ -1229,11 +1229,20 @@ legend { padding: 0 0.3rem; }
   pointer-events: none;
 }
 
+.sprite-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .accent-flight {
   position: relative;
   width: 6.6rem;
   height: 2.6rem;
   pointer-events: none;
+  /* Hard 4px rings (one sprite pixel): navy, then cream. No blur. */
+  filter: url("#pixel-outline");
 }
 
 .accent-flight.is-flying {
@@ -1269,7 +1278,6 @@ legend { padding: 0 0.3rem; }
   width: 4px;
   height: 4px;
   background: var(--gold);
-  box-shadow: 0 0 8px rgba(184, 134, 11, 0.85);
 }
 
 .cover .spark-a { left: 4.2rem; top: 0.2rem; }
