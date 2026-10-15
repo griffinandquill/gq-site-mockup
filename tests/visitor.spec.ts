@@ -357,7 +357,7 @@ test("the quillhaven demo stays unloaded until the poster is pressed", async ({ 
   await page.route("https://play.griffinandquill.com/**", (route) => route.abort());
   for (const width of [1280, 375]) {
     await page.setViewportSize({ width, height: 800 });
-    await page.goto("/worlds.html#play");
+    await page.goto(`/worlds.html?view=${width}#play`);
     const stage = page.locator("[data-play-stage]");
     await expect(stage).toBeVisible();
     await expect(stage.locator("iframe")).toHaveCount(0);
