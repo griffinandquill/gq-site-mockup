@@ -115,6 +115,7 @@
   });
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var kickCast = function () {};
 
   function setupReveal() {
     var nodes = Array.prototype.slice.call(
@@ -201,18 +202,198 @@
   }
 
   function setupScenePause() {
-    var scene = document.querySelector(".qh-scene");
-    if (!scene || reduceMotion) return;
+    var nodes = Array.prototype.slice.call(document.querySelectorAll(".qh-scene, .play-stage"));
+    if (!nodes.length || reduceMotion) return;
     if (!("IntersectionObserver" in window)) {
-      scene.classList.add("is-live");
+      nodes.forEach(function (el) { el.classList.add("is-live"); });
       return;
     }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        scene.classList.toggle("is-live", entry.isIntersecting);
+        entry.target.classList.toggle("is-live", entry.isIntersecting);
       });
+      kickCast();
     }, { rootMargin: "64px 0px" });
-    io.observe(scene);
+    nodes.forEach(function (el) { io.observe(el); });
+  }
+
+  function setupPlayFit() {
+    var fit = document.querySelector(".play-fit");
+    var panorama = fit ? fit.querySelector(".play-panorama") : null;
+    if (!fit || !panorama) return;
+    function apply() {
+      var width = fit.clientWidth;
+      var height = fit.clientHeight;
+      if (!width || !height) return;
+      var scale = Math.min(width / 1280, height / 512);
+      panorama.style.setProperty("--play-scale", String(Math.round(scale * 1000) / 1000));
+    }
+    apply();
+    if ("ResizeObserver" in window) {
+      var observer = new ResizeObserver(apply);
+      observer.observe(fit);
+    } else {
+      window.addEventListener("resize", apply);
+    }
+  }
+
+  function setupTownCast() {
+    if (reduceMotion) return;
+    var casts = Array.prototype.slice.call(document.querySelectorAll("[data-cast]"));
+    if (!casts.length) return;
+    var loop = 40;
+    var script = {
+      bramble: [
+        { t: 0, x: 96, face: "east" },
+        { t: 2.6, x: 96, face: "east" },
+        { t: 9.2, x: 146, face: "east" },
+        { t: 12.2, x: 146, face: "east", chat: "bubble" },
+        { t: 20.4, x: 96, face: "west" },
+        { t: 24, x: 96, face: "east" },
+        { t: 30, x: 132, face: "east" },
+        { t: 36, x: 96, face: "west" },
+        { t: 40, x: 96, face: "east" }
+      ],
+      brittany: [
+        { t: 0, x: 214, face: "west" },
+        { t: 2.4, x: 214, face: "west" },
+        { t: 9.2, x: 171, face: "west" },
+        { t: 12.2, x: 171, face: "west", chat: "bubble" },
+        { t: 19.4, x: 220, face: "east" },
+        { t: 23, x: 220, face: "west" },
+        { t: 30, x: 176, face: "west" },
+        { t: 36, x: 214, face: "east" },
+        { t: 40, x: 214, face: "west" }
+      ],
+      ruth: [
+        { t: 0, x: 220, face: "east" },
+        { t: 6.6, x: 268, face: "east" },
+        { t: 9.4, x: 268, face: "west" },
+        { t: 16, x: 220, face: "west" },
+        { t: 18.6, x: 220, face: "east" },
+        { t: 23, x: 250, face: "east", chat: "bubble" },
+        { t: 26, x: 250, face: "east" },
+        { t: 30.4, x: 220, face: "west" },
+        { t: 40, x: 220, face: "east" }
+      ],
+      winston: [
+        { t: 0, x: 328, face: "west" },
+        { t: 2, x: 328, face: "west" },
+        { t: 7.2, x: 292, face: "west" },
+        { t: 9.6, x: 292, face: "east" },
+        { t: 15, x: 328, face: "east" },
+        { t: 17, x: 328, face: "west" },
+        { t: 23, x: 280, face: "west", chat: "bubble" },
+        { t: 26, x: 280, face: "east" },
+        { t: 33, x: 328, face: "east" },
+        { t: 40, x: 328, face: "west" }
+      ],
+      merlin: [
+        { t: 0, x: 360, face: "east" },
+        { t: 6, x: 400, face: "east" },
+        { t: 12.6, x: 400, face: "west" },
+        { t: 16, x: 378, face: "east", chat: "wave" },
+        { t: 19, x: 378, face: "east" },
+        { t: 25.2, x: 340, face: "west" },
+        { t: 29, x: 340, face: "east" },
+        { t: 32.4, x: 360, face: "east" },
+        { t: 40, x: 360, face: "east" }
+      ],
+      tahne: [
+        { t: 0, x: 448, face: "west" },
+        { t: 5.2, x: 412, face: "west" },
+        { t: 8.4, x: 412, face: "east" },
+        { t: 11.6, x: 436, face: "east" },
+        { t: 16, x: 412, face: "west", chat: "wave" },
+        { t: 19, x: 412, face: "west" },
+        { t: 26.8, x: 470, face: "east" },
+        { t: 30, x: 470, face: "east", chat: "wave" },
+        { t: 33, x: 470, face: "east" },
+        { t: 37.2, x: 448, face: "west" },
+        { t: 40, x: 448, face: "west" }
+      ],
+      rudy: [
+        { t: 0, x: 548, face: "west" },
+        { t: 6.6, x: 508, face: "west" },
+        { t: 10, x: 508, face: "east" },
+        { t: 16.6, x: 560, face: "east" },
+        { t: 20, x: 560, face: "west" },
+        { t: 27.4, x: 502, face: "west" },
+        { t: 30, x: 502, face: "west", chat: "wave" },
+        { t: 33, x: 502, face: "west" },
+        { t: 40, x: 548, face: "east" }
+      ]
+    };
+
+    function sample(keys, time) {
+      var tt = time % loop;
+      if (tt < 0) tt += loop;
+      var index = 0;
+      var step;
+      for (step = 0; step < keys.length - 1; step += 1) {
+        if (keys[step + 1].t <= tt) index = step + 1;
+      }
+      var from = keys[index];
+      var to = keys[index + 1] || from;
+      var span = to.t - from.t;
+      var progress = span > 0 ? (tt - from.t) / span : 0;
+      var moving = Math.abs(to.x - from.x) > 0.5;
+      return {
+        x: from.x + (to.x - from.x) * progress,
+        face: moving ? (to.x >= from.x ? "east" : "west") : from.face,
+        pose: moving ? "walk" : "idle",
+        chat: !moving && from.chat ? from.chat : ""
+      };
+    }
+
+    function paint(cast, time) {
+      Array.prototype.forEach.call(cast.querySelectorAll(".qh-actor"), function (actor) {
+        var who = actor.getAttribute("data-who");
+        var keys = script[who];
+        var sprite = actor.querySelector("[data-sprite]");
+        if (!keys || !sprite) return;
+        var state = sample(keys, time);
+        var x = Math.max(72, Math.min(590, state.x));
+        actor.style.setProperty("--x", x.toFixed(2));
+        sprite.setAttribute("data-face", state.face);
+        sprite.setAttribute("data-pose", state.pose);
+        sprite.classList.toggle("is-walk", state.pose === "walk");
+        actor.classList.toggle("is-chat", state.chat !== "");
+        var emote = sprite.querySelector(".qh-emote");
+        if (emote && state.chat) emote.setAttribute("data-kind", state.chat);
+      });
+    }
+
+    function live(cast) {
+      var root = cast.closest(".qh-scene, .play-stage");
+      return !root || root.classList.contains("is-live");
+    }
+
+    var frame = 0;
+    function tick(now) {
+      var any = false;
+      casts.forEach(function (cast) {
+        if (!live(cast)) return;
+        any = true;
+        paint(cast, now / 1000);
+      });
+      frame = any ? window.requestAnimationFrame(tick) : 0;
+    }
+
+    kickCast = function () {
+      if (frame || document.hidden) return;
+      frame = window.requestAnimationFrame(tick);
+    };
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        if (frame) window.cancelAnimationFrame(frame);
+        frame = 0;
+        return;
+      }
+      kickCast();
+    });
+    kickCast();
   }
 
   function setupPlayDemo() {
@@ -375,6 +556,8 @@
   setupTypewriter();
   setupParallax();
   setupScenePause();
+  setupPlayFit();
+  setupTownCast();
   setupPlayDemo();
   setupGryphonFlight();
 })();

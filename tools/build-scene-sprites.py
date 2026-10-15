@@ -26,12 +26,22 @@ SHEETS = (
     ("tahne-idle", "Tahne_V3", "Breathing_Idle", "south", 4),
     ("merlin-idle", "Merlin", "Breathing_Idle", "south", 4),
     ("bramble-idle", "Professor_Bramble", "Breathing_Idle", "south", 4),
+    ("winston-idle", "Winston_Wolf", "Breathing_Idle", "south", 4),
 )
 
 # East and west share one cell so the turnaround does not pop.
 WALK = (
     ("winston-walk-east", "east"),
     ("winston-walk-west", "west"),
+)
+
+# Side-view sheets for the town cast. Idle and walk share one crop
+# so a pause does not resize the sprite.
+SIDE = (
+    ("tahne", "Tahne_V3"),
+    ("merlin", "Merlin"),
+    ("bramble", "Professor_Bramble"),
+    ("winston", "Winston_Wolf"),
 )
 
 
@@ -67,6 +77,37 @@ def load_frames(src: Path, name: str, anim: str, direction: str, count: int) -> 
             raise SystemExit(f"{path} is {frame.size}, expected 96x96")
         frames.append(frame)
     return frames
+
+
+def build_side_sheets(src: Path) -> None:
+    """East/west idle and walk, one shared crop per character."""
+    for stem, name in SIDE:
+        groups = {
+            "idle-east": load_frames(src, name, "Breathing_Idle", "east", 4),
+            "idle-west": load_frames(src, name, "Breathing_Idle", "west", 4),
+            "walk-east": load_frames(src, name, "Walking", "east", 6),
+            "walk-west": load_frames(src, name, "Walking", "west", 6),
+        }
+        raw = [frame for frames in groups.values() for frame in frames]
+        foot = max(opaque_box(frame)[3] for frame in raw)
+        height = max(frame.height for frame in raw)
+        width = max(frame.width for frame in raw)
+        if foot >= height:
+            height = foot + 1
+        aligned = {}
+        flat = []
+        for key, frames in groups.items():
+            moved = []
+            for frame in frames:
+                shift = foot - opaque_box(frame)[3]
+                canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+                canvas.paste(frame, (0, shift), frame)
+                moved.append(canvas)
+            aligned[key] = moved
+            flat.extend(moved)
+        crop = shared_crop(flat, width // 2)
+        for key, frames in aligned.items():
+            write_sheet(f"{stem}-{key}", frames, crop, width // 2, foot)
 
 
 def align_feet(frames: list[Image.Image]) -> tuple[list[Image.Image], int]:
@@ -200,6 +241,8 @@ def main() -> None:
     crop = shared_crop([frame for _, frames, _ in walks for frame in frames], anchor_x)
     for stem, aligned, foot in walks:
         write_sheet(stem, aligned, crop, anchor_x, foot)
+
+    build_side_sheets(src)
 
 
 if __name__ == "__main__":

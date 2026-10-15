@@ -91,13 +91,15 @@
             <span class="qh-fly fly-c"></span>
             <span class="qh-fly fly-d"></span>
             <span class="qh-fly fly-e"></span>
-            <span class="qh-npc qh-breathe qh-bramble"></span>
-            <span class="qh-npc qh-breathe qh-merlin"></span>
-            <span class="qh-npc qh-breathe qh-tahne"></span>
-            <span class="qh-walker">
-              <span class="qh-npc qh-winston qh-winston-east"></span>
-              <span class="qh-npc qh-winston qh-winston-west"></span>
-            </span>
+            <div class="qh-cast" data-cast>
+              <span class="qh-actor" data-who="bramble" style="--x:100"><span class="qh-npc qh-breathe qh-bramble" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
+              <span class="qh-actor" data-who="brittany" style="--x:168"><span class="qh-npc qh-brittany" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
+              <span class="qh-actor" data-who="ruth" style="--x:236"><span class="qh-npc qh-ruth" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
+              <span class="qh-actor" data-who="winston" style="--x:304"><span class="qh-npc qh-breathe qh-winston" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
+              <span class="qh-actor" data-who="merlin" style="--x:372"><span class="qh-npc qh-breathe qh-merlin" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
+              <span class="qh-actor" data-who="tahne" style="--x:456"><span class="qh-npc qh-breathe qh-tahne" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
+              <span class="qh-actor" data-who="rudy" style="--x:540"><span class="qh-npc qh-rudy" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
+            </div>
           </div>
         </div>
       </div>
@@ -120,9 +122,37 @@
         <p class="section-intro">The Quillhaven demo is live. The game stays unloaded until you press play.</p>
         <div class="play-stage" data-play-stage>
           <button type="button" class="play-poster" data-play-load>
-            <span class="play-poster-art" aria-hidden="true">
-              <img src="img/quillhaven/sky.png" alt="" width="1280" height="512">
-              <img src="img/quillhaven/town.png" alt="" width="1280" height="512">
+            <span class="play-fit" aria-hidden="true">
+              <span class="qh-panorama play-panorama" data-cast>
+                <img class="qh-layer" src="img/quillhaven/sky.png" width="1280" height="512" alt="">
+                <img class="qh-layer" src="img/quillhaven/far.png" width="1280" height="512" alt="">
+                <img class="qh-layer" src="img/quillhaven/town.png" width="1280" height="512" alt="">
+                <div class="qh-stage">
+                  <span class="qh-lamp lamp-a"></span>
+                  <span class="qh-lamp lamp-b"></span>
+                  <span class="qh-lamp lamp-c"></span>
+                  <span class="qh-lamp lamp-d"></span>
+                  <span class="qh-lamp lamp-e"></span>
+                  <span class="qh-lamp lamp-f"></span>
+                  <span class="qh-window window-academy-l"></span>
+                  <span class="qh-window window-academy-r"></span>
+                  <span class="qh-window window-printers"></span>
+                  <span class="qh-fly fly-a"></span>
+                  <span class="qh-fly fly-b"></span>
+                  <span class="qh-fly fly-c"></span>
+                  <span class="qh-fly fly-d"></span>
+                  <span class="qh-fly fly-e"></span>
+                  <div class="qh-cast">
+                    <span class="qh-actor" data-who="bramble" style="--x:100"><span class="qh-npc qh-breathe" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
+                    <span class="qh-actor" data-who="brittany" style="--x:168"><span class="qh-npc" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
+                    <span class="qh-actor" data-who="ruth" style="--x:236"><span class="qh-npc" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
+                    <span class="qh-actor" data-who="winston" style="--x:304"><span class="qh-npc qh-breathe" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
+                    <span class="qh-actor" data-who="merlin" style="--x:372"><span class="qh-npc qh-breathe" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
+                    <span class="qh-actor" data-who="tahne" style="--x:456"><span class="qh-npc qh-breathe" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
+                    <span class="qh-actor" data-who="rudy" style="--x:540"><span class="qh-npc" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
+                  </div>
+                </div>
+              </span>
             </span>
             <span class="btn btn-primary">Play the demo</span>
           </button>
