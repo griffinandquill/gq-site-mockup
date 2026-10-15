@@ -4,7 +4,7 @@ Team rules for the Griffin & Quill site mockup. They do not replace the README o
 
 ## Kid-safety first
 
-The kids' games are designed to collect no personal data. Do not add accounts, names, chat, analytics, cookies, or stored student data to this site in order to ship a feature.
+Public copy says Quillhaven collects only what teachers need, never sells it, and has no ads or trackers. Do not add accounts, names, chat, analytics, cookies, or stored student data to this site in order to ship a feature.
 
 The privacy and terms pages are drafts pending attorney review. The privacy page says an attorney still has to review them before any game is offered to children, including children under 13. This rule does not close that review.
 
