@@ -365,6 +365,62 @@ test("visited current nav item keeps its label on the desktop bar", async ({ pag
   expect(after).toBeGreaterThan(before * 0.5);
 });
 
+test("the home hero logo has no navy plate", async ({ page, request }) => {
+  await page.goto("/index.html");
+  const hero = page.locator(".logo-hero");
+  await expect(hero).toHaveAttribute("src", "assets/logo-hero.svg");
+  await expect(page.locator(".brand .logo")).toHaveAttribute("src", "assets/logo-icon.svg");
+  const svg = await (await request.get("/assets/logo-hero.svg")).text();
+  expect(svg).not.toContain("#1f2a44");
+  expect(svg).toContain("#fff");
+  expect(svg).toContain("#b8860b");
+});
+
+test("the pixel gryphon stays parked when motion is reduced", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/index.html");
+  const flight = page.locator(".accent-flight");
+  await expect(flight).toBeVisible();
+  await expect(flight).not.toHaveClass(/is-flying/);
+  const first = await flight.boundingBox();
+  await page.waitForTimeout(500);
+  const second = await flight.boundingBox();
+  expect(first).not.toBeNull();
+  expect(second).not.toBeNull();
+  expect(Math.hypot((second?.x ?? 0) - (first?.x ?? 0), (second?.y ?? 0) - (first?.y ?? 0))).toBeLessThan(1);
+});
+
+test.describe("home gryphon flight", () => {
+  test.use({ reducedMotion: "no-preference" });
+
+  test("the pixel gryphon is present and moves inside the viewport", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/index.html");
+    const flight = page.locator(".accent-flight");
+    await expect(flight).toBeVisible();
+    await expect(flight).toHaveClass(/is-flying/);
+    await expect(flight).toHaveCSS("pointer-events", "none");
+    const bird = flight.locator(".accent-gryphon");
+    await expect(bird).toBeVisible();
+    let previous = await flight.boundingBox();
+    let moved = 0;
+    expect(previous).not.toBeNull();
+    for (let i = 0; i < 4; i += 1) {
+      await page.waitForTimeout(450);
+      const box = await flight.boundingBox();
+      expect(box).not.toBeNull();
+      if (!box || !previous) continue;
+      expect(box.x).toBeGreaterThanOrEqual(0);
+      expect(box.y).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width).toBeLessThanOrEqual(1280);
+      expect(box.y + box.height).toBeLessThanOrEqual(800);
+      moved = Math.max(moved, Math.hypot(box.x - previous.x, box.y - previous.y));
+      previous = box;
+    }
+    expect(moved).toBeGreaterThan(12);
+  });
+});
+
 test("a bad path returns the 404 page", async ({ page }) => {
   const errors = collectErrors(page);
   const response = await page.goto("/not-a-page");

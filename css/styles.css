@@ -331,6 +331,7 @@ img.logo {
 
 .cover-frame {
   position: relative;
+  z-index: 3;
   margin: 1.25rem auto 1.6rem;
   padding: clamp(1.25rem, 3vw, 2.6rem);
   box-shadow:
@@ -418,6 +419,13 @@ img.logo {
 }
 
 .section { padding: 2.4rem 0; }
+
+.section > .container,
+.band > .container,
+.site-footer {
+  position: relative;
+  z-index: 3;
+}
 
 .section-intro { max-width: var(--measure); }
 .space-top { margin-top: 1.25rem; }
@@ -1221,6 +1229,31 @@ legend { padding: 0 0.3rem; }
   pointer-events: none;
 }
 
+.sprite-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.accent-flight {
+  position: relative;
+  width: 6.6rem;
+  height: 2.6rem;
+  pointer-events: none;
+  /* Hard 4px rings (one sprite pixel): navy, then cream. No blur. */
+  filter: url("#pixel-outline");
+}
+
+.accent-flight.is-flying {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 6.6rem;
+  height: 2.6rem;
+}
+
 .accent-gryphon,
 .spark { position: absolute; pointer-events: none; }
 
@@ -1229,6 +1262,7 @@ legend { padding: 0 0.3rem; }
   top: 0;
   width: 4px;
   height: 4px;
+  transform-origin: 16px 16px;
   background: transparent;
   box-shadow:
     16px 10px #faf6ea, 20px 10px #faf6ea,
@@ -1244,7 +1278,6 @@ legend { padding: 0 0.3rem; }
   width: 4px;
   height: 4px;
   background: var(--gold);
-  box-shadow: 0 0 8px rgba(184, 134, 11, 0.85);
 }
 
 .cover .spark-a { left: 4.2rem; top: 0.2rem; }
@@ -1551,6 +1584,7 @@ legend { padding: 0 0.3rem; }
   .cover h1 { position: relative; }
 
   .accent-gryphon { animation: gryphon-bob 2.6s ease-in-out 3; }
+  .accent-flight.is-flying .accent-gryphon { animation: none; }
   .sprite-bob { animation: gryphon-bob 2.8s ease-in-out 3; }
   .grid-3 .card:nth-child(2) .sprite-bob { animation-delay: 0.25s; }
   .grid-3 .card:nth-child(3) .sprite-bob { animation-delay: 0.5s; }

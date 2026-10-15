@@ -26,6 +26,18 @@
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body id="top">
+  <svg class="sprite-filters" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="pixel-outline" x="-35%" y="-55%" width="170%" height="220%" color-interpolation-filters="sRGB" primitiveUnits="userSpaceOnUse">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="4" result="inner"></feMorphology>
+      <feFlood flood-color="#14213d" result="navy"></feFlood>
+      <feComposite in="navy" in2="inner" operator="in" result="navyInk"></feComposite>
+      <feMorphology in="SourceAlpha" operator="dilate" radius="8" result="outer"></feMorphology>
+      <feFlood flood-color="#faf6ea" result="cream"></feFlood>
+      <feComposite in="cream" in2="outer" operator="in" result="creamInk"></feComposite>
+      <feComposite in="navyInk" in2="creamInk" operator="over" result="rings"></feComposite>
+      <feComposite in="SourceGraphic" in2="rings" operator="over"></feComposite>
+    </filter>
+  </svg>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <p class="mockup-bar">Design mockup for owner review. Forms are not connected.</p>
@@ -66,12 +78,14 @@
       <div class="container cover-frame">
         <div class="hero-grid">
           <div>
-            <img class="logo logo-hero" src="assets/logo-icon.svg" alt="Griffin and Quill logo" width="400" height="318">
+            <img class="logo logo-hero" src="assets/logo-hero.svg" alt="Griffin and Quill logo" width="400" height="318">
             <div class="motion-accents" aria-hidden="true">
-              <span class="accent-gryphon"></span>
-              <span class="spark spark-a"></span>
-              <span class="spark spark-b"></span>
-              <span class="spark spark-c"></span>
+              <div class="accent-flight" aria-hidden="true">
+                <span class="accent-gryphon"></span>
+                <span class="spark spark-a"></span>
+                <span class="spark spark-b"></span>
+                <span class="spark spark-c"></span>
+              </div>
             </div>
           </div>
           <div>
