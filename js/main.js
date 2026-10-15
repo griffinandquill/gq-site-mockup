@@ -215,6 +215,23 @@
     io.observe(scene);
   }
 
+  function setupPlayDemo() {
+    var stage = document.querySelector("[data-play-stage]");
+    if (!stage) return;
+    var poster = stage.querySelector("[data-play-load]");
+    if (!poster) return;
+    poster.addEventListener("click", function () {
+      if (stage.querySelector("iframe")) return;
+      var frame = document.createElement("iframe");
+      frame.src = "https://play.griffinandquill.com";
+      frame.title = "Quillhaven demo";
+      frame.allow = "fullscreen";
+      frame.allowFullscreen = true;
+      stage.appendChild(frame);
+      poster.hidden = true;
+    });
+  }
+
   function setupGryphonFlight() {
     var flight = document.querySelector(".accent-flight");
     var bird = flight ? flight.querySelector(".accent-gryphon") : null;
@@ -358,5 +375,6 @@
   setupTypewriter();
   setupParallax();
   setupScenePause();
+  setupPlayDemo();
   setupGryphonFlight();
 })();
