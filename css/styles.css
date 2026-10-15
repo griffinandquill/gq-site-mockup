@@ -1351,6 +1351,8 @@ legend { padding: 0 0.3rem; }
   outline-offset: -7px;
 }
 
+.play-poster[hidden] { display: none; }
+
 .play-stage iframe {
   position: absolute;
   inset: 0;
