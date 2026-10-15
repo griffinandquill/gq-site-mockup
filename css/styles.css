@@ -1266,6 +1266,177 @@ legend { padding: 0 0.3rem; }
   pointer-events: none;
 }
 
+/* Town pixels are 2 CSS pixels. Feet sit on the last row of each sheet. */
+.qh-sky-anim,
+.qh-stage {
+  position: absolute;
+  inset: 0;
+  width: 1280px;
+  height: 512px;
+  pointer-events: none;
+}
+
+.qh-logo-hold {
+  position: absolute;
+  left: 500px;
+  top: 16px;
+  width: 360px;
+  height: 88px;
+}
+
+.qh-cloud,
+.qh-lamp,
+.qh-window,
+.qh-fly,
+.qh-npc {
+  position: absolute;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+.qh-cloud {
+  width: 2px;
+  height: 2px;
+  background: #faf6ea;
+}
+
+.qh-cloud-a {
+  left: 104px;
+  top: 92px;
+  --dx: 18;
+  box-shadow:
+    4px 0 #faf6ea, 8px 0 #d6c4a8,
+    -2px 4px #d6c4a8, 2px 4px #faf6ea, 6px 4px #faf6ea, 10px 4px #d6c4a8, 14px 4px #968470,
+    -4px 8px #968470, 0 8px #d6c4a8, 4px 8px #faf6ea, 8px 8px #faf6ea, 12px 8px #d6c4a8, 16px 8px #968470,
+    0 12px #d6c4a8, 4px 12px #faf6ea, 8px 12px #d6c4a8, 12px 12px #968470;
+}
+
+.qh-cloud-b {
+  left: 940px;
+  top: 36px;
+  --dx: -16;
+  box-shadow:
+    4px 0 #d6c4a8, 8px 0 #faf6ea, 12px 0 #d6c4a8,
+    2px 4px #968470, 6px 4px #d6c4a8, 10px 4px #faf6ea, 14px 4px #d6c4a8, 18px 4px #968470,
+    4px 8px #d6c4a8, 8px 8px #faf6ea, 12px 8px #d6c4a8, 16px 8px #968470;
+}
+
+.qh-cloud-c {
+  left: 336px;
+  top: 116px;
+  --dx: 12;
+  box-shadow:
+    4px 0 #faf6ea, 8px 0 #d6c4a8,
+    0 4px #d6c4a8, 4px 4px #faf6ea, 8px 4px #faf6ea, 12px 4px #968470,
+    2px 8px #d6c4a8, 6px 8px #faf6ea, 10px 8px #d6c4a8;
+}
+
+.qh-lamp {
+  top: 336px;
+  width: 8px;
+  height: 8px;
+  margin: 2px 0 0 2px;
+  background: #ffe7a3;
+  opacity: 0.4;
+}
+
+.lamp-a { left: 76px; }
+.lamp-b { left: 292px; }
+.lamp-c { left: 580px; }
+.lamp-d { left: 892px; }
+.lamp-e { left: 1092px; }
+.lamp-f { left: 1212px; }
+
+.qh-window {
+  background: #ffd678;
+  opacity: 0.22;
+}
+
+.window-academy-l { left: 572px; top: 300px; width: 28px; height: 28px; }
+.window-academy-r { left: 688px; top: 312px; width: 12px; height: 20px; }
+.window-printers { left: 960px; top: 324px; width: 28px; height: 16px; }
+
+.qh-fly {
+  width: 4px;
+  height: 4px;
+  background: #f3d98a;
+  opacity: 0.55;
+  box-shadow: 4px 0 #fff6d2;
+}
+
+.fly-a { left: 180px; top: 300px; --dx: 8; --dy: -6; }
+.fly-b { left: 460px; top: 276px; --dx: -6; --dy: -8; }
+.fly-c { left: 640px; top: 292px; --dx: 10; --dy: -4; }
+.fly-d { left: 860px; top: 268px; --dx: 7; --dy: -7; }
+.fly-e { left: 1140px; top: 304px; --dx: -8; --dy: -5; }
+
+.qh-npc {
+  background-repeat: no-repeat;
+  left: calc((var(--x) - var(--anchor)) * 2px);
+  top: calc((var(--y) - (var(--cell-h) - 1)) * 2px);
+  width: calc(var(--cell-w) * 2px);
+  height: calc(var(--cell-h) * 2px);
+  background-size: calc(var(--sheet) * 1px) calc(var(--cell-h) * 2px);
+  z-index: 3;
+}
+
+.qh-bramble {
+  --cell-w: 27;
+  --cell-h: 30;
+  --anchor: 14;
+  --x: 108;
+  --y: 198;
+  --sheet: 216;
+  background-image: url("../img/quillhaven/sprites/bramble-idle.png");
+}
+
+.qh-merlin {
+  --cell-w: 25;
+  --cell-h: 33;
+  --anchor: 13;
+  --x: 308;
+  --y: 198;
+  --sheet: 200;
+  background-image: url("../img/quillhaven/sprites/merlin-idle.png");
+}
+
+.qh-tahne {
+  --cell-w: 28;
+  --cell-h: 31;
+  --anchor: 12;
+  --x: 372;
+  --y: 198;
+  --sheet: 224;
+  background-image: url("../img/quillhaven/sprites/tahne-idle.png");
+}
+
+.qh-walker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  width: 0;
+  height: 0;
+}
+
+.qh-winston {
+  --cell-w: 29;
+  --cell-h: 33;
+  --anchor: 14;
+  --x: 210;
+  --y: 210;
+  --sheet: 348;
+}
+
+.qh-winston-east {
+  background-image: url("../img/quillhaven/sprites/winston-walk-east.png");
+}
+
+.qh-winston-west {
+  background-image: url("../img/quillhaven/sprites/winston-walk-west.png");
+  opacity: 0;
+}
+
 .town-map {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
@@ -1385,4 +1556,131 @@ legend { padding: 0 0.3rem; }
 @keyframes map-in {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: none; }
+}
+
+@keyframes qh-steps-4 {
+  from { background-position: 0 0; }
+  to { background-position: calc(var(--sheet) * -1px) 0; }
+}
+
+@keyframes qh-steps-6 {
+  from { background-position: 0 0; }
+  to { background-position: calc(var(--sheet) * -1px) 0; }
+}
+
+@keyframes qh-patrol {
+  0% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(300px, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes qh-face-east {
+  0%, 49.9% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes qh-face-west {
+  0%, 49.9% { opacity: 0; }
+  50%, 100% { opacity: 1; }
+}
+
+@keyframes qh-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(calc(var(--dx) * 2px), 0, 0); }
+}
+
+@keyframes qh-flicker {
+  0%, 100% { opacity: 0.28; }
+  14% { opacity: 0.82; }
+  31% { opacity: 0.36; }
+  48% { opacity: 0.9; }
+  67% { opacity: 0.32; }
+  83% { opacity: 0.7; }
+}
+
+@keyframes qh-window {
+  0%, 100% { opacity: 0.16; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes qh-fly {
+  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.2; }
+  50% { transform: translate3d(calc(var(--dx) * 2px), calc(var(--dy) * 2px), 0); opacity: 0.95; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .qh-breathe {
+    animation: qh-steps-4 2.6s steps(4) infinite;
+    animation-play-state: paused;
+  }
+
+  .qh-bramble { animation-duration: 2.5s; }
+  .qh-merlin { animation-duration: 2.9s; animation-delay: -0.55s; }
+  .qh-tahne { animation-duration: 2.7s; animation-delay: -1.05s; }
+
+  .qh-walker {
+    animation: qh-patrol 24s linear infinite;
+    animation-play-state: paused;
+  }
+
+  .qh-winston-east,
+  .qh-winston-west {
+    animation:
+      qh-steps-6 1.1s steps(6) infinite,
+      qh-face-east 24s linear infinite;
+    animation-play-state: paused, paused;
+  }
+
+  .qh-winston-west {
+    animation-name: qh-steps-6, qh-face-west;
+  }
+
+  .qh-cloud {
+    animation: qh-drift 46s linear infinite alternate;
+    animation-play-state: paused;
+  }
+
+  .qh-cloud-b { animation-duration: 54s; }
+  .qh-cloud-c { animation-duration: 38s; }
+
+  .qh-lamp {
+    animation: qh-flicker 3.2s linear infinite;
+    animation-play-state: paused;
+  }
+
+  .lamp-b { animation-duration: 3.5s; animation-delay: -0.4s; }
+  .lamp-c { animation-duration: 3.0s; animation-delay: -0.9s; }
+  .lamp-d { animation-duration: 4.0s; animation-delay: -1.3s; }
+  .lamp-e { animation-duration: 3.3s; animation-delay: -0.2s; }
+  .lamp-f { animation-duration: 3.7s; animation-delay: -1.6s; }
+
+  .qh-window {
+    animation: qh-window 5.4s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+
+  .window-academy-l { animation-delay: -0.8s; }
+  .window-academy-r { animation-duration: 6.0s; animation-delay: -2.1s; }
+  .window-printers { animation-duration: 5.0s; animation-delay: -1.4s; }
+
+  .qh-fly {
+    animation: qh-fly 7s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+
+  .fly-b { animation-duration: 8.5s; animation-delay: -2s; }
+  .fly-c { animation-duration: 6.4s; animation-delay: -3.2s; }
+  .fly-d { animation-duration: 9s; animation-delay: -1.1s; }
+  .fly-e { animation-duration: 7.6s; animation-delay: -4s; }
+
+  .qh-scene.is-live .qh-breathe,
+  .qh-scene.is-live .qh-walker,
+  .qh-scene.is-live .qh-winston-east,
+  .qh-scene.is-live .qh-winston-west,
+  .qh-scene.is-live .qh-cloud,
+  .qh-scene.is-live .qh-lamp,
+  .qh-scene.is-live .qh-window,
+  .qh-scene.is-live .qh-fly {
+    animation-play-state: running;
+  }
 }
