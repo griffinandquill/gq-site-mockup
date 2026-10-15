@@ -219,10 +219,9 @@ img.logo {
 .wordmark-meta {
   display: block;
   color: var(--cream);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 
 .nav-toggle {
@@ -283,7 +282,6 @@ img.logo {
 
 @media (max-width: 1000px) {
   .js .nav-toggle { display: inline-flex; }
-  .site-header .wordmark-meta { display: none; }
   .wordmark-name { font-size: 1.05rem; }
   .js #site-nav {
     display: none;
@@ -346,6 +344,21 @@ img.logo {
 .cover p { color: var(--cream); }
 
 .h1-lead { display: block; }
+
+.secondary-line {
+  margin: 0 0 0.85rem;
+  max-width: 40rem;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.35;
+  color: var(--navy);
+}
+
+.cover .secondary-line {
+  margin-top: 0.9rem;
+  color: var(--cream);
+}
 
 .h1-rest {
   display: block;
@@ -468,6 +481,17 @@ img.logo {
 .card h3,
 .form-card h2,
 .callout-plain h2 { margin-top: 0; }
+
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card > p:has(> .btn),
+.card > .card-actions,
+.card > .price-note:last-child {
+  margin-top: auto;
+}
 
 .btn {
   display: inline-flex;
@@ -638,6 +662,13 @@ button.btn-soon:hover {
 
 .price-note { font-weight: 700; color: var(--navy); }
 
+.meta .price-note {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
 .meta { margin: 0.75rem 0 1rem; }
 .meta div {
   display: grid;
@@ -732,14 +763,6 @@ button.btn-soon:hover {
 .portrait-slot p,
 .art-slot p,
 .pixel-slot p { margin: 0; color: var(--navy); }
-
-.tbd {
-  background: var(--white);
-  border: 1px dashed var(--burgundy);
-  padding: 1rem 1.1rem;
-}
-
-.tbd strong { color: var(--burgundy); }
 
 .legal-banner {
   background: var(--burgundy);
@@ -1442,7 +1465,7 @@ legend { padding: 0 0.3rem; }
 
 .town-map {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
   gap: 0.85rem;
   margin-top: 1rem;
   padding: 0.85rem;
