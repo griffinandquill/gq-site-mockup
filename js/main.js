@@ -19,8 +19,8 @@
         ? '<a class="btn btn-primary" href="#">Buy on TPT<span class="visually-hidden">: ' + esc(item.title) + ', sample product</span></a>'
         : '<button type="button" class="btn btn-soon" aria-disabled="true">Coming soon<span class="visually-hidden">: ' + esc(item.title) + '</span></button>';
       var priceNote = item.action === "buy"
-        ? '<span class="price-note"> Sample price. Not for sale on this mockup.</span>'
-        : '<span class="price-note"> Sample. Price not set.</span>';
+        ? '<span class="price-note">Sample price. Not for sale on this mockup.</span>'
+        : '<span class="price-note">Sample. Price not set.</span>';
       return (
         '<article class="card product">' +
           '<p class="stamp">Sample</p>' +
