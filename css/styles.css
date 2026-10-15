@@ -1411,6 +1411,11 @@ legend { padding: 0 0.3rem; }
   scrollbar-color: #b8860b #1a243c;
 }
 
+/* Narrow windows cannot show the whole sidewalk at 2×. Fit the town instead of cropping townsfolk off the sides. */
+.qh-scene.is-fit {
+  overflow: hidden;
+}
+
 .qh-panorama {
   position: relative;
   width: 1280px;

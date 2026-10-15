@@ -267,8 +267,9 @@ test("quillhaven npc sprites have size inside the panorama", async ({ page }) =>
           backgroundImage: style.backgroundImage,
         };
       }, npc.selector);
-      expect(box.width, `${npc.name} width at ${width}`).toBeGreaterThan(20);
-      expect(box.height, `${npc.name} height at ${width}`).toBeGreaterThan(20);
+      const minSprite = width >= 1000 ? 20 : 6;
+      expect(box.width, `${npc.name} width at ${width}`).toBeGreaterThan(minSprite);
+      expect(box.height, `${npc.name} height at ${width}`).toBeGreaterThan(minSprite);
       expect(box.opacity, npc.name).toBe("1");
       expect(box.backgroundImage, npc.name).toContain(npc.sheet);
       expect(box.left, `${npc.name} left`).toBeGreaterThanOrEqual(box.sceneLeft - 1);
@@ -278,6 +279,116 @@ test("quillhaven npc sprites have size inside the panorama", async ({ page }) =>
       await expect(page.locator(npc.selector)).toBeVisible();
     }
   }
+});
+
+test.describe("quillhaven cast stays on screen", () => {
+  test.use({ reducedMotion: "no-preference" });
+
+  test("all seven characters stay visible and in bounds over several minutes", async ({ page }) => {
+    test.setTimeout(60_000);
+    await page.clock.install();
+    const who = ["bramble", "brittany", "ruth", "winston", "merlin", "tahne", "rudy"];
+
+    async function expectCast(clip: string, root: string, label: string) {
+      const rows = await page.evaluate(({ clip, root }) => {
+        const boxEl = document.querySelector(clip);
+        if (!boxEl) return [];
+        const box = boxEl.getBoundingClientRect();
+        return Array.from(document.querySelectorAll(`${root} [data-sprite]`)).map((sprite) => {
+          const actor = sprite.closest("[data-who]");
+          const rect = sprite.getBoundingClientRect();
+          const style = getComputedStyle(sprite);
+          return {
+            who: actor ? actor.getAttribute("data-who") : "",
+            opacity: style.opacity,
+            image: style.backgroundImage,
+            width: rect.width,
+            height: rect.height,
+            left: rect.left - box.left,
+            right: rect.right - box.left,
+            top: rect.top - box.top,
+            bottom: rect.bottom - box.top,
+            boxW: box.width,
+            boxH: box.height,
+          };
+        });
+      }, { clip, root });
+      expect(rows.map((row) => row.who).sort(), label).toEqual([...who].sort());
+      for (const row of rows) {
+        expect(row.opacity, `${label} ${row.who}`).toBe("1");
+        expect(row.image, `${label} ${row.who}`).not.toBe("none");
+        expect(row.width, `${label} ${row.who}`).toBeGreaterThan(4);
+        expect(row.height, `${label} ${row.who}`).toBeGreaterThan(4);
+        expect(row.left, `${label} ${row.who} left`).toBeGreaterThanOrEqual(-1);
+        expect(row.top, `${label} ${row.who} top`).toBeGreaterThanOrEqual(-1);
+        expect(row.right, `${label} ${row.who} right`).toBeLessThanOrEqual(row.boxW + 1);
+        expect(row.bottom, `${label} ${row.who} bottom`).toBeLessThanOrEqual(row.boxH + 1);
+      }
+    }
+
+    async function heroXs() {
+      return page.evaluate(() => Array.from(document.querySelectorAll(".qh-scene .qh-actor")).map((actor) => {
+        const el = actor as HTMLElement;
+        return el.style.getPropertyValue("--x");
+      }).join(","));
+    }
+
+    for (const width of [1280, 768, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`/worlds.html?cast=${width}`);
+      await expect(page.locator(".qh-scene")).toBeVisible();
+      await page.clock.fastForward(400);
+      for (let sec = 0; sec <= 180; sec += 5) {
+        if (sec) await page.clock.fastForward(5000);
+        if (sec === 60) await page.clock.fastForward(10 * 60 * 1000);
+        await expectCast(".qh-scene", ".qh-scene", `hero ${width}px t=${sec}`);
+      }
+
+      await page.evaluate(() => {
+        document.documentElement.style.scrollBehavior = "auto";
+        const play = document.querySelector("#play");
+        if (!play) return;
+        const top = play.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(0, Math.max(0, top - 80));
+      });
+      await page.clock.fastForward(400);
+      for (let sec = 0; sec <= 40; sec += 5) {
+        if (sec) await page.clock.fastForward(5000);
+        await expectCast(".play-fit", ".play-panorama", `poster ${width}px t=${sec}`);
+      }
+    }
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/worlds.html?cast=resume");
+    await page.clock.fastForward(400);
+    await page.evaluate(() => {
+      Object.defineProperty(Document.prototype, "hidden", {
+        configurable: true,
+        get() { return (document as Document & { __hide?: boolean }).__hide === true; },
+      });
+      (document as Document & { __hide?: boolean }).__hide = true;
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    const whileHidden = await heroXs();
+    await page.clock.fastForward(8000);
+    expect(await heroXs()).toBe(whileHidden);
+    await page.evaluate(() => {
+      (document as Document & { __hide?: boolean }).__hide = false;
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await page.clock.fastForward(4000);
+    expect(await heroXs()).not.toBe(whileHidden);
+    await expectCast(".qh-scene", ".qh-scene", "hero after tab show");
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const whileAway = await heroXs();
+    await page.clock.fastForward(5000);
+    expect(await heroXs()).toBe(whileAway);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.clock.fastForward(4000);
+    expect(await heroXs()).not.toBe(whileAway);
+    await expectCast(".qh-scene", ".qh-scene", "hero after scroll back");
+  });
 });
 
 function creamPixelCount(png: Buffer) {
