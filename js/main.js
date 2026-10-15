@@ -200,7 +200,23 @@
     apply();
   }
 
+  function setupScenePause() {
+    var scene = document.querySelector(".qh-scene");
+    if (!scene || reduceMotion) return;
+    if (!("IntersectionObserver" in window)) {
+      scene.classList.add("is-live");
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        scene.classList.toggle("is-live", entry.isIntersecting);
+      });
+    }, { rootMargin: "64px 0px" });
+    io.observe(scene);
+  }
+
   setupReveal();
   setupTypewriter();
   setupParallax();
+  setupScenePause();
 })();
