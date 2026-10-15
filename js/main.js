@@ -222,6 +222,7 @@
 
     var place = flight.getBoundingClientRect();
     flight.classList.add("is-flying");
+    document.body.appendChild(flight);
     var x = place.left;
     var y = place.top;
     var heading = 1;
