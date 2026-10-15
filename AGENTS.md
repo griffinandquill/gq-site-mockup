@@ -26,8 +26,32 @@ The Pages workflow on `main` only stages files and deploys. It does not run veri
 
 Fixes to the same build are replies on that build. After two fix rounds, stop and check before any further fix. The game-hub rules name Ryan for that check. A new page or a new feature starts its own count. The cap does not waive verify.
 
-## AI art
+## AI art and brand
 
-Do not drop AI art into the logo or the mascot. Those slots stay "coming soon" until a person delivers the mark. The gryphon-and-quill mark is with a human artist. Do not name the mascot until the trademark check in the README is finished.
+The final Griffin & Quill logo (Option 4: navy, cream gryphon, gold quill) is in the site. Use the repo's logo and icon files; do not redraw or recolor them. Quillhaven's pixel-art logo is still coming, so keep its slot on the Quillhaven page.
 
-AI art that Griffin & Quill will ship and own needs a hand-edited pass first. Raw model output is not the asset. The Option 4 logo is not in this repo. It goes on the site when the designer delivers it.
+The mascot gryphon is Tahne, founder of Quillhaven. Other characters: Winston Wolf, Merlin (wizard portal keeper), Professor Bramble (highland cow librarian), and the student kids Brittany, Ruth and Rudy. Character and building sprites come from the Quillhaven Pixel Assets in Drive; render them with `image-rendering: pixelated` at integer scales, and align sprites by their opaque bottom edge, not their canvas.
+
+AI art that Griffin & Quill will ship needs a hand-edited pass first. Do not invent testimonials, stats, or reviews.
+
+Official tagline: "Write your own legend. Learn it. Live it. PROVE IT!" Secondary line: "Where learning becomes an adventure." "An Edtech Company" is a descriptor only.
+
+## Stack
+
+Plain static HTML, CSS and vanilla JS, with Playwright for verify. No framework or build step without Ryan's OK. Motion stays light (transforms and opacity) and respects `prefers-reduced-motion`.
+
+## Branches and pull requests
+
+- Branch names: `feature/...`, `fix/...`, `art/...`, `chore/...`. One task per branch.
+- Every change goes through a pull request into `main`. No direct pushes. `main` must stay deployable.
+- Ryan merges. Agents open and update PRs; they do not merge them.
+
+## Brand colors
+
+| Name | Hex |
+|---|---|
+| Navy | `#1F2A44` |
+| Gold | `#B8860B` |
+| Cream | `#FAF6EA` |
+| Burgundy | `#7A2E2E` |
+| Charcoal | `#2B2B2B` |
