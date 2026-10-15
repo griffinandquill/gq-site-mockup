@@ -372,18 +372,142 @@
       };
     }
 
+    var idlePace = { bramble: 2.5, merlin: 2.9, tahne: 2.7, winston: 2.6 };
+    var idlePhase = { merlin: 0.55, tahne: 1.05 };
+    var strips = {};
+    var castReady = false;
+
+    function sheetInfo(sprite, face, pose) {
+      sprite.setAttribute("data-face", face);
+      sprite.setAttribute("data-pose", pose);
+      var style = getComputedStyle(sprite);
+      var image = style.backgroundImage || "";
+      var match = /url\(["']?([^"')]+)["']?\)/.exec(image);
+      var cell = parseFloat(style.getPropertyValue("--cell-w"));
+      var height = parseFloat(style.getPropertyValue("--cell-h"));
+      var sheet = parseFloat(style.getPropertyValue("--sheet"));
+      return {
+        face: face,
+        pose: pose,
+        url: match ? match[1] : "",
+        cell: cell,
+        height: height,
+        frames: Math.round(sheet / (cell * 2))
+      };
+    }
+
+    function loadImage(url) {
+      return new Promise(function (resolve, reject) {
+        var img = new Image();
+        img.decoding = "sync";
+        img.onload = function () { resolve(img); };
+        img.onerror = function () { reject(new Error("sprite")); };
+        img.src = url;
+      });
+    }
+
+    function measureSheets(sprite) {
+      var actor = sprite.closest(".qh-actor");
+      var ghost = actor.cloneNode(true);
+      ghost.setAttribute("aria-hidden", "true");
+      ghost.style.visibility = "hidden";
+      ghost.style.pointerEvents = "none";
+      document.body.appendChild(ghost);
+      var ghostSprite = ghost.querySelector("[data-sprite]");
+      var parts = [
+        sheetInfo(ghostSprite, "east", "idle"),
+        sheetInfo(ghostSprite, "east", "walk"),
+        sheetInfo(ghostSprite, "west", "idle"),
+        sheetInfo(ghostSprite, "west", "walk")
+      ];
+      ghost.remove();
+      return parts;
+    }
+
+    function buildStrip(who, sprite) {
+      var parts = measureSheets(sprite);
+      return Promise.all(parts.map(function (part) {
+        return loadImage(part.url).then(function (img) {
+          return { part: part, img: img };
+        });
+      })).then(function (loaded) {
+        var cell = loaded[0].part.cell;
+        var height = loaded[0].part.height;
+        var total = 0;
+        var i;
+        for (i = 0; i < loaded.length; i += 1) total += loaded[i].part.frames;
+        var canvas = document.createElement("canvas");
+        canvas.width = cell * total;
+        canvas.height = height;
+        var ctx = canvas.getContext("2d");
+        if (!ctx) throw new Error("sprite");
+        ctx.imageSmoothingEnabled = false;
+        var origin = {};
+        var frameAt = 0;
+        for (i = 0; i < loaded.length; i += 1) {
+          var item = loaded[i];
+          var frames = item.part.frames;
+          if (item.img.naturalWidth !== cell * frames || item.img.naturalHeight !== height) {
+            throw new Error("sprite");
+          }
+          origin[item.part.face + "-" + item.part.pose] = frameAt;
+          ctx.drawImage(item.img, frameAt * cell, 0);
+          frameAt += frames;
+        }
+        strips[who] = {
+          url: canvas.toDataURL("image/png"),
+          width: canvas.width * 2,
+          height: canvas.height * 2,
+          origin: origin,
+          idleFrames: loaded[0].part.frames,
+          walkFrames: loaded[1].part.frames
+        };
+      });
+    }
+
+    function applyStrip(sprite, who) {
+      var strip = strips[who];
+      if (!strip) return;
+      sprite.style.animation = "none";
+      sprite.style.backgroundRepeat = "no-repeat";
+      sprite.style.backgroundImage = 'url("' + strip.url + '")';
+      sprite.style.backgroundSize = strip.width + "px " + strip.height + "px";
+      sprite.style.backgroundPosition = "0 0";
+    }
+
+    function stepFrame(sprite, who, face, pose, time) {
+      var strip = strips[who];
+      if (!strip) return;
+      var frames = pose === "walk" ? strip.walkFrames : strip.idleFrames;
+      var index = 0;
+      if (frames > 1) {
+        var dur = pose === "walk" ? 1.1 : (idlePace[who] || 2.6);
+        var phase = pose === "walk" ? 0 : (idlePhase[who] || 0);
+        var t = (time + phase) % dur;
+        if (t < 0) t += dur;
+        index = Math.floor((t / dur) * frames);
+        if (index >= frames) index = frames - 1;
+      }
+      var origin = strip.origin[face + "-" + pose] || 0;
+      // Idle and walk already share this image, so a pose change cannot
+      // leave the window on an empty cell of a shorter sheet.
+      sprite.style.backgroundPositionX = "calc(var(--cell-w) * " + ((origin + index) * -2) + "px)";
+    }
+
     function paint(cast, time) {
+      if (!castReady) return;
       Array.prototype.forEach.call(cast.querySelectorAll(".qh-actor"), function (actor) {
         var who = actor.getAttribute("data-who");
         var keys = script[who];
         var sprite = actor.querySelector("[data-sprite]");
-        if (!keys || !sprite) return;
+        if (!keys || !sprite || !strips[who]) return;
         var state = sample(keys, time);
         var x = Math.max(72, Math.min(590, state.x));
         actor.style.setProperty("--x", x.toFixed(2));
         sprite.setAttribute("data-face", state.face);
         sprite.setAttribute("data-pose", state.pose);
         sprite.classList.toggle("is-walk", state.pose === "walk");
+        stepFrame(sprite, who, state.face, state.pose, time);
         actor.classList.toggle("is-chat", state.chat !== "");
         var emote = sprite.querySelector(".qh-emote");
         if (emote && state.chat) emote.setAttribute("data-kind", state.chat);
@@ -407,7 +531,7 @@
     }
 
     kickCast = function () {
-      if (frame || document.hidden) return;
+      if (!castReady || frame || document.hidden) return;
       frame = window.requestAnimationFrame(tick);
     };
 
@@ -419,7 +543,32 @@
       }
       kickCast();
     });
-    kickCast();
+
+    var pending = [];
+    var seenWho = {};
+    casts.forEach(function (cast) {
+      Array.prototype.forEach.call(cast.querySelectorAll(".qh-actor"), function (actor) {
+        var who = actor.getAttribute("data-who");
+        var sprite = actor.querySelector("[data-sprite]");
+        if (!who || !sprite || seenWho[who]) return;
+        seenWho[who] = true;
+        pending.push(buildStrip(who, sprite));
+      });
+    });
+    Promise.all(pending).then(function () {
+      casts.forEach(function (cast) {
+        Array.prototype.forEach.call(cast.querySelectorAll(".qh-actor"), function (actor) {
+          var who = actor.getAttribute("data-who");
+          var sprite = actor.querySelector("[data-sprite]");
+          if (who && sprite) applyStrip(sprite, who);
+        });
+      });
+      castReady = true;
+      document.documentElement.setAttribute("data-cast-ready", "1");
+      kickCast();
+    }).catch(function (err) {
+      document.documentElement.setAttribute("data-cast-error", String(err && err.message ? err.message : err));
+    });
   }
 
   function setupPlayDemo() {

@@ -283,6 +283,16 @@ test("quillhaven npc sprites have size inside the panorama", async ({ page }) =>
 
 const castWho = ["bramble", "brittany", "ruth", "winston", "merlin", "tahne", "rudy"];
 
+async function waitForCast(page: Page) {
+  for (let attempt = 0; attempt < 80; attempt += 1) {
+    const state = await page.evaluate(() => document.documentElement.dataset.castReady || document.documentElement.dataset.castError || "");
+    if (state === "1") return;
+    if (state) throw new Error(state);
+    await page.clock.fastForward(50);
+  }
+  throw new Error("cast did not start");
+}
+
 async function expectCastInCrop(page: Page, clip: string, root: string, label: string) {
   const rows = await page.evaluate(({ clip, root }) => {
     const boxEl = document.querySelector(clip);
@@ -361,6 +371,7 @@ test.describe("quillhaven cast stays on screen", () => {
       await page.setViewportSize({ width: run.width, height: run.height });
       await page.goto(`/worlds.html?cast=${run.width}x${run.height}`);
       await expect(page.locator(".qh-scene")).toBeVisible();
+      await waitForCast(page);
       await page.clock.fastForward(400);
       const step = run.seconds > 40 ? 5 : 10;
       for (let sec = 0; sec <= run.seconds; sec += step) {
@@ -391,6 +402,7 @@ test.describe("quillhaven cast stays on screen", () => {
 
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/worlds.html?cast=resize");
+    await waitForCast(page);
     await page.clock.fastForward(400);
     for (let step = 0; step < 20; step += 1) {
       const rudy = await page.evaluate(() => {
@@ -407,6 +419,7 @@ test.describe("quillhaven cast stays on screen", () => {
     }
     await resizeTo(853, 700);
     await page.goto("/worlds.html?cast=grow");
+    await waitForCast(page);
     await page.clock.fastForward(17_000);
     await expectCast(".qh-scene", ".qh-scene", "opened at 150% zoom");
     await resizeTo(1440, 900);
@@ -414,6 +427,7 @@ test.describe("quillhaven cast stays on screen", () => {
 
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/worlds.html?cast=resume");
+    await waitForCast(page);
     await page.clock.fastForward(400);
     await page.evaluate(() => {
       Object.defineProperty(Document.prototype, "hidden", {
@@ -443,7 +457,273 @@ test.describe("quillhaven cast stays on screen", () => {
     expect(await heroXs()).not.toBe(whileAway);
     await expectCast(".qh-scene", ".qh-scene", "hero after scroll back");
   });
+
+  test("each sprite stays on a drawn frame for a full cast loop", async ({ page }) => {
+    test.setTimeout(180_000);
+    const width = 1440;
+    const height = 900;
+    const seconds = 40;
+    await page.setViewportSize({ width, height });
+    const pageErrors: string[] = [];
+    page.on("pageerror", (error) => pageErrors.push(error.message));
+    await page.goto("/worlds.html?frames=cast");
+    await page.waitForFunction(() => {
+      const root = document.documentElement;
+      return root.dataset.castReady === "1" || root.dataset.castError;
+    });
+    const castError = await page.evaluate(() => document.documentElement.dataset.castError || "");
+    expect(castError).toBe("");
+    await page.evaluate(() => {
+      document.querySelectorAll(".qh-lamp, .qh-fly, .qh-cloud, .qh-window, .accent-flight").forEach((node) => {
+        (node as HTMLElement).style.animation = "none";
+      });
+      const bird = document.querySelector(".accent-flight");
+      if (bird) (bird as HTMLElement).style.visibility = "hidden";
+    });
+
+    const client = await page.context().newCDPSession(page);
+    const shots: { png: Buffer; stamp: number }[] = [];
+    client.on("Page.screencastFrame", (event) => {
+      const metadata = event.metadata as { timestamp?: number } | undefined;
+      const raw = metadata && typeof metadata.timestamp === "number" ? metadata.timestamp : 0;
+      const stamp = raw > 1e12 ? raw : raw > 1e9 ? raw * 1000 : Date.now();
+      shots.push({ png: Buffer.from(event.data, "base64"), stamp });
+      void client.send("Page.screencastFrameAck", { sessionId: event.sessionId }).catch(() => {});
+    });
+
+    await page.evaluate(() => {
+      document.querySelectorAll(".qh-scene [data-sprite]").forEach((node) => {
+        (node as HTMLElement).style.visibility = "hidden";
+      });
+    });
+    await client.send("Page.startScreencast", { format: "png", everyFrame: true });
+    await expect.poll(() => shots.length, { timeout: 5_000 }).toBeGreaterThan(1);
+    const reference = decodePng(shots[shots.length - 1].png);
+    await client.send("Page.stopScreencast");
+    await page.waitForTimeout(150);
+    shots.length = 0;
+
+    await page.evaluate(() => {
+      document.querySelectorAll(".qh-scene [data-sprite]").forEach((node) => {
+        (node as HTMLElement).style.visibility = "";
+      });
+      const samples: CastFrame[] = [];
+      (window as Window & { __castFrames?: CastFrame[] }).__castFrames = samples;
+      const log = () => {
+        samples.push({
+          t: Date.now(),
+          rows: Array.from(document.querySelectorAll(".qh-scene [data-sprite]")).map((sprite) => {
+            const actor = sprite.closest("[data-who]");
+            const rect = sprite.getBoundingClientRect();
+            const style = getComputedStyle(sprite);
+            const sheet = parseFloat(style.backgroundSize) || 0;
+            const pos = parseFloat(style.backgroundPositionX) || 0;
+            const cell = (parseFloat(style.getPropertyValue("--cell-w")) || 0) * 2;
+            return {
+              who: actor ? actor.getAttribute("data-who") || "" : "",
+              pose: sprite.getAttribute("data-pose") || "",
+              left: rect.left,
+              top: rect.top,
+              width: rect.width,
+              height: rect.height,
+              sheet,
+              pos,
+              cell,
+              image: style.backgroundImage.startsWith('url("data:image/png') ? "strip" : style.backgroundImage.slice(0, 48),
+            };
+          }),
+        });
+        window.requestAnimationFrame(log);
+      };
+      window.requestAnimationFrame(log);
+    });
+    shots.length = 0;
+    const captureStart = Date.now();
+    await client.send("Page.startScreencast", { format: "png", everyFrame: true });
+
+    await page.waitForTimeout(seconds * 1000);
+    await client.send("Page.stopScreencast");
+    await page.waitForTimeout(200);
+    const samples = await page.evaluate(() => {
+      const holder = window as Window & { __castFrames?: CastFrame[] };
+      return holder.__castFrames || [];
+    });
+    const seen = new Map<string, Set<string>>();
+    const styleProblems: string[] = [];
+    for (const sample of samples) {
+      for (const row of sample.rows) {
+        const poses = seen.get(row.who) || new Set<string>();
+        poses.add(row.pose);
+        seen.set(row.who, poses);
+        if (row.image !== "strip") styleProblems.push(`${row.who} sheet ${row.image}`);
+        if (row.width <= 4 || row.height <= 4) styleProblems.push(`${row.who} box ${row.width}x${row.height}`);
+        if (!(row.cell > 0)) styleProblems.push(`${row.who} cell`);
+        if (row.pos > 0.5 || -row.pos >= row.sheet - row.cell + 1) styleProblems.push(`${row.who} pos ${row.pos}`);
+      }
+    }
+    expect(styleProblems.slice(0, 8)).toEqual([]);
+    expect(samples.length, "animation samples").toBeGreaterThan(seconds * 20);
+
+    let frames = 0;
+    let worstGap = 0;
+    let worst = { who: "", diff: Number.POSITIVE_INFINITY, pose: "" };
+    const blanks: string[] = [];
+    const captured = shots.splice(0, shots.length);
+    for (const shot of captured) {
+      if (shot.stamp < captureStart - 30) continue;
+      const decoded = decodePng(shot.png);
+      if (decoded.width !== reference.width || decoded.height !== reference.height) {
+        styleProblems.push(`frame ${decoded.width}x${decoded.height}`);
+        break;
+      }
+      const sample = nearestCastFrame(samples, shot.stamp);
+      const gap = Math.abs(sample.t - shot.stamp);
+      if (gap > worstGap) worstGap = gap;
+      frames += 1;
+      for (const row of sample.rows) {
+        const diff = meanChannelDiff(reference, decoded, row, width, height);
+        if (diff < worst.diff) worst = { who: row.who, diff, pose: row.pose };
+        if (diff < 10) {
+          const name = `${row.who}-${row.pose}-${frames}`;
+          blanks.push(`${name} diff ${diff.toFixed(2)}`);
+          if (blanks.length <= 4) {
+            fs.mkdirSync("verify-results", { recursive: true });
+            fs.writeFileSync(path.join("verify-results", `blank-${name}.png`), shot.png);
+          }
+        }
+      }
+    }
+    expect(worstGap, "frame clock").toBeLessThan(80);
+    expect(styleProblems.slice(0, 8)).toEqual([]);
+
+    expect(pageErrors).toEqual([]);
+    expect(frames, "compositor frames").toBeGreaterThan(seconds * 20);
+    for (const who of castWho) {
+      expect(seen.get(who)?.has("walk"), `${who} walked`).toBe(true);
+      expect(seen.get(who)?.has("idle"), `${who} idled`).toBe(true);
+    }
+    expect(blanks, `empty sprite frames (lowest diff ${worst.who} ${worst.pose} ${worst.diff.toFixed(2)})`).toEqual([]);
+  });
 });
+
+type PngImage = { width: number; height: number; channels: number; pixels: Buffer };
+
+function decodePng(png: Buffer): PngImage {
+  let offset = 8;
+  let width = 0;
+  let height = 0;
+  let colorType = 6;
+  const chunks: Buffer[] = [];
+  while (offset + 8 <= png.length) {
+    const length = png.readUInt32BE(offset);
+    const type = png.toString("ascii", offset + 4, offset + 8);
+    const data = png.subarray(offset + 8, offset + 8 + length);
+    if (type === "IHDR") {
+      width = data.readUInt32BE(0);
+      height = data.readUInt32BE(4);
+      colorType = data[9];
+    } else if (type === "IDAT") {
+      chunks.push(Buffer.from(data));
+    } else if (type === "IEND") {
+      break;
+    }
+    offset += 12 + length;
+  }
+  const channels = colorType === 2 ? 3 : 4;
+  const inflated = inflateSync(Buffer.concat(chunks));
+  const rowSize = width * channels;
+  const pixels = Buffer.alloc(width * height * channels);
+  let src = 0;
+  for (let y = 0; y < height; y += 1) {
+    const filter = inflated[src];
+    src += 1;
+    const rowStart = y * rowSize;
+    if (filter === 0) {
+      inflated.copy(pixels, rowStart, src, src + rowSize);
+      src += rowSize;
+      continue;
+    }
+    for (let i = 0; i < rowSize; i += 1) {
+      const raw = inflated[src];
+      src += 1;
+      const left = i >= channels ? pixels[rowStart + i - channels] : 0;
+      const up = y > 0 ? pixels[rowStart - rowSize + i] : 0;
+      const upLeft = y > 0 && i >= channels ? pixels[rowStart - rowSize + i - channels] : 0;
+      let value = raw;
+      if (filter === 1) value = (raw + left) & 255;
+      else if (filter === 2) value = (raw + up) & 255;
+      else if (filter === 3) value = (raw + Math.floor((left + up) / 2)) & 255;
+      else if (filter === 4) {
+        const guess = left + up - upLeft;
+        const leftDist = Math.abs(guess - left);
+        const upDist = Math.abs(guess - up);
+        const upLeftDist = Math.abs(guess - upLeft);
+        const predicted = leftDist <= upDist && leftDist <= upLeftDist ? left : upDist <= upLeftDist ? up : upLeft;
+        value = (raw + predicted) & 255;
+      }
+      pixels[rowStart + i] = value;
+    }
+  }
+  return { width, height, channels, pixels };
+}
+
+type CastFrame = {
+  t: number;
+  rows: {
+    who: string;
+    pose: string;
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    sheet: number;
+    pos: number;
+    cell: number;
+    image: string;
+  }[];
+};
+
+function nearestCastFrame(samples: CastFrame[], stamp: number) {
+  let low = 0;
+  let high = samples.length - 1;
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2);
+    if (samples[mid].t < stamp) low = mid + 1;
+    else high = mid;
+  }
+  const next = samples[low];
+  const prev = samples[Math.max(0, low - 1)];
+  return Math.abs(prev.t - stamp) <= Math.abs(next.t - stamp) ? prev : next;
+}
+
+function meanChannelDiff(
+  reference: PngImage,
+  frame: PngImage,
+  rect: { left: number; top: number; width: number; height: number },
+  viewportWidth: number,
+  viewportHeight: number,
+) {
+  const scaleX = frame.width / viewportWidth;
+  const scaleY = frame.height / viewportHeight;
+  const x0 = Math.max(0, Math.floor(rect.left * scaleX));
+  const y0 = Math.max(0, Math.floor(rect.top * scaleY));
+  const x1 = Math.min(frame.width, Math.ceil((rect.left + rect.width) * scaleX));
+  const y1 = Math.min(frame.height, Math.ceil((rect.top + rect.height) * scaleY));
+  let sum = 0;
+  let count = 0;
+  const channels = frame.channels;
+  for (let y = y0; y < y1; y += 2) {
+    for (let x = x0; x < x1; x += 2) {
+      const frameAt = (y * frame.width + x) * channels;
+      const refAt = (y * reference.width + x) * reference.channels;
+      sum += Math.abs(frame.pixels[frameAt] - reference.pixels[refAt]);
+      sum += Math.abs(frame.pixels[frameAt + 1] - reference.pixels[refAt + 1]);
+      sum += Math.abs(frame.pixels[frameAt + 2] - reference.pixels[refAt + 2]);
+      count += 3;
+    }
+  }
+  return count ? sum / count : 0;
+}
 
 for (const dpr of [1.25, 1.5, 2]) {
   test.describe(`quillhaven cast at devicePixelRatio ${dpr}`, () => {
@@ -456,6 +736,7 @@ for (const dpr of [1.25, 1.5, 2]) {
     test(`all seven stay inside the crop at pixel ratio ${dpr}`, async ({ page }) => {
       await page.clock.install();
       await page.goto(`/worlds.html?dpr=${dpr}`);
+      await waitForCast(page);
       await page.clock.fastForward(17_000);
       await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} laptop`);
       await page.setViewportSize({ width: 853, height: 480 });
