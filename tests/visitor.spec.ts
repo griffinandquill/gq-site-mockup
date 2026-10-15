@@ -281,49 +281,61 @@ test("quillhaven npc sprites have size inside the panorama", async ({ page }) =>
   }
 });
 
+const castWho = ["bramble", "brittany", "ruth", "winston", "merlin", "tahne", "rudy"];
+
+async function expectCastInCrop(page: Page, clip: string, root: string, label: string) {
+  const rows = await page.evaluate(({ clip, root }) => {
+    const boxEl = document.querySelector(clip);
+    if (!boxEl) return [];
+    const box = boxEl.getBoundingClientRect();
+    const boxStyle = getComputedStyle(boxEl);
+    const cropLeft = box.left + (parseFloat(boxStyle.borderLeftWidth) || 0);
+    const cropTop = box.top + (parseFloat(boxStyle.borderTopWidth) || 0);
+    return Array.from(document.querySelectorAll(`${root} [data-sprite]`)).map((sprite) => {
+      const actor = sprite.closest("[data-who]");
+      const rect = sprite.getBoundingClientRect();
+      const style = getComputedStyle(sprite);
+      return {
+        who: actor ? actor.getAttribute("data-who") : "",
+        opacity: style.opacity,
+        visibility: style.visibility,
+        display: style.display,
+        image: style.backgroundImage,
+        width: rect.width,
+        height: rect.height,
+        left: rect.left - cropLeft,
+        right: rect.right - cropLeft,
+        top: rect.top - cropTop,
+        bottom: rect.bottom - cropTop,
+        boxW: boxEl.clientWidth,
+        boxH: boxEl.clientHeight,
+      };
+    });
+  }, { clip, root });
+  expect(rows.map((row) => row.who).sort(), label).toEqual([...castWho].sort());
+  for (const row of rows) {
+    expect(row.opacity, `${label} ${row.who}`).toBe("1");
+    expect(row.visibility, `${label} ${row.who}`).toBe("visible");
+    expect(row.display, `${label} ${row.who}`).not.toBe("none");
+    expect(row.image, `${label} ${row.who}`).not.toBe("none");
+    expect(row.width, `${label} ${row.who}`).toBeGreaterThan(4);
+    expect(row.height, `${label} ${row.who}`).toBeGreaterThan(4);
+    expect(row.left, `${label} ${row.who} left`).toBeGreaterThanOrEqual(-1);
+    expect(row.top, `${label} ${row.who} top`).toBeGreaterThanOrEqual(-1);
+    expect(row.right, `${label} ${row.who} right`).toBeLessThanOrEqual(row.boxW + 1);
+    expect(row.bottom, `${label} ${row.who} bottom`).toBeLessThanOrEqual(row.boxH + 1);
+  }
+}
+
 test.describe("quillhaven cast stays on screen", () => {
   test.use({ reducedMotion: "no-preference" });
 
   test("all seven characters stay visible and in bounds over several minutes", async ({ page }) => {
-    test.setTimeout(60_000);
+    test.setTimeout(90_000);
     await page.clock.install();
-    const who = ["bramble", "brittany", "ruth", "winston", "merlin", "tahne", "rudy"];
 
     async function expectCast(clip: string, root: string, label: string) {
-      const rows = await page.evaluate(({ clip, root }) => {
-        const boxEl = document.querySelector(clip);
-        if (!boxEl) return [];
-        const box = boxEl.getBoundingClientRect();
-        return Array.from(document.querySelectorAll(`${root} [data-sprite]`)).map((sprite) => {
-          const actor = sprite.closest("[data-who]");
-          const rect = sprite.getBoundingClientRect();
-          const style = getComputedStyle(sprite);
-          return {
-            who: actor ? actor.getAttribute("data-who") : "",
-            opacity: style.opacity,
-            image: style.backgroundImage,
-            width: rect.width,
-            height: rect.height,
-            left: rect.left - box.left,
-            right: rect.right - box.left,
-            top: rect.top - box.top,
-            bottom: rect.bottom - box.top,
-            boxW: box.width,
-            boxH: box.height,
-          };
-        });
-      }, { clip, root });
-      expect(rows.map((row) => row.who).sort(), label).toEqual([...who].sort());
-      for (const row of rows) {
-        expect(row.opacity, `${label} ${row.who}`).toBe("1");
-        expect(row.image, `${label} ${row.who}`).not.toBe("none");
-        expect(row.width, `${label} ${row.who}`).toBeGreaterThan(4);
-        expect(row.height, `${label} ${row.who}`).toBeGreaterThan(4);
-        expect(row.left, `${label} ${row.who} left`).toBeGreaterThanOrEqual(-1);
-        expect(row.top, `${label} ${row.who} top`).toBeGreaterThanOrEqual(-1);
-        expect(row.right, `${label} ${row.who} right`).toBeLessThanOrEqual(row.boxW + 1);
-        expect(row.bottom, `${label} ${row.who} bottom`).toBeLessThanOrEqual(row.boxH + 1);
-      }
+      await expectCastInCrop(page, clip, root, label);
     }
 
     async function heroXs() {
@@ -333,17 +345,30 @@ test.describe("quillhaven cast stays on screen", () => {
       }).join(","));
     }
 
-    for (const width of [1280, 768, 390]) {
-      await page.setViewportSize({ width, height: 900 });
-      await page.goto(`/worlds.html?cast=${width}`);
+    const runs = [
+      { width: 1280, height: 720, seconds: 180, poster: true },
+      { width: 1366, height: 768, seconds: 40, poster: false },
+      { width: 1440, height: 900, seconds: 180, poster: true },
+      { width: 1536, height: 864, seconds: 40, poster: false },
+      { width: 1920, height: 1080, seconds: 40, poster: false },
+      { width: 1024, height: 576, seconds: 40, poster: false },
+      { width: 960, height: 540, seconds: 40, poster: true },
+      { width: 853, height: 480, seconds: 180, poster: true },
+      { width: 768, height: 900, seconds: 40, poster: false },
+      { width: 390, height: 844, seconds: 40, poster: true },
+    ];
+    for (const run of runs) {
+      await page.setViewportSize({ width: run.width, height: run.height });
+      await page.goto(`/worlds.html?cast=${run.width}x${run.height}`);
       await expect(page.locator(".qh-scene")).toBeVisible();
       await page.clock.fastForward(400);
-      for (let sec = 0; sec <= 180; sec += 5) {
-        if (sec) await page.clock.fastForward(5000);
+      const step = run.seconds > 40 ? 5 : 10;
+      for (let sec = 0; sec <= run.seconds; sec += step) {
+        if (sec) await page.clock.fastForward(step * 1000);
         if (sec === 60) await page.clock.fastForward(10 * 60 * 1000);
-        await expectCast(".qh-scene", ".qh-scene", `hero ${width}px t=${sec}`);
+        await expectCast(".qh-scene", ".qh-scene", `hero ${run.width}x${run.height} t=${sec}`);
       }
-
+      if (!run.poster) continue;
       await page.evaluate(() => {
         document.documentElement.style.scrollBehavior = "auto";
         const play = document.querySelector("#play");
@@ -352,11 +377,34 @@ test.describe("quillhaven cast stays on screen", () => {
         window.scrollTo(0, Math.max(0, top - 80));
       });
       await page.clock.fastForward(400);
-      for (let sec = 0; sec <= 40; sec += 5) {
-        if (sec) await page.clock.fastForward(5000);
-        await expectCast(".play-fit", ".play-panorama", `poster ${width}px t=${sec}`);
+      for (let sec = 0; sec <= 40; sec += 10) {
+        if (sec) await page.clock.fastForward(10_000);
+        await expectCast(".play-fit", ".play-panorama", `poster ${run.width}px t=${sec}`);
       }
     }
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/worlds.html?cast=resize");
+    await page.clock.fastForward(400);
+    for (let step = 0; step < 20; step += 1) {
+      const rudy = await page.evaluate(() => {
+        const style = document.querySelector('.qh-scene [data-who="rudy"]')?.getAttribute("style") || "";
+        const match = /--x:\s*([0-9.]+)/.exec(style);
+        return match ? Number(match[1]) : 0;
+      });
+      if (rudy >= 545) break;
+      await page.clock.fastForward(2000);
+    }
+    for (const width of [1440, 1366, 1280, 1100, 1024, 960, 853, 768, 1440, 1920, 1536]) {
+      await page.setViewportSize({ width, height: 800 });
+      await expectCast(".qh-scene", ".qh-scene", `resized to ${width}`);
+    }
+    await page.setViewportSize({ width: 853, height: 700 });
+    await page.goto("/worlds.html?cast=grow");
+    await page.clock.fastForward(17_000);
+    await expectCast(".qh-scene", ".qh-scene", "opened at 150% zoom");
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await expectCast(".qh-scene", ".qh-scene", "grown from zoom to laptop");
 
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/worlds.html?cast=resume");
@@ -390,6 +438,27 @@ test.describe("quillhaven cast stays on screen", () => {
     await expectCast(".qh-scene", ".qh-scene", "hero after scroll back");
   });
 });
+
+for (const dpr of [1.25, 1.5, 2]) {
+  test.describe(`quillhaven cast at devicePixelRatio ${dpr}`, () => {
+    test.use({
+      reducedMotion: "no-preference",
+      deviceScaleFactor: dpr,
+      viewport: { width: 1440, height: 900 },
+    });
+
+    test(`all seven stay inside the crop at pixel ratio ${dpr}`, async ({ page }) => {
+      await page.clock.install();
+      await page.goto(`/worlds.html?dpr=${dpr}`);
+      await page.clock.fastForward(17_000);
+      await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} laptop`);
+      await page.setViewportSize({ width: 853, height: 480 });
+      await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} zoom`);
+      await page.setViewportSize({ width: 1280, height: 720 });
+      await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} restored`);
+    });
+  });
+}
 
 function creamPixelCount(png: Buffer) {
   let offset = 8;
