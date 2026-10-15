@@ -1294,6 +1294,111 @@ legend { padding: 0 0.3rem; }
   vertical-align: text-bottom;
 }
 
+.play-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #141c30;
+  border: 4px solid #0b1020;
+  box-shadow: 6px 6px 0 var(--gold);
+}
+
+.play-poster {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 2px 0.75rem 0;
+  border: 0;
+  background: #141c30;
+  color: var(--cream);
+  font: inherit;
+  cursor: pointer;
+}
+
+.play-fit {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.play-fit .play-panorama {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 1280px;
+  height: 512px;
+  max-width: none;
+  margin: 0;
+  transform: translateX(-50%) scale(var(--play-scale, 1));
+  transform-origin: center bottom;
+}
+
+.play-poster-art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+}
+
+.play-poster-art img {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center bottom;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+.play-poster .btn {
+  position: relative;
+  z-index: 2;
+  align-self: start;
+  min-height: 44px;
+  padding: 0.35rem 0.9rem;
+  background: var(--cream);
+  color: var(--navy);
+  border-color: var(--cream);
+  pointer-events: none;
+}
+
+.play-poster:focus-visible {
+  outline: 3px solid var(--cream);
+  outline-offset: -7px;
+}
+
+.play-poster[hidden] { display: none; }
+
+.play-stage iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #141c30;
+}
+
+.play-open {
+  margin: 0.7rem 0 0;
+  font-size: 0.95rem;
+}
+
+.play-open a,
+.play-open a:visited {
+  color: var(--cream);
+  font-weight: 700;
+}
+
+.play-open a:hover { color: var(--white); }
+
 .qh-scene {
   position: relative;
   height: 456px;
@@ -1439,61 +1544,299 @@ legend { padding: 0 0.3rem; }
   z-index: 3;
 }
 
-.qh-bramble {
+.qh-actor {
+  --ground: 198;
+  position: absolute;
+  left: 0;
+  top: calc((var(--ground) + 1) * 2px);
+  z-index: 4;
+  width: 0;
+  height: 0;
+  transform: translate3d(calc(var(--x) * 2px), 0, 0);
+  pointer-events: none;
+}
+
+.qh-actor .qh-npc {
+  top: auto;
+  bottom: 0;
+  left: calc(var(--anchor) * -2px);
+}
+
+.qh-bramble,
+.qh-actor[data-who="bramble"] .qh-npc {
   --cell-w: 27;
   --cell-h: 30;
   --anchor: 14;
-  --x: 108;
   --y: 198;
   --sheet: 216;
   background-image: url("../img/quillhaven/sprites/bramble-idle.png");
 }
 
-.qh-merlin {
+.qh-merlin,
+.qh-actor[data-who="merlin"] .qh-npc {
   --cell-w: 25;
   --cell-h: 33;
   --anchor: 13;
-  --x: 308;
   --y: 198;
   --sheet: 200;
   background-image: url("../img/quillhaven/sprites/merlin-idle.png");
 }
 
-.qh-tahne {
+.qh-tahne,
+.qh-actor[data-who="tahne"] .qh-npc {
   --cell-w: 28;
   --cell-h: 31;
   --anchor: 12;
-  --x: 372;
   --y: 198;
   --sheet: 224;
   background-image: url("../img/quillhaven/sprites/tahne-idle.png");
 }
 
-.qh-walker {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 4;
-  width: 0;
-  height: 0;
+.qh-winston,
+.qh-actor[data-who="winston"] .qh-npc {
+  --cell-w: 32;
+  --cell-h: 31;
+  --anchor: 16;
+  --y: 198;
+  --sheet: 256;
+  background-image: url("../img/quillhaven/sprites/winston-idle.png");
 }
 
-.qh-winston {
+.qh-brittany,
+.qh-actor[data-who="brittany"] .qh-npc {
+  --cell-w: 15;
+  --cell-h: 26;
+  --anchor: 7;
+  --y: 198;
+  --sheet: 30;
+  background-image: url("../img/quillhaven/sprites/brittany-idle.png");
+}
+
+.qh-ruth,
+.qh-actor[data-who="ruth"] .qh-npc {
+  --cell-w: 16;
+  --cell-h: 24;
+  --anchor: 8;
+  --y: 198;
+  --sheet: 32;
+  background-image: url("../img/quillhaven/sprites/ruth-idle.png");
+}
+
+.qh-rudy,
+.qh-actor[data-who="rudy"] .qh-npc {
+  --cell-w: 15;
+  --cell-h: 24;
+  --anchor: 7;
+  --y: 198;
+  --sheet: 30;
+  background-image: url("../img/quillhaven/sprites/rudy-idle.png");
+}
+
+.qh-actor[data-who="bramble"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="bramble"] .qh-npc[data-face="west"][data-pose="idle"] {
+  --cell-w: 23;
+  --cell-h: 31;
+  --anchor: 13;
+  --sheet: 184;
+}
+
+.qh-actor[data-who="bramble"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="bramble"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --cell-w: 23;
+  --cell-h: 31;
+  --anchor: 13;
+  --sheet: 276;
+}
+
+.qh-actor[data-who="merlin"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="merlin"] .qh-npc[data-face="west"][data-pose="idle"],
+.qh-actor[data-who="merlin"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="merlin"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --cell-w: 25;
+  --cell-h: 34;
+  --anchor: 15;
+}
+
+.qh-actor[data-who="merlin"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="merlin"] .qh-npc[data-face="west"][data-pose="idle"] {
+  --sheet: 200;
+}
+
+.qh-actor[data-who="merlin"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="merlin"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --sheet: 300;
+}
+
+.qh-actor[data-who="tahne"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="tahne"] .qh-npc[data-face="west"][data-pose="idle"],
+.qh-actor[data-who="tahne"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="tahne"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --cell-w: 33;
+  --cell-h: 31;
+  --anchor: 16;
+}
+
+.qh-actor[data-who="tahne"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="tahne"] .qh-npc[data-face="west"][data-pose="idle"] {
+  --sheet: 264;
+}
+
+.qh-actor[data-who="tahne"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="tahne"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --sheet: 396;
+}
+
+.qh-actor[data-who="winston"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="winston"] .qh-npc[data-face="west"][data-pose="idle"] {
   --cell-w: 29;
   --cell-h: 33;
   --anchor: 14;
-  --x: 210;
-  --y: 210;
+  --sheet: 232;
+}
+
+.qh-actor[data-who="winston"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="winston"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --cell-w: 29;
+  --cell-h: 33;
+  --anchor: 14;
   --sheet: 348;
 }
 
-.qh-winston-east {
-  background-image: url("../img/quillhaven/sprites/winston-walk-east.png");
+.qh-actor[data-who="brittany"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="brittany"] .qh-npc[data-face="west"][data-pose="idle"],
+.qh-actor[data-who="brittany"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="brittany"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --cell-w: 15;
+  --cell-h: 26;
+  --anchor: 7;
 }
 
-.qh-winston-west {
-  background-image: url("../img/quillhaven/sprites/winston-walk-west.png");
+.qh-actor[data-who="brittany"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="brittany"] .qh-npc[data-face="west"][data-pose="idle"] {
+  --sheet: 30;
+}
+
+.qh-actor[data-who="brittany"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="brittany"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --sheet: 180;
+}
+
+.qh-actor[data-who="ruth"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="ruth"] .qh-npc[data-face="west"][data-pose="idle"],
+.qh-actor[data-who="ruth"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="ruth"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --cell-w: 16;
+  --cell-h: 24;
+  --anchor: 8;
+}
+
+.qh-actor[data-who="ruth"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="ruth"] .qh-npc[data-face="west"][data-pose="idle"] {
+  --sheet: 32;
+}
+
+.qh-actor[data-who="ruth"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="ruth"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --sheet: 192;
+}
+
+.qh-actor[data-who="rudy"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="rudy"] .qh-npc[data-face="west"][data-pose="idle"],
+.qh-actor[data-who="rudy"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="rudy"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --cell-w: 15;
+  --cell-h: 24;
+  --anchor: 7;
+}
+
+.qh-actor[data-who="rudy"] .qh-npc[data-face="east"][data-pose="idle"],
+.qh-actor[data-who="rudy"] .qh-npc[data-face="west"][data-pose="idle"] {
+  --sheet: 30;
+}
+
+.qh-actor[data-who="rudy"] .qh-npc[data-face="east"][data-pose="walk"],
+.qh-actor[data-who="rudy"] .qh-npc[data-face="west"][data-pose="walk"] {
+  --sheet: 180;
+}
+
+.qh-actor[data-who="bramble"] .qh-npc[data-face="east"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/bramble-idle-east.png"); }
+.qh-actor[data-who="bramble"] .qh-npc[data-face="west"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/bramble-idle-west.png"); }
+.qh-actor[data-who="bramble"] .qh-npc[data-face="east"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/bramble-walk-east.png"); }
+.qh-actor[data-who="bramble"] .qh-npc[data-face="west"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/bramble-walk-west.png"); }
+.qh-actor[data-who="merlin"] .qh-npc[data-face="east"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/merlin-idle-east.png"); }
+.qh-actor[data-who="merlin"] .qh-npc[data-face="west"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/merlin-idle-west.png"); }
+.qh-actor[data-who="merlin"] .qh-npc[data-face="east"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/merlin-walk-east.png"); }
+.qh-actor[data-who="merlin"] .qh-npc[data-face="west"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/merlin-walk-west.png"); }
+.qh-actor[data-who="tahne"] .qh-npc[data-face="east"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/tahne-idle-east.png"); }
+.qh-actor[data-who="tahne"] .qh-npc[data-face="west"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/tahne-idle-west.png"); }
+.qh-actor[data-who="tahne"] .qh-npc[data-face="east"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/tahne-walk-east.png"); }
+.qh-actor[data-who="tahne"] .qh-npc[data-face="west"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/tahne-walk-west.png"); }
+.qh-actor[data-who="winston"] .qh-npc[data-face="east"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/winston-idle-east.png"); }
+.qh-actor[data-who="winston"] .qh-npc[data-face="west"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/winston-idle-west.png"); }
+.qh-actor[data-who="winston"] .qh-npc[data-face="east"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/winston-walk-east.png"); }
+.qh-actor[data-who="winston"] .qh-npc[data-face="west"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/winston-walk-west.png"); }
+.qh-actor[data-who="brittany"] .qh-npc[data-face="east"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/brittany-idle-east.png"); }
+.qh-actor[data-who="brittany"] .qh-npc[data-face="west"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/brittany-idle-west.png"); }
+.qh-actor[data-who="brittany"] .qh-npc[data-face="east"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/brittany-walk-east.png"); }
+.qh-actor[data-who="brittany"] .qh-npc[data-face="west"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/brittany-walk-west.png"); }
+.qh-actor[data-who="ruth"] .qh-npc[data-face="east"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/ruth-idle-east.png"); }
+.qh-actor[data-who="ruth"] .qh-npc[data-face="west"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/ruth-idle-west.png"); }
+.qh-actor[data-who="ruth"] .qh-npc[data-face="east"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/ruth-walk-east.png"); }
+.qh-actor[data-who="ruth"] .qh-npc[data-face="west"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/ruth-walk-west.png"); }
+.qh-actor[data-who="rudy"] .qh-npc[data-face="east"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/rudy-idle-east.png"); }
+.qh-actor[data-who="rudy"] .qh-npc[data-face="west"][data-pose="idle"] { background-image: url("../img/quillhaven/sprites/rudy-idle-west.png"); }
+.qh-actor[data-who="rudy"] .qh-npc[data-face="east"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/rudy-walk-east.png"); }
+.qh-actor[data-who="rudy"] .qh-npc[data-face="west"][data-pose="walk"] { background-image: url("../img/quillhaven/sprites/rudy-walk-west.png"); }
+
+.qh-emote {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 2px);
+  width: 16px;
+  height: 10px;
+  transform: translateX(-50%);
   opacity: 0;
+  pointer-events: none;
+}
+
+.qh-actor.is-chat .qh-emote { opacity: 1; }
+
+.qh-emote[data-kind="bubble"] {
+  background: #faf6ea;
+  box-shadow:
+    0 0 0 2px #1f2a44,
+    2px 8px 0 -2px #faf6ea,
+    4px 10px 0 0 #1f2a44;
+}
+
+.qh-emote[data-kind="bubble"]::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 4px;
+  width: 2px;
+  height: 2px;
+  background: #1f2a44;
+  box-shadow: 4px 0 #1f2a44, 8px 0 #1f2a44;
+}
+
+.qh-emote[data-kind="wave"] {
+  background: #faf6ea;
+  box-shadow:
+    0 0 0 2px #1f2a44,
+    2px 8px 0 -2px #faf6ea,
+    4px 10px 0 0 #1f2a44;
+}
+
+.qh-emote[data-kind="wave"]::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 5px;
+  width: 2px;
+  height: 2px;
+  background: #1f2a44;
+  box-shadow: 3px -2px 0 #1f2a44, 6px -2px 0 #1f2a44, 9px 0 0 #1f2a44;
 }
 
 .town-map {
@@ -1674,25 +2017,16 @@ legend { padding: 0 0.3rem; }
     animation-play-state: paused;
   }
 
-  .qh-bramble { animation-duration: 2.5s; }
-  .qh-merlin { animation-duration: 2.9s; animation-delay: -0.55s; }
-  .qh-tahne { animation-duration: 2.7s; animation-delay: -1.05s; }
+  .qh-bramble,
+  .qh-actor[data-who="bramble"] .qh-npc { animation-duration: 2.5s; }
+  .qh-merlin,
+  .qh-actor[data-who="merlin"] .qh-npc { animation-duration: 2.9s; animation-delay: -0.55s; }
+  .qh-tahne,
+  .qh-actor[data-who="tahne"] .qh-npc { animation-duration: 2.7s; animation-delay: -1.05s; }
 
-  .qh-walker {
-    animation: qh-patrol 24s linear infinite;
+  .qh-npc.is-walk {
+    animation: qh-steps-6 1.1s steps(6) infinite;
     animation-play-state: paused;
-  }
-
-  .qh-winston-east,
-  .qh-winston-west {
-    animation:
-      qh-steps-6 1.1s steps(6) infinite,
-      qh-face-east 24s linear infinite;
-    animation-play-state: paused, paused;
-  }
-
-  .qh-winston-west {
-    animation-name: qh-steps-6, qh-face-west;
   }
 
   .qh-cloud {
@@ -1734,13 +2068,16 @@ legend { padding: 0 0.3rem; }
   .fly-e { animation-duration: 7.6s; animation-delay: -4s; }
 
   .qh-scene.is-live .qh-breathe,
-  .qh-scene.is-live .qh-walker,
-  .qh-scene.is-live .qh-winston-east,
-  .qh-scene.is-live .qh-winston-west,
+  .qh-scene.is-live .qh-npc.is-walk,
   .qh-scene.is-live .qh-cloud,
   .qh-scene.is-live .qh-lamp,
   .qh-scene.is-live .qh-window,
-  .qh-scene.is-live .qh-fly {
+  .qh-scene.is-live .qh-fly,
+  .play-stage.is-live .qh-breathe,
+  .play-stage.is-live .qh-npc.is-walk,
+  .play-stage.is-live .qh-lamp,
+  .play-stage.is-live .qh-window,
+  .play-stage.is-live .qh-fly {
     animation-play-state: running;
   }
 }

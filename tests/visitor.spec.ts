@@ -225,7 +225,10 @@ const sceneNpcs = [
   { name: "Bramble", selector: ".qh-bramble", sheet: "bramble-idle.png" },
   { name: "Merlin", selector: ".qh-merlin", sheet: "merlin-idle.png" },
   { name: "Tahne", selector: ".qh-tahne", sheet: "tahne-idle.png" },
-  { name: "Winston", selector: ".qh-winston-east", sheet: "winston-walk-east.png" },
+  { name: "Winston", selector: ".qh-winston", sheet: "winston-idle.png" },
+  { name: "Brittany", selector: ".qh-brittany", sheet: "brittany-idle.png" },
+  { name: "Ruth", selector: ".qh-ruth", sheet: "ruth-idle.png" },
+  { name: "Rudy", selector: ".qh-rudy", sheet: "rudy-idle.png" },
 ] as const;
 
 test("quillhaven npc sprites have size inside the panorama", async ({ page }) => {
@@ -352,6 +355,64 @@ async function forceVisited(page: Page, selector: string) {
     forcedPseudoClasses: ["visited"],
   });
 }
+
+test("the quillhaven demo stays unloaded until the poster is pressed", async ({ page }) => {
+  await page.route("https://play.griffinandquill.com/**", (route) => route.abort());
+  for (const width of [1280, 768, 390, 375]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto(`/worlds.html?view=${width}#play`);
+    const stage = page.locator("[data-play-stage]");
+    await expect(stage).toBeVisible();
+    await expect(stage.locator("iframe")).toHaveCount(0);
+    const layout = await stage.evaluate((el) => {
+      const stageBox = el.getBoundingClientRect();
+      const button = el.querySelector(".play-poster .btn");
+      if (!button) throw new Error("missing play button");
+      const btn = button.getBoundingClientRect();
+      const npcs = Array.from(el.querySelectorAll(".play-panorama .qh-npc")).map((node) => {
+        const box = node.getBoundingClientRect();
+        return { top: box.top, right: box.right, bottom: box.bottom, left: box.left, width: box.width, height: box.height };
+      });
+      return {
+        stage: { top: stageBox.top, right: stageBox.right, bottom: stageBox.bottom, left: stageBox.left, height: stageBox.height },
+        btn: { top: btn.top, right: btn.right, bottom: btn.bottom, left: btn.left },
+        npcs,
+      };
+    });
+    expect(layout.npcs, `poster cast at ${width}`).toHaveLength(7);
+    expect(layout.btn.top - layout.stage.top, `play button top at ${width}`).toBeLessThan(layout.stage.height * 0.22);
+    expect(layout.btn.bottom, `play button stays high at ${width}`).toBeLessThan(layout.stage.top + layout.stage.height * 0.45);
+    for (const npc of layout.npcs) {
+      expect(npc.height, `poster sprite height at ${width}`).toBeGreaterThan(10);
+      expect(npc.top, `poster sprite top at ${width}`).toBeGreaterThanOrEqual(layout.stage.top - 1);
+      expect(npc.bottom, `poster sprite bottom at ${width}`).toBeLessThanOrEqual(layout.stage.bottom + 1);
+      expect(npc.left, `poster sprite left at ${width}`).toBeGreaterThanOrEqual(layout.stage.left - 1);
+      expect(npc.right, `poster sprite right at ${width}`).toBeLessThanOrEqual(layout.stage.right + 1);
+      const overlaps = npc.left < layout.btn.right && npc.right > layout.btn.left && npc.top < layout.btn.bottom && npc.bottom > layout.btn.top;
+      expect(overlaps, `play button covers a character at ${width}`).toBe(false);
+    }
+    const ratio = await stage.evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      return box.width / box.height;
+    });
+    expect(ratio, `stage ratio at ${width}`).toBeCloseTo(16 / 9, 1);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, `horizontal overflow at ${width}`).toBeLessThanOrEqual(1);
+    await expect(page.getByRole("link", { name: "Open full screen" })).toHaveAttribute(
+      "href",
+      "https://play.griffinandquill.com",
+    );
+    await expect(page.getByText("It plays best on a computer or tablet with a keyboard.")).toBeVisible();
+    await page.getByRole("button", { name: "Play the demo" }).click();
+    const frame = stage.locator("iframe");
+    await expect(frame).toHaveCount(1);
+    await expect(frame).toHaveAttribute("src", "https://play.griffinandquill.com");
+    await expect(frame).toHaveAttribute("allow", "fullscreen");
+    await expect(stage.locator("[data-play-load]")).toBeHidden();
+  }
+});
 
 test("visited current nav item keeps its label on the desktop bar", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
