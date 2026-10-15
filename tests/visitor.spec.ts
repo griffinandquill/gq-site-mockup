@@ -383,6 +383,12 @@ test.describe("quillhaven cast stays on screen", () => {
       }
     }
 
+    async function resizeTo(width: number, height: number) {
+      await page.setViewportSize({ width, height });
+      // The test clock can hold the browser's own resize event. Dispatch the one the scene listens for.
+      await page.evaluate(() => window.dispatchEvent(new Event("resize")));
+    }
+
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/worlds.html?cast=resize");
     await page.clock.fastForward(400);
@@ -396,14 +402,14 @@ test.describe("quillhaven cast stays on screen", () => {
       await page.clock.fastForward(2000);
     }
     for (const width of [1440, 1366, 1280, 1100, 1024, 960, 853, 768, 1440, 1920, 1536]) {
-      await page.setViewportSize({ width, height: 800 });
+      await resizeTo(width, 800);
       await expectCast(".qh-scene", ".qh-scene", `resized to ${width}`);
     }
-    await page.setViewportSize({ width: 853, height: 700 });
+    await resizeTo(853, 700);
     await page.goto("/worlds.html?cast=grow");
     await page.clock.fastForward(17_000);
     await expectCast(".qh-scene", ".qh-scene", "opened at 150% zoom");
-    await page.setViewportSize({ width: 1440, height: 900 });
+    await resizeTo(1440, 900);
     await expectCast(".qh-scene", ".qh-scene", "grown from zoom to laptop");
 
     await page.setViewportSize({ width: 1280, height: 900 });
@@ -453,8 +459,10 @@ for (const dpr of [1.25, 1.5, 2]) {
       await page.clock.fastForward(17_000);
       await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} laptop`);
       await page.setViewportSize({ width: 853, height: 480 });
+      await page.evaluate(() => window.dispatchEvent(new Event("resize")));
       await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} zoom`);
       await page.setViewportSize({ width: 1280, height: 720 });
+      await page.evaluate(() => window.dispatchEvent(new Event("resize")));
       await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} restored`);
     });
   });
