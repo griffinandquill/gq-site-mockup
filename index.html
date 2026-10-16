@@ -4,19 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Write your own legend. Learn it. Live it. PROVE IT! Griffin &amp; Quill is a South Carolina edtech company with tutoring, classroom resources, and Quillhaven.">
-  <meta name="robots" content="noindex">
   <meta name="theme-color" content="#1F2A44">
   <title>Griffin &amp; Quill | Write your own legend</title>
   <meta property="og:title" content="Griffin &amp; Quill | Write your own legend">
   <meta property="og:description" content="Write your own legend. Learn it. Live it. PROVE IT! Griffin &amp; Quill is a South Carolina edtech company with tutoring, classroom resources, and Quillhaven.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.griffinandquill.com/">
-  <meta property="og:image" content="assets/og.png">
+  <link rel="canonical" href="https://www.griffinandquill.com/">
+  <meta property="og:image" content="https://www.griffinandquill.com/assets/og.png">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <!-- Placeholder icons. Replace the files in /assets/icons/ with the final set. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon-180.png">
   <link rel="manifest" href="/assets/icons/site.webmanifest">
@@ -40,7 +40,6 @@
   </svg>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
-    <p class="mockup-bar">Design mockup for owner review. Forms are not connected.</p>
     <div class="header-bar">
       <div class="container header-inner">
         <a class="brand" href="index.html">
@@ -71,7 +70,7 @@
   </header>
   <main id="main" tabindex="-1">
     <noscript>
-      <p class="container note">JavaScript is off, so the menu button, the shop cards, and the thank-you note will not run. Page links still work. Forms are not connected to a server.</p>
+      <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. A form on this page needs JavaScript to send, or you can email the address in the footer.</p>
     </noscript>
 
     <div class="cover">
@@ -122,7 +121,7 @@
           </article>
           <article class="card">
             <h3>Shop</h3>
-            <p>Ready-to-teach lessons, document packets, and study guides for teachers and homeschoolers. The catalog on this mockup is a sample. Sales will live on Teachers Pay Teachers.</p>
+            <p>Ready-to-teach lessons, document packets, and study guides for teachers and homeschoolers. They are coming to Teachers Pay Teachers. Nothing on this site is for sale yet.</p>
             <p><a class="btn btn-secondary" href="resources.html">Shop resources</a></p>
           </article>
           <article class="card">
@@ -180,33 +179,9 @@
       <div class="container">
         <h2 id="cred-title">Built by a South Carolina teacher</h2>
         <div class="rule" aria-hidden="true"><span></span></div>
-        <div class="split">
-          <div class="portrait-slot">
-            <p>Photo of Ryan Mayer</p>
-            <p>To be added</p>
-          </div>
-          <div>
-            <p>Ryan Mayer is a South Carolina high school social studies teacher. His social studies courses are U.S. History and the Constitution (USHC), Economics, AP Human Geography, and Government. He has taught social studies for more than seven years and holds a Master’s in History Education.</p>
-            <p>Griffin &amp; Quill LLC is his South Carolina company: tutoring, Teachers Pay Teachers curriculum, and South Carolina history browser games. The classroom habit is the same one the company asks for: read the source, weigh the claim, and write the answer in your own words.</p>
-            <p>The work is meant to sit beside the standards he teaches. When a card names a standard, that standard is marked as a sample until the real one is confirmed.</p>
-            <div class="placeholder-board">
-              <p><strong>Placeholder.</strong> Testimonials from teachers, parents, and schools will go here. None are published yet.</p>
-              <p><strong>Placeholder.</strong> Awards, press, and outcome numbers will go here. None are claimed yet.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="band" aria-labelledby="quotes-title">
-      <div class="container">
-        <h2 id="quotes-title">Quotes we hope to earn</h2>
-        <p class="example-banner">Placeholder slots. Not reviews. No quotes have been collected.</p>
-        <div class="grid-3">
-          <article class="quote"><p class="stamp">Placeholder</p><p>A parent’s words will go here after Ryan has permission to use them.</p></article>
-          <article class="quote"><p class="stamp">Placeholder</p><p>A teacher’s words will go here after Ryan has permission to use them.</p></article>
-          <article class="quote"><p class="stamp">Placeholder</p><p>A student’s words, shared by a parent or teacher, will go here. We will not invent one.</p></article>
-        </div>
+        <p>Ryan Mayer is a South Carolina high school social studies teacher. His social studies courses are U.S. History and the Constitution (USHC), Economics, AP Human Geography, and Government. He has taught social studies for more than seven years and holds a Master’s in History Education.</p>
+        <p>Griffin &amp; Quill LLC is his South Carolina company: tutoring, Teachers Pay Teachers curriculum, and South Carolina history browser games. The classroom habit is the same one the company asks for: read the source, weigh the claim, and write the answer in your own words.</p>
+        <p>The work is meant to sit beside the standards he teaches. When a card names a standard, that standard is marked as a sample until the real one is confirmed.</p>
       </div>
     </section>
 
@@ -215,8 +190,12 @@
         <div class="form-card form-wrap">
           <h2 id="news-title">Notes from the studio</h2>
           <p>A short note when tutoring spots, new resources, or the Quillhaven demo are ready. This list is for adults. Students should ask a parent.</p>
-          <form data-mockup action="#">
-            <p class="thanks" data-thanks tabindex="-1" hidden>Thanks! (mockup: form not connected)</p>
+          <form data-form="hello" method="POST" action="#">
+            <p class="thanks" data-thanks tabindex="-1" hidden>Thanks. Your note is on its way.</p>
+            <p class="form-error" data-form-error tabindex="-1" hidden>That note did not send. Write to <a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a>.</p>
+            <p class="visually-hidden"><label for="hp-news">Leave this empty</label><input id="hp-news" name="_honey" type="text" tabindex="-1" autocomplete="off"></p>
+            <input type="hidden" name="_subject" value="Newsletter">
+            <input type="hidden" name="_captcha" value="false">
             <div class="field">
               <label for="news-email">Email (required)</label>
               <input id="news-email" name="email" type="email" autocomplete="email" required>
@@ -233,7 +212,7 @@
               </select>
             </div>
             <button class="btn btn-primary" type="submit">Join the list</button>
-            <p class="note">This form does not send. It is here so you can see the layout. No third-party signup script is loaded.</p>
+            <p class="note">Do not include a child’s full name. This note goes to hello@griffinandquill.com.</p>
           </form>
         </div>
       </div>
@@ -277,9 +256,10 @@
       </div>
     </div>
     <div class="container">
-      <p class="fineprint">© 2026 Griffin &amp; Quill LLC. Design mockup. Tutoring rates are published. Shop prices and quote slots are samples, not reviews.</p>
+      <p class="fineprint">© 2026 Griffin &amp; Quill LLC.</p>
     </div>
   </footer>
+  <script src="js/form-config.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

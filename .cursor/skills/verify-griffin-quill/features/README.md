@@ -1,6 +1,6 @@
 # Griffin & Quill verification map
 
-This directory is the source for visitor checks of the Griffin & Quill mockup. Read this index, then use the matching feature file.
+This directory is the source for visitor checks of the Griffin & Quill site. Read this index, then use the matching feature file.
 
 ## Baseline preconditions
 
@@ -40,6 +40,6 @@ Each feature file starts with an H1 and one paragraph. It then uses these four H
 
 - [Pages, links, and the missing page](./pages.md) covers load, title, assets, axe, and the 404 page.
 - [Navigation](./navigation.md) covers the header at desktop width and the mobile menu.
-- [Mockup guard](./mockup-guard.md) covers the banner, `noindex`, and `robots.txt`.
-- [Forms](./forms.md) covers the five forms that stay on the page.
-- [FAQ and placeholder links](./interactions.md) covers the questions and the TPT notes.
+- [Crawl and share tags](./mockup-guard.md) covers `robots.txt`, the sitemap, and the share tags.
+- [Forms](./forms.md) covers the six forms that stay on the page.
+- [FAQ and the shop note](./interactions.md) covers the questions and the Teachers Pay Teachers section.

@@ -4,19 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Sample classroom resources from Griffin &amp; Quill for history and social studies teachers and homeschoolers.">
-  <meta name="robots" content="noindex">
   <meta name="theme-color" content="#1F2A44">
   <title>Shop | Griffin &amp; Quill</title>
   <meta property="og:title" content="Shop | Griffin &amp; Quill">
   <meta property="og:description" content="Sample classroom resources from Griffin &amp; Quill for history and social studies teachers and homeschoolers.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.griffinandquill.com/resources.html">
-  <meta property="og:image" content="assets/og.png">
+  <link rel="canonical" href="https://www.griffinandquill.com/resources.html">
+  <meta property="og:image" content="https://www.griffinandquill.com/assets/og.png">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <!-- Placeholder icons. Replace the files in /assets/icons/ with the final set. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon-180.png">
   <link rel="manifest" href="/assets/icons/site.webmanifest">
@@ -28,7 +28,6 @@
 <body id="top">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
-    <p class="mockup-bar">Design mockup for owner review. Forms are not connected.</p>
     <div class="header-bar">
       <div class="container header-inner">
         <a class="brand" href="index.html">
@@ -59,56 +58,54 @@
   </header>
   <main id="main" tabindex="-1">
     <noscript>
-      <p class="container note">JavaScript is off, so the menu button, the shop cards, and the thank-you note will not run. Page links still work. Forms are not connected to a server.</p>
+      <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. A form on this page needs JavaScript to send, or you can email the address in the footer.</p>
     </noscript>
 
     <div class="container page-hero">
       <p class="eyebrow">Shop</p>
       <h1>Classroom resources</h1>
-      <p class="lede">Lessons, document packets, and study guides a teacher can open this week. The cards below are samples, so you can see the layout. Buttons do not open Teachers Pay Teachers yet.</p>
+      <p class="lede">Lessons, document packets, and study guides for teachers and homeschoolers. The store is not open on this site.</p>
       <p>Shop help: <a href="mailto:support@griffinandquill.com">support@griffinandquill.com</a>.</p>
     </div>
 
-    <section class="section" aria-labelledby="cat-title">
-      <div class="container">
-        <h2 id="cat-title">What the store will hold</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <div class="card-grid">
-          <article class="card"><h3>Ready-to-teach units</h3><p>A sequence with a driving question, the lessons, and a way to check understanding.</p></article>
-          <article class="card"><h3>Lessons</h3><p>One class period, or one homeschool sitting, with the materials in the file.</p></article>
-          <article class="card"><h3>Document-analysis packets</h3><p>Short sets of sources and questions that stay on the words on the page.</p></article>
-          <article class="card"><h3>Study guides</h3><p>Review sheets a student can use before a test, with an answer key for the adult in the room.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="samples" aria-labelledby="samples-title">
-      <div class="container">
-        <h2 id="samples-title">Sample catalog</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">Sample items for the layout. Grades, standards, and prices on these cards are samples, not a price list.</p>
-        <div class="product-grid" data-product-catalog>
-          <p>Sample resources load here.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="free-title">
+    <section class="section" aria-labelledby="tpt-title">
       <div class="container">
         <div class="callout">
-          <h2 id="free-title">Try a page before you buy</h2>
-          <p>A free sample is planned for the TPT store. This button is a placeholder.</p>
-          <div class="card-actions"><a class="btn btn-on-dark" href="#">Free sample<span class="visually-hidden">: placeholder link</span></a></div>
+          <h2 id="tpt-title">Coming to Teachers Pay Teachers</h2>
+          <p>Classroom resources will be sold on Teachers Pay Teachers. There is no store link here yet, and nothing on this page is for sale.</p>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="follow-title">
+    <section class="section" id="shop-news" aria-labelledby="shop-news-title">
       <div class="container">
-        <div class="callout-plain">
-          <h2 id="follow-title">Follow on Teachers Pay Teachers</h2>
-          <p>New resources will show up on Teachers Pay Teachers. The store link is not connected in this mockup.</p>
-          <div class="card-actions"><a class="btn btn-primary" href="#">Follow the store</a></div>
+        <div class="form-card form-wrap">
+          <h2 id="shop-news-title">A note when the store opens</h2>
+          <p>Leave an adult email if you want a note when the Teachers Pay Teachers store is open. Students should ask a parent.</p>
+          <form data-form="hello" method="POST" action="#">
+            <p class="thanks" data-thanks tabindex="-1" hidden>Thanks. Your note is on its way.</p>
+            <p class="form-error" data-form-error tabindex="-1" hidden>That note did not send. Write to <a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a>.</p>
+            <p class="visually-hidden"><label for="hp-shop">Leave this empty</label><input id="hp-shop" name="_honey" type="text" tabindex="-1" autocomplete="off"></p>
+            <input type="hidden" name="_subject" value="Newsletter">
+            <input type="hidden" name="_captcha" value="false">
+            <div class="field">
+              <label for="shop-email">Email (required)</label>
+              <input id="shop-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="shop-who">I am a (required)</label>
+              <select id="shop-who" name="who" required>
+                <option value="">Select one</option>
+                <option>Parent or guardian</option>
+                <option>Homeschooler</option>
+                <option>Teacher</option>
+                <option>Lifelong learner</option>
+                <option>School or district</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Join the list</button>
+            <p class="note">Do not include a child’s full name. This note goes to hello@griffinandquill.com.</p>
+          </form>
         </div>
       </div>
     </section>
@@ -151,10 +148,10 @@
       </div>
     </div>
     <div class="container">
-      <p class="fineprint">© 2026 Griffin &amp; Quill LLC. Design mockup. Tutoring rates are published. Shop prices and quote slots are samples, not reviews.</p>
+      <p class="fineprint">© 2026 Griffin &amp; Quill LLC.</p>
     </div>
   </footer>
-  <script src="js/products.js"></script>
+  <script src="js/form-config.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

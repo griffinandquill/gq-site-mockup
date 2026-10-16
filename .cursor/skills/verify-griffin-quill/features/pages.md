@@ -25,7 +25,7 @@ Preconditions:
 - **Open a page.** Visit `tutoring.html`. The test `tutoring.html loads at desktop` goes to `/tutoring.html`, expects status 200, and expects the title `Tutoring | Griffin & Quill`.
 - **Check assets.** Run `npm run verify -- --grep "internal links"`. Same-origin stylesheets, scripts, icons, and links answer below 400. `href="#"` is skipped. `mailto:` is skipped.
 - **Check axe.** Each page-load test runs axe and expects no serious or critical violation ids.
-- **Miss a page.** Run `npm run verify -- --grep "bad path"`. `/not-a-page` returns status 404, the title `Page not found | Griffin & Quill`, and the heading `This page is not on the mockup.`
+- **Miss a page.** Run `npm run verify -- --grep "bad path"`. `/not-a-page` returns status 404, the title `Page not found | Griffin & Quill`, and the heading `This page is not on the site.`
 - **Proof.** Open `verify-results/report/index.html`. The page-load rows are green, and the report names the title assertion.
 
 ## Gotchas

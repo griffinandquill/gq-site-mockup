@@ -1,6 +1,6 @@
 ---
 name: verify-griffin-quill
-description: "Drive the Griffin & Quill static mockup the way a visitor does, locally or at BASE_URL. Use when checking pages, navigation, forms, the FAQ, the mockup guard, or the GitHub Pages publish set."
+description: "Drive the Griffin & Quill static site the way a visitor does, locally or at BASE_URL. Use when checking pages, navigation, forms, the FAQ, crawl tags, or the GitHub Pages publish set."
 disable-model-invocation: true
 ---
 
@@ -55,7 +55,7 @@ npm run verify -- --grep "faq questions"
 npm run verify -- --grep "form stays"
 ```
 
-The visitor checks cover every page at 1280 and 390, the menu at 390, 1000, 1001, and 1280, each mockup form, the FAQ, one placeholder link, axe serious and critical impacts, `robots.txt`, and `/not-a-page`. The open menu covers the page heading. An outside click in the check uses the mockup bar.
+The visitor checks cover every page at 1280 and 390, the menu at 390, 1000, 1001, and 1280, each form with FormSubmit intercepted, the FAQ, the shop note, axe serious and critical impacts, `robots.txt`, the sitemap, and `/not-a-page`. The open menu covers the page heading. An outside click in the check uses the brand.
 
 ## Evidence
 
@@ -75,6 +75,6 @@ Cleanup does not delete `verify-results/`. Those files are the proof.
 
 ## Helpers
 
-`node verify/stage.mjs` copies root HTML, `css/`, `js/`, `favicon.svg`, `robots.txt`, and `.nojekyll` into `_site`. HTML and CSS gain `?v=` plus the short git commit on stylesheet, script, and sprite URLs. Every other file is copied byte for byte. The Pages workflow runs that command and uploads `_site`. `node verify/server.mjs` rewrites those same URLs when it serves a page. `_site` is not the proof directory. Delete `_site` when you want a clean tree. The next stage recreates it.
+`node verify/stage.mjs` copies root HTML, `css/`, `js/`, `favicon.svg`, `favicon.ico`, `robots.txt`, `sitemap.xml`, and `.nojekyll` into `_site`. HTML and CSS gain `?v=` plus the short git commit on stylesheet, script, and sprite URLs. Every other file is copied byte for byte. The Pages workflow runs that command and uploads `_site`. `node verify/server.mjs` rewrites those same URLs when it serves a page. `_site` is not the proof directory. Delete `_site` when you want a clean tree. The next stage recreates it.
 
 `node verify/server.mjs` is the local site. Prefer `npm run verify` so the process is tied to the run. Use the server command only when doctor or a manual browser needs it. Stop it with Ctrl-C, which is the foreground process you started.

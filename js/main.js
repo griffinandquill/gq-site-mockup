@@ -3,42 +3,6 @@
   var nav = document.querySelector("#site-nav");
   var label = toggle ? toggle.querySelector(".nav-toggle-label") : null;
 
-  function esc(value) {
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function renderProducts() {
-    var root = document.querySelector("[data-product-catalog]");
-    if (!root || !window.GQ_PRODUCTS) return;
-    root.innerHTML = window.GQ_PRODUCTS.map(function (item) {
-      var control = item.action === "buy"
-        ? '<a class="btn btn-primary" href="#">Buy on TPT<span class="visually-hidden">: ' + esc(item.title) + ', sample product</span></a>'
-        : '<button type="button" class="btn btn-soon" aria-disabled="true">Coming soon<span class="visually-hidden">: ' + esc(item.title) + '</span></button>';
-      var priceNote = item.action === "buy"
-        ? '<span class="price-note">Sample price. Not for sale on this mockup.</span>'
-        : '<span class="price-note">Sample. Price not set.</span>';
-      return (
-        '<article class="card product">' +
-          '<p class="stamp">Sample</p>' +
-          '<h3>' + esc(item.title) + '</h3>' +
-          '<p>' + esc(item.summary) + '</p>' +
-          '<dl class="meta">' +
-            '<div><dt>Grade</dt><dd>' + esc(item.grade) + '</dd></div>' +
-            '<div><dt>Standard</dt><dd>' + esc(item.standard) + '</dd></div>' +
-            '<div><dt>Price</dt><dd>' + esc(item.price) + priceNote + '</dd></div>' +
-          '</dl>' +
-          '<div class="card-actions">' + control + '</div>' +
-        '</article>'
-      );
-    }).join("");
-  }
-
-  renderProducts();
-
   function setOpen(open) {
     if (!toggle || !nav) return;
     nav.classList.toggle("is-open", open);
@@ -80,18 +44,60 @@
     });
   }
 
-  document.querySelectorAll("form[data-mockup]").forEach(function (form) {
+  document.querySelectorAll("form[data-form]").forEach(function (form) {
     form.addEventListener("submit", function (event) {
       event.preventDefault();
+      var note = form.querySelector("[data-thanks]");
+      var error = form.querySelector("[data-form-error]");
       if (typeof form.reportValidity === "function" && !form.checkValidity()) {
         form.reportValidity();
         return;
       }
-      var note = form.querySelector("[data-thanks]");
-      if (note) {
-        note.hidden = false;
-        note.focus();
+      var honey = form.querySelector("[name='_honey']");
+      if (honey && honey.value) return;
+      var config = window.GQ_FORMS || {};
+      var inbox = config[form.getAttribute("data-form")];
+      var endpoint = config.endpoint;
+      function showError() {
+        if (note) note.hidden = true;
+        if (error) {
+          error.hidden = false;
+          error.focus();
+        }
       }
+      if (!inbox || !endpoint) {
+        showError();
+        return;
+      }
+      var data = {};
+      new FormData(form).forEach(function (value, name) {
+        if (name === "_honey") return;
+        data[name] = value;
+      });
+      var button = form.querySelector("[type='submit']");
+      if (button) button.disabled = true;
+      fetch(endpoint + encodeURIComponent(inbox), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify(data)
+      }).then(function (response) {
+        if (!response.ok) throw new Error("send");
+        return response.json();
+      }).then(function (body) {
+        var ok = body && (body.success === true || body.success === "true");
+        if (!ok) throw new Error("send");
+        if (error) error.hidden = true;
+        if (note) {
+          note.hidden = false;
+          note.focus();
+        }
+        form.reset();
+      }).catch(showError).then(function () {
+        if (button) button.disabled = false;
+      });
     });
   });
 
@@ -103,7 +109,7 @@
       var note = document.createElement("div");
       note.className = "link-note";
       note.setAttribute("role", "status");
-      note.textContent = "Placeholder link. Nothing opens on this mockup.";
+      note.textContent = "That link is not open yet.";
       link.insertAdjacentElement("afterend", note);
     });
   });

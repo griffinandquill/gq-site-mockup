@@ -1,33 +1,35 @@
-# Mockup guard
+# Crawl and share tags
 
-Every page says it is a design mockup, asks crawlers not to index it, and `robots.txt` disallows the whole site. Those three stay until the owner says to launch.
+Pages do not ask crawlers to stay away. `robots.txt` allows the site and names the sitemap. Each page has an absolute share image, a description, a URL, a large Twitter card, and a canonical link that matches the URL.
 
 ## Sub-features
 
-- `guard-banner` shows the mockup sentence on every page, including the 404 page.
-- `guard-noindex` keeps `<meta name="robots" content="noindex">` on every page.
-- `guard-robots` serves `robots.txt` as `User-agent: *` and `Disallow: /`.
+- `guard-banner` expects no mockup bar on any page, including the 404 page.
+- `guard-noindex` expects no `meta[name="robots"]` on any page.
+- `guard-robots` serves `robots.txt` as `User-agent: *`, `Allow: /`, a blank line, and the sitemap URL.
+- `guard-share` expects `og:image`, `og:description`, `og:url`, `twitter:card`, and a canonical link equal to `og:url`.
 
 ## How to get to it (user POV)
 
-- Read the burgundy bar at the top of any page.
-- View the page source and find the robots meta tag.
-- Open `/robots.txt`.
+- Open any page. There is no burgundy mockup bar.
+- View the page source and find the canonical link and the share tags.
+- Open `/robots.txt` and `/sitemap.xml`.
 
 ## Driving it with Playwright
 
 Preconditions:
 
 - Doctor printed `doctor ok` for this origin.
-- The expected strings live in `verify/catalog.mjs` as `copy.mockupBar` and `copy.robots`.
+- The expected robots body and share image live in `verify/catalog.mjs` as `copy.robots` and `copy.ogImage`.
 
-- **Read the bar.** Each `loads at` test expects `.mockup-bar` to read `Design mockup for owner review. Forms are not connected.`
-- **Read the meta.** The same tests expect `meta[name="robots"]` to have content `noindex`.
-- **Read robots.txt.** Run `npm run verify -- --grep "disallows"`. The body is exactly `User-agent: *` followed by `Disallow: /` and a trailing newline.
-- **Proof.** The report rows for `robots.txt disallows every path` and any page-load test are green. Doctor also fetches these two responses before the browser run.
+- **Read the bar.** Each `loads at` test expects `.mockup-bar` to be absent.
+- **Read the meta.** The same tests expect no `meta[name="robots"]`. Privacy and terms still show `.legal-banner` with `Draft placeholder, pending attorney review.`
+- **Read the share tags.** `og:image` is `https://www.griffinandquill.com/assets/og.png`. `twitter:card` is `summary_large_image`. The canonical `href` equals `og:url`, and that URL starts with `https://www.griffinandquill.com/`.
+- **Read robots.txt.** Run `npm run verify -- --grep "allows crawling"`. The body matches `copy.robots`, including the trailing newline. The same test expects `/sitemap.xml` to list every page except `404.html`, and expects `/favicon.ico` to answer 200.
+- **Proof.** The report row `robots.txt allows crawling and names the sitemap` and the page-load tests are green. Doctor also fetches `/`, `/robots.txt`, `/sitemap.xml`, and `/favicon.ico`.
 
 ## Gotchas
 
-- There is no `X-Robots-Tag` header. The meta tag is the check.
-- Cloudflare does not change `robots.txt`, the stylesheet, or `js/main.js`. It does change HTML. Check the meta in the DOM after load, not a byte compare of the HTML.
-- A crawler that honors `robots.txt` never fetches the pages. Playwright does not honor `robots.txt`, so the suite can still open them.
+- There is no `noindex` meta. A 404 status is enough for a missing path.
+- Cloudflare does not change `robots.txt`. It does change HTML. Check the share tags in the DOM after load, not a byte compare of the HTML.
+- Playwright does not honor `robots.txt`, so the suite can still open every page.

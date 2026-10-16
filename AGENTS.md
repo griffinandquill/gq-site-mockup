@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Team rules for the Griffin & Quill site mockup. They do not replace the README or `.cursor/skills/verify-griffin-quill/SKILL.md`. Those still say how the pages and the visitor check work.
+Team rules for the Griffin & Quill site. They do not replace the README or `.cursor/skills/verify-griffin-quill/SKILL.md`. Those still say how the pages and the visitor check work.
 
 ## Kid-safety first
 
@@ -8,7 +8,7 @@ Public copy says Quillhaven collects only what teachers need, never sells it, an
 
 The privacy and terms pages are drafts pending attorney review. The privacy page says an attorney still has to review them before any game is offered to children, including children under 13. This rule does not close that review.
 
-Pages for teachers, parents, schools, and grant reviewers may describe the product. The mockup forms are not connected. Wiring them up is a separate decision.
+Pages for teachers, parents, schools, and grant reviewers may describe the product. Marketing forms post to FormSubmit through `js/form-config.js`. Do not put a secret in the repo. Do not show a thank-you unless that request returns success. The first real note to each inbox still needs the owner to confirm FormSubmit’s activation email.
 
 ## Chromebook performance
 

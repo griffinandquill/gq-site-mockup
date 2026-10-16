@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Contact Griffin &amp; Quill LLC at hello@griffinandquill.com. The form on this mockup does not send.">
-  <meta name="robots" content="noindex">
+  <meta name="description" content="Contact Griffin &amp; Quill LLC at hello@griffinandquill.com.">
   <meta name="theme-color" content="#1F2A44">
   <title>Contact | Griffin &amp; Quill</title>
   <meta property="og:title" content="Contact | Griffin &amp; Quill">
-  <meta property="og:description" content="Contact Griffin &amp; Quill LLC at hello@griffinandquill.com. The form on this mockup does not send.">
+  <meta property="og:description" content="Contact Griffin &amp; Quill LLC at hello@griffinandquill.com.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.griffinandquill.com/contact.html">
-  <meta property="og:image" content="assets/og.png">
+  <link rel="canonical" href="https://www.griffinandquill.com/contact.html">
+  <meta property="og:image" content="https://www.griffinandquill.com/assets/og.png">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <!-- Placeholder icons. Replace the files in /assets/icons/ with the final set. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon-180.png">
   <link rel="manifest" href="/assets/icons/site.webmanifest">
@@ -28,7 +28,6 @@
 <body id="top">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
-    <p class="mockup-bar">Design mockup for owner review. Forms are not connected.</p>
     <div class="header-bar">
       <div class="container header-inner">
         <a class="brand" href="index.html">
@@ -59,13 +58,13 @@
   </header>
   <main id="main" tabindex="-1">
     <noscript>
-      <p class="container note">JavaScript is off, so the menu button, the shop cards, and the thank-you note will not run. Page links still work. Forms are not connected to a server.</p>
+      <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. A form on this page needs JavaScript to send, or you can email the address in the footer.</p>
     </noscript>
 
     <div class="container page-hero">
       <p class="eyebrow">Contact</p>
       <h1>Write to the studio.</h1>
-      <p class="lede">Griffin &amp; Quill LLC reads general mail at <a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a>. On X: <a href="https://x.com/griffinandquill">@griffinandquill</a>. The form below does not send. It shows a thank-you note so you can see the layout.</p>
+      <p class="lede">Griffin &amp; Quill LLC reads general mail at <a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a>. On X: <a href="https://x.com/griffinandquill">@griffinandquill</a>. The form below sends that note to the same inbox.</p>
       <ul class="plain-list">
         <li>Tutoring booking and inquiries: <a href="mailto:tutoring@griffinandquill.com">tutoring@griffinandquill.com</a></li>
         <li>Shop and Quillhaven help: <a href="mailto:support@griffinandquill.com">support@griffinandquill.com</a></li>
@@ -79,8 +78,12 @@
       <div class="container">
         <div class="form-card form-wrap">
           <h2 id="contact-title">Message</h2>
-          <form data-mockup action="#">
-            <p class="thanks" data-thanks tabindex="-1" hidden>Thanks! (mockup: form not connected)</p>
+          <form data-form="hello" method="POST" action="#">
+            <p class="thanks" data-thanks tabindex="-1" hidden>Thanks. Your note is on its way.</p>
+            <p class="form-error" data-form-error tabindex="-1" hidden>That note did not send. Write to <a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a>.</p>
+            <p class="visually-hidden"><label for="hp-contact">Leave this empty</label><input id="hp-contact" name="_honey" type="text" tabindex="-1" autocomplete="off"></p>
+            <input type="hidden" name="_subject" value="Contact">
+            <input type="hidden" name="_captcha" value="false">
             <div class="form-grid two">
               <div class="field">
                 <label for="contact-name">Your name (required)</label>
@@ -122,7 +125,7 @@
               <textarea id="contact-message" name="message" required></textarea>
             </div>
             <button class="btn btn-primary" type="submit">Send message</button>
-            <p class="note">Do not include a child’s full name or other private details. This form is a visual mockup and does not send. We do not promise a reply time, because this page is not live.</p>
+            <p class="note">Do not include a child’s full name or other private details. This note goes to hello@griffinandquill.com. We do not promise a reply time.</p>
           </form>
         </div>
       </div>
@@ -166,9 +169,10 @@
       </div>
     </div>
     <div class="container">
-      <p class="fineprint">© 2026 Griffin &amp; Quill LLC. Design mockup. Tutoring rates are published. Shop prices and quote slots are samples, not reviews.</p>
+      <p class="fineprint">© 2026 Griffin &amp; Quill LLC.</p>
     </div>
   </footer>
+  <script src="js/form-config.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
