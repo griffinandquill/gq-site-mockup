@@ -13,7 +13,7 @@ The header lists the same eight pages on every screen. Wide windows show the row
 
 - On a wide window, use the row in the header.
 - On a narrow window, choose Menu, then a page name.
-- Press Escape, click the mockup bar, or widen the window to close the menu.
+- Press Escape, click the brand, or widen the window to close the menu.
 
 ## Driving it with Playwright
 
@@ -24,7 +24,7 @@ Preconditions:
 
 - **Desktop row.** Run `npm run verify -- --grep "desktop nav"`. At 1280px the Menu button is hidden. Choosing Contact inside `#site-nav` opens `/contact.html`, and that link is the current page.
 - **Open the menu.** Run `npm run verify -- --grep "mobile menu"`. At 390px Tutoring is hidden. Choosing Menu sets `aria-expanded` to `true`, the label contains `Close`, and focus is on Home. Choosing Tutoring opens `/tutoring.html` and closes the menu.
-- **Close the menu.** Run `npm run verify -- --grep "escape"`. Escape returns focus to Menu. A click on the mockup bar closes the list. The open menu covers the heading and the footer links, so those are not the outside click. A viewport of 1100px hides Menu.
+- **Close the menu.** Run `npm run verify -- --grep "escape"`. Escape returns focus to Menu. A click on `.brand` closes the list. The open menu covers the heading and the footer links, so those are not the outside click. A viewport of 1100px hides Menu.
 - **Breakpoint.** Run `npm run verify -- --grep "1000px"`. At 1000px Menu is visible and the first header link is hidden. At 1001px Menu is hidden and Home is visible.
 - **Proof.** `verify-results/menu-open.png` shows the open menu on the home page. The report row `mobile menu opens` is green.
 

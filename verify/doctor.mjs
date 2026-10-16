@@ -43,18 +43,33 @@ async function main() {
     fail(`home status ${home.status} at ${base}/`);
     return;
   }
-  if (!html.includes(copy.mockupBar)) {
-    fail("home is missing the mockup bar");
+  if (html.includes("Design mockup for owner review")) {
+    fail("home still shows the mockup bar");
     return;
   }
-  if (!html.includes('name="robots" content="noindex"')) {
-    fail("home is missing the robots noindex meta");
+  if (html.includes('name="robots" content="noindex"')) {
+    fail("home still asks crawlers not to index");
+    return;
+  }
+  if (!html.includes(`property="og:image" content="${copy.ogImage}"`)) {
+    fail("home og:image is not the absolute share image");
     return;
   }
   const robots = await fetch(`${base}/robots.txt`);
   const body = await robots.text();
   if (robots.status !== 200 || body !== copy.robots) {
     fail(`robots.txt at ${base} is ${JSON.stringify(body)}`);
+    return;
+  }
+  const sitemap = await fetch(`${base}/sitemap.xml`);
+  const map = await sitemap.text();
+  if (sitemap.status !== 200 || !map.includes("https://www.griffinandquill.com/")) {
+    fail(`sitemap.xml at ${base} is status ${sitemap.status}`);
+    return;
+  }
+  const icon = await fetch(`${base}/favicon.ico`);
+  if (icon.status !== 200) {
+    fail(`favicon.ico status ${icon.status}`);
     return;
   }
   console.log(`doctor ok ${base}`);

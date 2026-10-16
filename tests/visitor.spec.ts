@@ -64,17 +64,34 @@ test("stage copies site bytes and leaves the checker out", () => {
   expect(worlds).toContain(`src="img/buildings/academy.png?v=${version}"`);
   expect(worlds).toContain('src="assets/logo-icon.svg"');
   expect(css).toContain(`bramble-idle.png?v=${version}`);
-  expect(shop).toContain(`src="js/products.js?v=${version}"`);
+  expect(shop).toContain(`src="js/form-config.js?v=${version}"`);
+  expect(shop).not.toContain("products.js");
   expect(fs.existsSync(path.join(ROOT, "_site", "package.json"))).toBe(false);
   expect(fs.existsSync(path.join(ROOT, "_site", "verify"))).toBe(false);
   expect(fs.existsSync(path.join(ROOT, "_site", "tests"))).toBe(false);
   expect(fs.existsSync(path.join(ROOT, "_site", "README.md"))).toBe(false);
 });
 
-test("robots.txt disallows every path", async ({ request }) => {
+test("robots.txt allows crawling and names the sitemap", async ({ request }) => {
   const response = await request.get("/robots.txt");
   expect(response.status()).toBe(200);
   expect(await response.text()).toBe(copy.robots);
+  const sitemap = await request.get("/sitemap.xml");
+  expect(sitemap.status()).toBe(200);
+  const body = await sitemap.text();
+  for (const entry of pages) {
+    if (entry.file === "404.html") {
+      expect(body).not.toContain("404.html");
+      continue;
+    }
+    const loc =
+      entry.file === "index.html"
+        ? "https://www.griffinandquill.com/"
+        : `https://www.griffinandquill.com/${entry.file}`;
+    expect(body).toContain(`<loc>${loc}</loc>`);
+  }
+  const icon = await request.get("/favicon.ico");
+  expect(icon.status()).toBe(200);
 });
 
 for (const entry of pages) {
@@ -86,8 +103,35 @@ for (const entry of pages) {
       expect(response?.status()).toBe(200);
       await expect(page).toHaveTitle(entry.title);
       await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-      await expect(page.locator(".mockup-bar")).toHaveText(copy.mockupBar);
-      await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex");
+      await expect(page.locator(".mockup-bar")).toHaveCount(0);
+      await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+      await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", copy.ogImage);
+      await expect(page.locator('meta[property="og:description"]')).not.toHaveAttribute("content", "");
+      await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+      const ogUrl = await page.locator('meta[property="og:url"]').getAttribute("content");
+      const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
+      expect(canonical).toBe(ogUrl);
+      expect(ogUrl).toMatch(/^https:\/\/www\.griffinandquill\.com\//);
+      if (entry.file === "privacy.html" || entry.file === "terms.html") {
+        await expect(page.locator(".legal-banner")).toHaveText(copy.legalBanner);
+      }
+      if (entry.file === "index.html") {
+        await expect(page.getByText("Quotes we hope to earn")).toHaveCount(0);
+        await expect(page.getByText("after Ryan has permission")).toHaveCount(0);
+      }
+      if (entry.file === "about.html") {
+        await expect(page.getByText("builds standards-aligned games and lessons")).toBeVisible();
+        await expect(page.getByText("To be added")).toHaveCount(0);
+        await expect(page.getByText("A demo is still ahead")).toHaveCount(0);
+      }
+      if (entry.file === "tutoring.html") {
+        await expect(page.locator('a[href*="stripe.com"]')).toHaveCount(0);
+        await expect(page.getByRole("link", { name: "Request a session" }).first()).toHaveAttribute("href", "#book");
+      }
+      if (entry.file === "worlds.html") {
+        await expect(page.getByText("Library: Professor Bramble keeps the books.")).toBeVisible();
+        await expect(page.getByText("still reserved")).toHaveCount(0);
+      }
       const current = page.locator('#site-nav a[aria-current="page"]');
       if (entry.nav) {
         await expect(current).toHaveCount(1);
@@ -140,7 +184,7 @@ test("escape, an outside click, and a wide window close the menu", async ({ page
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   await expect(toggle).toBeFocused();
   await toggle.click();
-  await page.locator(".mockup-bar").click();
+  await page.locator(".brand").click();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   await toggle.click();
   await page.setViewportSize({ width: 1100, height: 800 });
@@ -170,27 +214,86 @@ test("desktop nav follows a header link", async ({ page }) => {
 for (const form of forms) {
   test(`${form.id} form stays on the page`, async ({ page }) => {
     const errors = collectErrors(page);
+    const posts: { url: string; body: Record<string, string> }[] = [];
+    await page.route("https://formsubmit.co/**", async (route) => {
+      posts.push({
+        url: route.request().url(),
+        body: route.request().postDataJSON() as Record<string, string>,
+      });
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ success: "true" }),
+      });
+    });
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto(form.page);
     const region = page.locator(form.section);
     const thanks = region.locator("[data-thanks]");
-    await expect(region.locator("form[data-mockup]")).toBeVisible();
+    await expect(region.locator(`form[data-form="${form.route}"]`)).toBeVisible();
+    await expect(region.locator("[name='_honey']")).toHaveCount(1);
     await expect(thanks).toBeHidden();
     await region.getByRole("button", { name: form.submit, exact: true }).click();
     await expect(thanks).toBeHidden();
+    expect(posts).toEqual([]);
     for (const field of form.fields) await fillField(region, field);
     const before = page.url();
     await region.getByRole("button", { name: form.submit, exact: true }).click();
     await expect(thanks).toBeVisible();
     await expect(thanks).toHaveText(copy.thanks);
     await expect(thanks).toBeFocused();
+    await expect(region.locator("[data-form-error]")).toBeHidden();
     expect(page.url()).toBe(before);
+    expect(posts).toHaveLength(1);
+    expect(posts[0].url).toContain(encodeURIComponent(form.inbox));
+    expect(posts[0].body._honey).toBeUndefined();
     if (form.id === "contact") {
       await page.screenshot({ path: "verify-results/form-thanks.png" });
     }
     expect(unexpected(errors, false)).toEqual([]);
   });
 }
+
+test("a failed send does not show thanks", async ({ page }) => {
+  await page.route("https://formsubmit.co/**", async (route) => {
+    await route.fulfill({
+      status: 422,
+      contentType: "application/json",
+      body: JSON.stringify({ success: false }),
+    });
+  });
+  await page.goto("/contact.html");
+  const region = page.locator("#contact-form");
+  const contact = forms.find((form) => form.id === "contact");
+  if (!contact) throw new Error("missing contact form");
+  for (const field of contact.fields) await fillField(region, field);
+  await region.getByRole("button", { name: "Send message", exact: true }).click();
+  await expect(region.locator("[data-thanks]")).toBeHidden();
+  await expect(region.locator("[data-form-error]")).toBeVisible();
+  await expect(region.locator("[data-form-error]")).toBeFocused();
+});
+
+test("a filled honeypot does not send", async ({ page }) => {
+  let posts = 0;
+  await page.route("https://formsubmit.co/**", async (route) => {
+    posts += 1;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ success: "true" }),
+    });
+  });
+  await page.goto("/contact.html");
+  const region = page.locator("#contact-form");
+  const contact = forms.find((form) => form.id === "contact");
+  if (!contact) throw new Error("missing contact form");
+  for (const field of contact.fields) await fillField(region, field);
+  await region.locator("[name='_honey']").fill("spam", { force: true });
+  await region.getByRole("button", { name: "Send message", exact: true }).click();
+  await expect(region.locator("[data-thanks]")).toBeHidden();
+  await expect(region.locator("[data-form-error]")).toBeHidden();
+  expect(posts).toBe(0);
+});
 
 test("two faq questions stay open together", async ({ page }) => {
   await page.goto("/faq.html");
@@ -209,16 +312,12 @@ test("two faq questions stay open together", async ({ page }) => {
   await expect(tutoring.locator(".answer")).toContainText("online first");
 });
 
-test("a placeholder product link notes that nothing opens", async ({ page }) => {
+test("the shop page offers a Teachers Pay Teachers note and a newsletter", async ({ page }) => {
   await page.goto("/resources.html");
-  const link = page.getByRole("link", { name: "The Road to Revolution" });
-  await link.click();
-  const note = page.getByRole("status");
-  await expect(note).toHaveCount(1);
-  await expect(note).toHaveText(copy.placeholder);
-  await link.click();
-  await expect(note).toHaveCount(1);
-  await expect(page).toHaveURL(/\/resources\.html$/);
+  await expect(page.getByRole("heading", { name: "Coming to Teachers Pay Teachers" })).toBeVisible();
+  await expect(page.locator("#shop-news form[data-form='hello']")).toBeVisible();
+  await expect(page.locator('a[href="#"]')).toHaveCount(0);
+  await expect(page.getByText("The Road to Revolution")).toHaveCount(0);
 });
 
 const sceneNpcs = [
@@ -569,6 +668,7 @@ test.describe("quillhaven cast stays on screen", () => {
     let worst = { who: "", diff: Number.POSITIVE_INFINITY, pose: "" };
     const blanks: string[] = [];
     const captured = shots.splice(0, shots.length);
+    let primed = false;
     for (const shot of captured) {
       if (shot.stamp < captureStart - 30) continue;
       const decoded = decodePng(shot.png);
@@ -579,6 +679,13 @@ test.describe("quillhaven cast stays on screen", () => {
       const sample = nearestCastFrame(samples, shot.stamp);
       const gap = Math.abs(sample.t - shot.stamp);
       if (gap > worstGap) worstGap = gap;
+      if (!primed) {
+        const painted = sample.rows.some(
+          (row) => meanChannelDiff(reference, decoded, row, width, height) >= 10,
+        );
+        if (!painted) continue;
+        primed = true;
+      }
       frames += 1;
       for (const row of sample.rows) {
         const diff = meanChannelDiff(reference, decoded, row, width, height);
@@ -956,9 +1063,9 @@ test("a bad path returns the 404 page", async ({ page }) => {
   const response = await page.goto("/not-a-page");
   expect(response?.status()).toBe(404);
   await expect(page).toHaveTitle("Page not found | Griffin & Quill");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("This page is not on the mockup.");
-  await expect(page.locator(".mockup-bar")).toHaveText(copy.mockupBar);
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("This page is not on the site.");
+  await expect(page.locator(".mockup-bar")).toHaveCount(0);
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
   expect(unexpected(errors, true)).toEqual([]);
 });
 

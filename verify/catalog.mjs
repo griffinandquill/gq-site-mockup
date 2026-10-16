@@ -1,8 +1,8 @@
 export const copy = {
-  mockupBar: "Design mockup for owner review. Forms are not connected.",
-  thanks: "Thanks! (mockup: form not connected)",
-  placeholder: "Placeholder link. Nothing opens on this mockup.",
-  robots: "User-agent: *\nDisallow: /\n",
+  thanks: "Thanks. Your note is on its way.",
+  robots: "User-agent: *\nAllow: /\n\nSitemap: https://www.griffinandquill.com/sitemap.xml\n",
+  ogImage: "https://www.griffinandquill.com/assets/og.png",
+  legalBanner: "Draft placeholder, pending attorney review.",
 };
 
 export const pages = [
@@ -69,6 +69,8 @@ export const forms = [
     page: "/index.html",
     section: "#newsletter",
     submit: "Join the list",
+    route: "hello",
+    inbox: "hello@griffinandquill.com",
     fields: [
       { kind: "fill", label: "Email (required)", value: "qa@example.com" },
       { kind: "select", label: "I am a (required)", value: "Parent or guardian" },
@@ -79,6 +81,8 @@ export const forms = [
     page: "/tutoring.html",
     section: "#book",
     submit: "Request a consult",
+    route: "tutoring",
+    inbox: "tutoring@griffinandquill.com",
     fields: [
       { kind: "fill", label: "Your name (required)", value: "Ada Lovelace" },
       { kind: "fill", label: "Email (required)", value: "qa@example.com" },
@@ -92,6 +96,8 @@ export const forms = [
     page: "/worlds.html",
     section: "#waitlist",
     submit: "Join the waitlist",
+    route: "hello",
+    inbox: "hello@griffinandquill.com",
     fields: [
       { kind: "fill", label: "Email (required)", value: "qa@example.com" },
       { kind: "select", label: "I am a (required)", value: "Parent or guardian" },
@@ -102,6 +108,8 @@ export const forms = [
     page: "/schools.html",
     section: "#inquiry",
     submit: "Send inquiry",
+    route: "partners",
+    inbox: "partners@griffinandquill.com",
     fields: [
       { kind: "fill", label: "Your name (required)", value: "Ada Lovelace" },
       { kind: "fill", label: "Work email (required)", value: "qa@example.com" },
@@ -124,12 +132,26 @@ export const forms = [
     page: "/contact.html",
     section: "#contact-form",
     submit: "Send message",
+    route: "hello",
+    inbox: "hello@griffinandquill.com",
     fields: [
       { kind: "fill", label: "Your name (required)", value: "Ada Lovelace" },
       { kind: "fill", label: "Email (required)", value: "qa@example.com" },
       { kind: "select", label: "I am a (required)", value: "Teacher or educator" },
       { kind: "select", label: "Topic (required)", value: "Tutoring" },
       { kind: "fill", label: "Message (required)", value: "Layout check for the contact form." },
+    ],
+  },
+  {
+    id: "shop",
+    page: "/resources.html",
+    section: "#shop-news",
+    submit: "Join the list",
+    route: "hello",
+    inbox: "hello@griffinandquill.com",
+    fields: [
+      { kind: "fill", label: "Email (required)", value: "qa@example.com" },
+      { kind: "select", label: "I am a (required)", value: "Teacher" },
     ],
   },
 ];
