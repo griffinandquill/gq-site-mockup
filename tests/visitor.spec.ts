@@ -120,7 +120,8 @@ for (const entry of pages) {
         await expect(page.getByText("after Ryan has permission")).toHaveCount(0);
       }
       if (entry.file === "about.html") {
-        await expect(page.getByText("builds standards-aligned games and lessons")).toBeVisible();
+        await expect(page.getByText("each built by a practicing teacher around one habit")).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Vision" })).toBeVisible();
         await expect(page.getByText("To be added")).toHaveCount(0);
         await expect(page.getByText("A demo is still ahead")).toHaveCount(0);
       }
