@@ -126,7 +126,11 @@ for (const entry of pages) {
       }
       if (entry.file === "tutoring.html") {
         await expect(page.locator('a[href*="stripe.com"]')).toHaveCount(0);
-        await expect(page.getByRole("link", { name: "Request a session" }).first()).toHaveAttribute("href", "#book");
+        await expect(page.getByRole("link", { name: "Book on Wyzant" }).first()).toHaveAttribute(
+          "href",
+          "https://www.wyzant.com/match/tutor/90199286",
+        );
+        await expect(page.getByRole("link", { name: "contact page" })).toHaveAttribute("href", "contact.html");
       }
       if (entry.file === "worlds.html") {
         await expect(page.getByText("Library: Professor Bramble keeps the books.")).toBeVisible();
@@ -312,12 +316,13 @@ test("two faq questions stay open together", async ({ page }) => {
   await expect(tutoring.locator(".answer")).toContainText("online first");
 });
 
-test("the shop page offers a Teachers Pay Teachers note and a newsletter", async ({ page }) => {
+test("the curriculum page says materials are coming soon and offers a newsletter", async ({ page }) => {
   await page.goto("/resources.html");
-  await expect(page.getByRole("heading", { name: "Coming to Teachers Pay Teachers" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Coming soon" })).toBeVisible();
   await expect(page.locator("#shop-news form[data-form='hello']")).toBeVisible();
   await expect(page.locator('a[href="#"]')).toHaveCount(0);
   await expect(page.getByText("The Road to Revolution")).toHaveCount(0);
+  await expect(page.getByText("Teachers Pay Teachers")).toHaveCount(0);
 });
 
 const sceneNpcs = [
@@ -1062,7 +1067,7 @@ test("a bad path returns the 404 page", async ({ page }) => {
   const errors = collectErrors(page);
   const response = await page.goto("/not-a-page");
   expect(response?.status()).toBe(404);
-  await expect(page).toHaveTitle("Page not found | Griffin & Quill");
+  await expect(page).toHaveTitle("Griffin & Quill | Where learning becomes an adventure");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("This page is not on the site.");
   await expect(page.locator(".mockup-bar")).toHaveCount(0);
   await expect(page.locator('meta[name="robots"]')).toHaveCount(0);

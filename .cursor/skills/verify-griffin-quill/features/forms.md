@@ -1,6 +1,6 @@
 # Forms
 
-Six forms post to FormSubmit. A valid submit stays on the page and shows `Thanks. Your note is on its way.` only after a successful JSON response. An empty submit shows the browser's required-field message and does not show that note. A failed response shows the error note and does not show thanks. A filled honeypot sends nothing.
+Five forms post to FormSubmit. A valid submit stays on the page and shows `Thanks. Your note is on its way.` only after a successful JSON response. An empty submit shows the browser's required-field message and does not show that note. A failed response shows the error note and does not show thanks. A filled honeypot sends nothing.
 
 ## Sub-features
 
@@ -13,11 +13,10 @@ Six forms post to FormSubmit. A valid submit stays on the page and shows `Thanks
 ## How to get to it (user POV)
 
 - Home, section `Notes from the studio`, button `Join the list`. Inbox `hello@griffinandquill.com`.
-- Tutoring, section `Book a free consult`, button `Request a consult`. Inbox `tutoring@griffinandquill.com`.
 - Quillhaven (`worlds.html`), section `Waitlist`, button `Join the waitlist`. Inbox `hello@griffinandquill.com`.
 - Schools, section `Inquiry form`, button `Send inquiry`. Inbox `partners@griffinandquill.com`.
 - Contact, section `Message`, button `Send message`. Inbox `hello@griffinandquill.com`.
-- Shop (`resources.html`), section `A note when the store opens`, button `Join the list`. Inbox `hello@griffinandquill.com`.
+- Curriculum (`resources.html`), section `A note when curriculum is ready`, button `Join the list`. Inbox `hello@griffinandquill.com`.
 
 ## Driving it with Playwright
 
@@ -37,7 +36,7 @@ Preconditions:
 ## Gotchas
 
 - Click the button. Calling `form.submit()` skips the handler and navigates.
-- The optional consult note and the optional school size stay empty. They are not required.
+- The optional school size stays empty. It is not required.
 - `getByLabel` needs the full label, including `(required)`, and `exact: true`. `Email (required)` is not `Work email (required)`.
 - The thank-you note is not a live region. Assert the text and focus.
 - The honeypot is clipped. Fill it with `force: true`.
