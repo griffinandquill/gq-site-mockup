@@ -42,4 +42,4 @@ Each feature file starts with an H1 and one paragraph. It then uses these four H
 - [Navigation](./navigation.md) covers the header at desktop width and the mobile menu.
 - [Crawl and share tags](./mockup-guard.md) covers `robots.txt`, the sitemap, and the share tags.
 - [Forms](./forms.md) covers the six forms that stay on the page.
-- [FAQ and the shop note](./interactions.md) covers the questions and the Teachers Pay Teachers section.
+- [FAQ and the shop note](./interactions.md) covers the questions and the curriculum coming-soon note.

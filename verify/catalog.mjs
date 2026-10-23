@@ -8,18 +8,18 @@ export const copy = {
 export const pages = [
   {
     file: "index.html",
-    title: "Griffin & Quill | Write your own legend",
+    title: "Griffin & Quill | Where learning becomes an adventure",
     nav: "Home",
   },
   {
     file: "tutoring.html",
-    title: "Tutoring | Griffin & Quill",
+    title: "Griffin & Quill | Where learning becomes an adventure",
     nav: "Tutoring",
   },
   {
     file: "resources.html",
-    title: "Shop | Griffin & Quill",
-    nav: "Shop",
+    title: "Griffin & Quill | Where learning becomes an adventure",
+    nav: "Curriculum",
   },
   {
     file: "worlds.html",
@@ -28,37 +28,37 @@ export const pages = [
   },
   {
     file: "schools.html",
-    title: "Schools and Districts | Griffin & Quill",
+    title: "Griffin & Quill | Where learning becomes an adventure",
     nav: "Schools",
   },
   {
     file: "about.html",
-    title: "About | Griffin & Quill",
+    title: "Griffin & Quill | Where learning becomes an adventure",
     nav: "About",
   },
   {
     file: "faq.html",
-    title: "FAQ | Griffin & Quill",
+    title: "Griffin & Quill | Where learning becomes an adventure",
     nav: "FAQ",
   },
   {
     file: "contact.html",
-    title: "Contact | Griffin & Quill",
+    title: "Griffin & Quill | Where learning becomes an adventure",
     nav: "Contact",
   },
   {
     file: "privacy.html",
-    title: "Privacy Policy | Griffin & Quill",
+    title: "Griffin & Quill | Where learning becomes an adventure",
     nav: null,
   },
   {
     file: "terms.html",
-    title: "Terms of Use | Griffin & Quill",
+    title: "Griffin & Quill | Where learning becomes an adventure",
     nav: null,
   },
   {
     file: "404.html",
-    title: "Page not found | Griffin & Quill",
+    title: "Griffin & Quill | Where learning becomes an adventure",
     nav: null,
   },
 ];
@@ -74,21 +74,6 @@ export const forms = [
     fields: [
       { kind: "fill", label: "Email (required)", value: "qa@example.com" },
       { kind: "select", label: "I am a (required)", value: "Parent or guardian" },
-    ],
-  },
-  {
-    id: "consult",
-    page: "/tutoring.html",
-    section: "#book",
-    submit: "Request a consult",
-    route: "tutoring",
-    inbox: "tutoring@griffinandquill.com",
-    fields: [
-      { kind: "fill", label: "Your name (required)", value: "Ada Lovelace" },
-      { kind: "fill", label: "Email (required)", value: "qa@example.com" },
-      { kind: "select", label: "I am a (required)", value: "Parent or guardian" },
-      { kind: "select", label: "Subject (required)", value: "U.S. History" },
-      { kind: "radio", label: "1:1" },
     ],
   },
   {

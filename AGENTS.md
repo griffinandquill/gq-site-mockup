@@ -34,7 +34,7 @@ The mascot gryphon is Tahne, founder of Quillhaven. Other characters: Winston Wo
 
 AI art that Griffin & Quill will ship needs a hand-edited pass first. Do not invent testimonials, stats, or reviews.
 
-Official tagline: "Write your own legend. Learn it. Live it. PROVE IT!" Secondary line: "Where learning becomes an adventure." "An Edtech Company" is a descriptor only.
+Company line: "Where learning becomes an adventure." Use "Write your own legend. Learn it. Live it. PROVE IT!" only for Quillhaven, not as the company tagline. "An Edtech Company" is a descriptor only.
 
 ## Stack
 

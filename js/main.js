@@ -150,9 +150,7 @@
     var slot = document.querySelector(".tagline-type");
     if (!slot || reduceMotion) return;
     document.documentElement.classList.add("motion");
-    var lead = "Write your own legend. ";
-    var rest = "Learn it. Live it. PROVE IT!";
-    var full = lead + rest;
+    var full = "Where learning becomes an adventure.";
     var i = 0;
     function tick() {
       i += 1;
@@ -160,14 +158,8 @@
       slot.textContent = "";
       var leadEl = document.createElement("span");
       leadEl.className = "h1-lead";
-      leadEl.textContent = shown.slice(0, Math.min(shown.length, lead.length));
+      leadEl.textContent = shown;
       slot.appendChild(leadEl);
-      if (shown.length > lead.length) {
-        var restEl = document.createElement("span");
-        restEl.className = "h1-rest";
-        restEl.textContent = shown.slice(lead.length);
-        slot.appendChild(restEl);
-      }
       if (i < full.length) {
         var caret = document.createElement("span");
         caret.className = "caret";

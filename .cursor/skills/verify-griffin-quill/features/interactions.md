@@ -1,18 +1,18 @@
 # FAQ and the shop note
 
-FAQ questions are disclosure widgets. More than one can be open. The shop page names Teachers Pay Teachers and offers a newsletter. It does not list sample products.
+FAQ questions are disclosure widgets. More than one can be open. The curriculum page says the materials are coming soon and offers a newsletter. It does not list sample products.
 
 ## Sub-features
 
 - `faq-open` opens two questions on the FAQ page and leaves both open.
 - `faq-tutoring` opens the first tutoring question on the tutoring page.
-- `shop-coming` shows the Teachers Pay Teachers heading and the shop newsletter, with no sample product and no `href="#"`.
+- `shop-coming` shows the coming-soon heading and the curriculum newsletter, with no sample product and no `href="#"`.
 
 ## How to get to it (user POV)
 
 - Open FAQ and choose a question summary.
 - Open Tutoring and choose a question under Tutoring questions.
-- Open Shop (`resources.html`) and read `Coming to Teachers Pay Teachers`.
+- Open Curriculum (`resources.html`) and read `Coming soon`.
 
 ## Driving it with Playwright
 
@@ -23,7 +23,7 @@ Preconditions:
 
 - **Open two questions.** Run `npm run verify -- --grep "faq questions"`. The test clicks the first two summaries on `/faq.html`. Both `details` elements have `open` true, and both `.answer` blocks are visible.
 - **Open a tutoring question.** The same test opens the first question in `#tutoring-questions` on `/tutoring.html` and expects the answer to contain `online first`.
-- **Shop.** Run `npm run verify -- --grep "Teachers Pay Teachers"`. The heading `Coming to Teachers Pay Teachers` is visible, `#shop-news` has `form[data-form="hello"]`, and the page has no `The Road to Revolution` text and no `href="#"`.
+- **Curriculum.** Run `npm run verify -- --grep "coming soon"`. The heading `Coming soon` is visible, `#shop-news` has `form[data-form="hello"]`, and the page has no `The Road to Revolution` text, no `Teachers Pay Teachers` text, and no `href="#"`.
 - **Proof.** The report rows for those two tests are green.
 
 ## Gotchas
