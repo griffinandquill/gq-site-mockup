@@ -1229,68 +1229,6 @@ legend { padding: 0 0.3rem; }
   max-width: 22em;
 }
 
-.cover .motion-accents {
-  position: relative;
-  height: 2.6rem;
-  margin-top: 0.85rem;
-  pointer-events: none;
-}
-
-.sprite-filters {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
-.accent-flight {
-  position: relative;
-  width: 6.6rem;
-  height: 2.6rem;
-  pointer-events: none;
-  /* Hard 4px rings (one sprite pixel): navy, then cream. No blur. */
-  filter: url("#pixel-outline");
-}
-
-.accent-flight.is-flying {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 2;
-  width: 6.6rem;
-  height: 2.6rem;
-}
-
-.accent-gryphon,
-.spark { position: absolute; pointer-events: none; }
-
-.accent-gryphon {
-  left: 0;
-  top: 0;
-  width: 4px;
-  height: 4px;
-  transform-origin: 16px 16px;
-  background: transparent;
-  box-shadow:
-    16px 10px #faf6ea, 20px 10px #faf6ea,
-    12px 14px #faf6ea, 16px 14px #faf6ea, 20px 14px #faf6ea, 24px 14px #faf6ea,
-    8px 18px #faf6ea, 12px 18px #faf6ea, 16px 18px #faf6ea, 20px 18px #faf6ea,
-    12px 22px #faf6ea, 20px 22px #faf6ea,
-    4px 12px #faf6ea, 8px 12px #faf6ea,
-    0 14px #b8860b, 4px 16px #b8860b,
-    22px 6px #faf6ea, 26px 8px #faf6ea, 30px 12px #b8860b;
-}
-
-.spark {
-  width: 4px;
-  height: 4px;
-  background: var(--gold);
-}
-
-.cover .spark-a { left: 4.2rem; top: 0.2rem; }
-.cover .spark-b { left: 2.2rem; top: 1.5rem; }
-.cover .spark-c { left: 5.4rem; top: 1.35rem; }
-
 .tagline-type:empty { display: none; }
 .tagline-type .caret {
   display: inline-block;
@@ -1938,14 +1876,9 @@ legend { padding: 0 0.3rem; }
 
   .cover h1 { position: relative; }
 
-  .accent-gryphon { animation: gryphon-bob 2.6s ease-in-out 3; }
-  .accent-flight.is-flying .accent-gryphon { animation: none; }
   .sprite-bob { animation: gryphon-bob 2.8s ease-in-out 3; }
   .grid-3 .card:nth-child(2) .sprite-bob { animation-delay: 0.25s; }
   .grid-3 .card:nth-child(3) .sprite-bob { animation-delay: 0.5s; }
-  .spark { animation: spark-twinkle 1.6s ease-in-out 3; }
-  .spark-b { animation-delay: 0.35s; }
-  .spark-c { animation-delay: 0.7s; }
 
   html.js .reveal.is-in .town-map .plot {
     animation: map-in 0.45s ease both;
@@ -1961,11 +1894,6 @@ legend { padding: 0 0.3rem; }
 @keyframes gryphon-bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
-}
-
-@keyframes spark-twinkle {
-  0%, 100% { opacity: 0.25; }
-  50% { opacity: 1; }
 }
 
 @keyframes map-in {

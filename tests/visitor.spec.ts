@@ -579,11 +579,9 @@ test.describe("quillhaven cast stays on screen", () => {
     const castError = await page.evaluate(() => document.documentElement.dataset.castError || "");
     expect(castError).toBe("");
     await page.evaluate(() => {
-      document.querySelectorAll(".qh-lamp, .qh-fly, .qh-cloud, .qh-window, .accent-flight").forEach((node) => {
+      document.querySelectorAll(".qh-lamp, .qh-fly, .qh-cloud, .qh-window").forEach((node) => {
         (node as HTMLElement).style.animation = "none";
       });
-      const bird = document.querySelector(".accent-flight");
-      if (bird) (bird as HTMLElement).style.visibility = "hidden";
     });
 
     const client = await page.context().newCDPSession(page);
@@ -1019,49 +1017,11 @@ test("the home hero logo has no navy plate", async ({ page, request }) => {
   expect(svg).toContain("#b8860b");
 });
 
-test("the pixel gryphon stays parked when motion is reduced", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+test("the home page has no flying gryphon", async ({ page }) => {
   await page.goto("/index.html");
-  const flight = page.locator(".accent-flight");
-  await expect(flight).toBeVisible();
-  await expect(flight).not.toHaveClass(/is-flying/);
-  const first = await flight.boundingBox();
-  await page.waitForTimeout(500);
-  const second = await flight.boundingBox();
-  expect(first).not.toBeNull();
-  expect(second).not.toBeNull();
-  expect(Math.hypot((second?.x ?? 0) - (first?.x ?? 0), (second?.y ?? 0) - (first?.y ?? 0))).toBeLessThan(1);
-});
-
-test.describe("home gryphon flight", () => {
-  test.use({ reducedMotion: "no-preference" });
-
-  test("the pixel gryphon is present and moves inside the viewport", async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto("/index.html");
-    const flight = page.locator(".accent-flight");
-    await expect(flight).toBeVisible();
-    await expect(flight).toHaveClass(/is-flying/);
-    await expect(flight).toHaveCSS("pointer-events", "none");
-    const bird = flight.locator(".accent-gryphon");
-    await expect(bird).toBeVisible();
-    let previous = await flight.boundingBox();
-    let moved = 0;
-    expect(previous).not.toBeNull();
-    for (let i = 0; i < 4; i += 1) {
-      await page.waitForTimeout(450);
-      const box = await flight.boundingBox();
-      expect(box).not.toBeNull();
-      if (!box || !previous) continue;
-      expect(box.x).toBeGreaterThanOrEqual(0);
-      expect(box.y).toBeGreaterThanOrEqual(0);
-      expect(box.x + box.width).toBeLessThanOrEqual(1280);
-      expect(box.y + box.height).toBeLessThanOrEqual(800);
-      moved = Math.max(moved, Math.hypot(box.x - previous.x, box.y - previous.y));
-      previous = box;
-    }
-    expect(moved).toBeGreaterThan(12);
-  });
+  await expect(page.locator(".accent-flight")).toHaveCount(0);
+  await expect(page.locator(".accent-gryphon")).toHaveCount(0);
+  await expect(page.locator(".is-flying")).toHaveCount(0);
 });
 
 test("a bad path returns the 404 page", async ({ page }) => {
