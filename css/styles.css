@@ -1263,6 +1263,7 @@ legend { padding: 0 0.3rem; }
   background: #141c30;
   color: var(--cream);
   font: inherit;
+  text-decoration: none;
   cursor: pointer;
 }
 
