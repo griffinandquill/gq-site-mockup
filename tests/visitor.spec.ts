@@ -936,7 +936,7 @@ async function forceVisited(page: Page, selector: string) {
   });
 }
 
-test("the quillhaven demo stays unloaded until the poster is pressed", async ({ page }) => {
+test("every quillhaven demo link opens play.griffinandquill.com in a new tab", async ({ page }) => {
   await page.route("https://play.griffinandquill.com/**", (route) => route.abort());
   for (const width of [1280, 768, 390, 375]) {
     await page.setViewportSize({ width, height: 800 });
@@ -980,17 +980,17 @@ test("the quillhaven demo stays unloaded until the poster is pressed", async ({ 
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
     expect(overflow, `horizontal overflow at ${width}`).toBeLessThanOrEqual(1);
-    await expect(page.getByRole("link", { name: "Open full screen" })).toHaveAttribute(
-      "href",
-      "https://play.griffinandquill.com",
-    );
+    for (const link of [
+      page.getByRole("link", { name: "Open full screen" }),
+      stage.locator("[data-play-load]"),
+      page.locator("main a", { hasText: "Play the demo" }).first(),
+    ]) {
+      await expect(link).toHaveAttribute("href", "https://play.griffinandquill.com");
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", /noopener/);
+    }
     await expect(page.getByText("It plays best on a computer or tablet with a keyboard.")).toBeVisible();
-    await page.getByRole("button", { name: "Play the demo" }).click();
-    const frame = stage.locator("iframe");
-    await expect(frame).toHaveCount(1);
-    await expect(frame).toHaveAttribute("src", "https://play.griffinandquill.com");
-    await expect(frame).toHaveAttribute("allow", "fullscreen");
-    await expect(stage.locator("[data-play-load]")).toBeHidden();
+    await expect(stage.locator("iframe")).toHaveCount(0);
   }
 });
 
