@@ -55,6 +55,33 @@
         }
       ],
       "tptUrl": "https://www.teacherspayteachers.com/Product/Griffin-Quill-World-War-1-Unit-Bundle-18086100"
+    },
+    {
+      "id": "world-war-ii-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "World War II Unit Bundle",
+      "grades": "9-12",
+      "price": 36,
+      "included": [
+        "9 lessons",
+        "8-bit and plain-font slides",
+        "Packets",
+        "DBQ",
+        "Unit test",
+        "Study guide"
+      ],
+      "summary": "A complete U.S. History unit on World War II for grades 9-12.",
+      "description": "World War II Unit Bundle is a complete U.S. History unit for grades 9-12. The cover marks it for South Carolina USHC Standard 4.\n\nNine lessons follow the United States from trying to stay out of another war in the 1930s through the attack on Pearl Harbor. Lesson 1, Peace at Any Price? Dictators, Neutrality and America, 1931-1939, asks why staying out was so hard. A later checkpoint uses a photograph of the USS Arizona on December 7, 1941, and asks students what they see, what listeners would need to know, and to write a headline.\n\nThe bundle includes nine lessons, an 8-bit slide deck and a plain-font slide deck, student packets, a DBQ, a unit test, and a study guide. The files are Google Docs and Google Slides. The cover also lists real historical images and nine unique activities.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/world-war-ii-cover.png",
+      "coverAlt": "World War II unit cover. Complete U.S. History unit for grades 9-12, with nine lessons, real historical images, nine unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/world-war-ii-cover.png",
+          "alt": "Preview of the World War II unit cover, showing Peace at Any Price and the Pearl Harbor photograph checkpoint."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/World-War-II-Unit-Bundle-US-History-Slides-Packets-DBQ-Test-Grades-9-12-18087243"
     }
   ]
 }
