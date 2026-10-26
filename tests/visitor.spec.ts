@@ -57,15 +57,19 @@ test("stage copies site bytes and leaves the checker out", () => {
   }
   const worlds = fs.readFileSync(path.join(ROOT, "_site", "worlds.html"), "utf8");
   const css = fs.readFileSync(path.join(ROOT, "_site", "css", "styles.css"), "utf8");
-  const shop = fs.readFileSync(path.join(ROOT, "_site", "resources.html"), "utf8");
+  const store = fs.readFileSync(path.join(ROOT, "_site", "store.html"), "utf8");
+  const legacy = fs.readFileSync(path.join(ROOT, "_site", "resources.html"), "utf8");
   expect(worlds).toContain(`href="css/styles.css?v=${version}"`);
   expect(worlds).toContain(`src="js/main.js?v=${version}"`);
   expect(worlds).toContain(`src="img/characters/tahne.png?v=${version}"`);
   expect(worlds).toContain(`src="img/buildings/academy.png?v=${version}"`);
   expect(worlds).toContain('src="assets/logo-icon.svg"');
   expect(css).toContain(`bramble-idle.png?v=${version}`);
-  expect(shop).toContain(`src="js/form-config.js?v=${version}"`);
-  expect(shop).not.toContain("products.js");
+  expect(store).toContain(`src="js/store.js?v=${version}"`);
+  expect(store).toContain(`href="data/store.json?v=${version}"`);
+  expect(store).not.toContain("products.js");
+  expect(legacy).toContain("store.html");
+  expect(legacy).not.toContain("products.js");
   expect(fs.existsSync(path.join(ROOT, "_site", "package.json"))).toBe(false);
   expect(fs.existsSync(path.join(ROOT, "_site", "verify"))).toBe(false);
   expect(fs.existsSync(path.join(ROOT, "_site", "tests"))).toBe(false);
@@ -82,6 +86,10 @@ test("robots.txt allows crawling and names the sitemap", async ({ request }) => 
   for (const entry of pages) {
     if (entry.file === "404.html") {
       expect(body).not.toContain("404.html");
+      continue;
+    }
+    if (entry.redirectsTo) {
+      expect(body).not.toContain(`<loc>https://www.griffinandquill.com/${entry.file}</loc>`);
       continue;
     }
     const loc =
@@ -101,6 +109,9 @@ for (const entry of pages) {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
       const response = await page.goto(`/${entry.file}`);
       expect(response?.status()).toBe(200);
+      if (entry.redirectsTo) {
+        await expect(page).toHaveURL(new RegExp(`${entry.redirectsTo.replace(/\./g, "\\.")}$`));
+      }
       await expect(page).toHaveTitle(entry.title);
       await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
       await expect(page.locator(".mockup-bar")).toHaveCount(0);
@@ -317,13 +328,15 @@ test("two faq questions stay open together", async ({ page }) => {
   await expect(tutoring.locator(".answer")).toContainText("online first");
 });
 
-test("the curriculum page says materials are coming soon and offers a newsletter", async ({ page }) => {
-  await page.goto("/resources.html");
-  await expect(page.getByRole("heading", { name: "Coming soon" })).toBeVisible();
-  await expect(page.locator("#shop-news form[data-form='hello']")).toBeVisible();
+test("the old curriculum address opens the store", async ({ page }) => {
+  const response = await page.goto("/resources.html");
+  expect(response?.status()).toBe(200);
+  await expect(page).toHaveURL(/\/store\.html$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Classroom units and simulations." })).toBeVisible();
+  await expect(page.locator("#site-nav").getByRole("link", { name: "Curriculum", exact: true })).toHaveCount(0);
+  await expect(page.locator('#site-nav a[aria-current="page"]')).toHaveText("Store");
   await expect(page.locator('a[href="#"]')).toHaveCount(0);
   await expect(page.getByText("The Road to Revolution")).toHaveCount(0);
-  await expect(page.getByText("Teachers Pay Teachers")).toHaveCount(0);
 });
 
 const sceneNpcs = [

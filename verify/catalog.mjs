@@ -18,8 +18,14 @@ export const pages = [
   },
   {
     file: "resources.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
-    nav: "Curriculum",
+    title: "Store | Griffin & Quill",
+    nav: "Store",
+    redirectsTo: "/store.html",
+  },
+  {
+    file: "store.html",
+    title: "Store | Griffin & Quill",
+    nav: "Store",
   },
   {
     file: "worlds.html",
@@ -125,18 +131,6 @@ export const forms = [
       { kind: "select", label: "I am a (required)", value: "Teacher or educator" },
       { kind: "select", label: "Topic (required)", value: "Tutoring" },
       { kind: "fill", label: "Message (required)", value: "Layout check for the contact form." },
-    ],
-  },
-  {
-    id: "shop",
-    page: "/resources.html",
-    section: "#shop-news",
-    submit: "Join the list",
-    route: "hello",
-    inbox: "hello@griffinandquill.com",
-    fields: [
-      { kind: "fill", label: "Email (required)", value: "qa@example.com" },
-      { kind: "select", label: "I am a (required)", value: "Teacher" },
     ],
   },
 ];
