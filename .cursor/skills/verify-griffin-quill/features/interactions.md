@@ -24,11 +24,11 @@ Preconditions:
 - **Open two questions.** Run `npm run verify -- --grep "faq questions"`. The test clicks the first two summaries on `/faq.html`. Both `details` elements have `open` true, and both `.answer` blocks are visible.
 - **Open a tutoring question.** The same test opens the first question in `#tutoring-questions` on `/tutoring.html` and expects the answer to contain `online first`.
 - **Store.** Run `npm run verify -- --grep "old curriculum address"`. `/resources.html` ends on `/store.html`, the header says Store, and the page has no `The Road to Revolution` text and no `href="#"`.
-- **Board.** Run `npm run verify -- --grep "subject tiles"`. Each subject opens, U.S. History shows the World War I card at $36, empty subjects say coming soon, search and the Units/Simulations filter run, and Buy on TPT opens the TPT store in a new tab.
+- **Board.** Run `npm run verify -- --grep "subject tiles"`. Each subject opens, U.S. History shows the World War I card at $36, empty subjects say coming soon, search and the Units/Simulations filter run, and Buy on TPT opens the World War I product page in a new tab.
 - **Proof.** The report rows for those tests are green.
 
 ## Gotchas
 
 - The plus and minus marks are CSS. They are not in the text of the summary.
 - Several questions can be open. The check does not expect one to close the other.
-- The store board is on `store.html`. Empty subjects say “Coming soon, follow our TPT store.” The World War I buy link opens Teachers Pay Teachers in a new tab.
+- The store board is on `store.html`. Empty subjects say “Coming soon, follow our TPT store.” The World War I buy link opens the product page on Teachers Pay Teachers in a new tab.

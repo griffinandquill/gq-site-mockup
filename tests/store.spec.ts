@@ -104,7 +104,7 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
   const popupPromise = page.waitForEvent("popup");
   await buy.click();
   const popup = await popupPromise;
-  await expect(popup).toHaveURL(/teacherspayteachers\.com\/store\/griffin-quill/);
+  await expect(popup).toHaveURL(/teacherspayteachers\.com\/Product\/Griffin-Quill-World-War-1-Unit-Bundle-18086100/);
   await popup.close();
 
   expect(errors).toEqual([]);
