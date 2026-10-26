@@ -29,6 +29,32 @@
   ],
   "items": [
     {
+      "id": "colonial-america-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "Colonial America Unit Bundle",
+      "grades": "9-12",
+      "price": 36,
+      "included": [
+        "9 lessons",
+        "8-bit and plain-font slides",
+        "Packets",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on colonial America for grades 9-12.",
+      "description": "Colonial America Unit Bundle is a complete U.S. History unit for grades 9-12. The cover marks it for South Carolina USHC Standard 1.\n\nNine lessons start with who lived in North America before Europeans arrived. Lesson 1, Before 1492, asks who lived there and how they lived. Lesson 3, Jamestown and the Chesapeake: Survival, Tobacco and Bound Labor, follows that colony. A checkpoint uses John White’s 1585 drawing, The Town of Secoton, and asks what the corn fields, the dance circle, and the fire show about planning.\n\nThe bundle includes nine lessons, an 8-bit slide deck and a plain-font slide deck, student packets, a DBQ, and a unit test. The files are Google Docs and Google Slides. The cover also lists real primary sources and nine unique activities.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/colonial-america-cover.png",
+      "coverAlt": "Colonial America unit cover. Complete U.S. History unit for grades 9-12, with nine lessons, real primary sources, nine unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/colonial-america-cover.png",
+          "alt": "Preview of the Colonial America unit cover, showing Before 1492 and the Town of Secoton checkpoint."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Colonial-America-Unit-Bundle-US-History-Slides-Packets-DBQ-Test-9-12-18087918"
+    },
+    {
       "id": "world-war-i-unit-bundle",
       "kind": "unit",
       "subject": "us-history",
