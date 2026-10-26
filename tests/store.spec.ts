@@ -49,12 +49,19 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
     await expect(page).toHaveURL(new RegExp(`#${id}$`));
     await expect(page.getByRole("heading", { name: `${name} units` })).toBeVisible();
     if (name === "U.S. History") {
-      await expect(page.locator("article.unit-card")).toHaveCount(3);
+      await expect(page.locator("article.unit-card")).toHaveCount(4);
       await expect(page.locator("article.unit-card h3")).toHaveText([
         "Colonial America Unit Bundle",
+        "American Revolution & Constitution Unit Bundle",
         "World War I Unit Bundle",
         "World War II Unit Bundle",
       ]);
+      const revolution = unitCard(page, "American Revolution & Constitution Unit Bundle");
+      await expect(revolution.getByText("$40", { exact: true })).toBeVisible();
+      await expect(revolution.getByText("Grades 9-12")).toBeVisible();
+      await expect(revolution.getByText("10 lessons")).toBeVisible();
+      const revolutionWidth = await revolution.locator("img").evaluate((img: HTMLImageElement) => img.naturalWidth);
+      expect(revolutionWidth).toBeGreaterThan(200);
       const colonial = unitCard(page, "Colonial America Unit Bundle");
       await expect(colonial.getByText("$36", { exact: true })).toBeVisible();
       await expect(colonial.getByText("Grades 9-12")).toBeVisible();
@@ -87,8 +94,8 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
 
   await page.getByRole("radio", { name: "Units" }).check();
   await expect(page).toHaveURL(/kind=unit/);
-  await expect(page.locator("article.unit-card")).toHaveCount(3);
-  await expect(unitCard(page, "Colonial America Unit Bundle").getByText("$36", { exact: true })).toBeVisible();
+  await expect(page.locator("article.unit-card")).toHaveCount(4);
+  await expect(unitCard(page, "American Revolution & Constitution Unit Bundle").getByText("$40", { exact: true })).toBeVisible();
 
   await page.getByRole("radio", { name: "Simulations" }).check();
   await expect(page.locator("#store-results")).toContainText("Coming soon, follow our TPT store");
@@ -156,6 +163,19 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
   await expect(colonialPopup).toHaveURL(/Colonial-America-Unit-Bundle-US-History-Slides-Packets-DBQ-Test-9-12-18087918/);
   await colonialPopup.close();
 
+  const revolutionBuy = unitCard(page, "American Revolution & Constitution Unit Bundle").getByRole("link", { name: "Buy on TPT" });
+  await expect(revolutionBuy).toHaveAttribute("target", "_blank");
+  await expect(revolutionBuy).toHaveAttribute("rel", /noopener/);
+  await expect(revolutionBuy).toHaveAttribute(
+    "href",
+    "https://www.teacherspayteachers.com/Product/American-Revolution-Constitution-Unit-US-History-Slides-DBQ-Test-9-12-18088204",
+  );
+  const revolutionPopupPromise = page.waitForEvent("popup");
+  await revolutionBuy.click();
+  const revolutionPopup = await revolutionPopupPromise;
+  await expect(revolutionPopup).toHaveURL(/American-Revolution-Constitution-Unit-US-History-Slides-DBQ-Test-9-12-18088204/);
+  await revolutionPopup.close();
+
   expect(errors).toEqual([]);
 });
 
@@ -178,7 +198,7 @@ test("the store fits a phone and a desktop window", async ({ page }) => {
   for (const width of [375, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(`/store.html?view=${width}#us-history`);
-    await expect(page.locator("article.unit-card")).toHaveCount(3);
+    await expect(page.locator("article.unit-card")).toHaveCount(4);
     const card = unitCard(page, "World War II Unit Bundle");
     await expect(card.getByText("$36", { exact: true })).toBeVisible();
     await expect(card.getByRole("link", { name: "Buy on TPT" })).toBeVisible();

@@ -55,6 +55,32 @@
       "tptUrl": "https://www.teacherspayteachers.com/Product/Colonial-America-Unit-Bundle-US-History-Slides-Packets-DBQ-Test-9-12-18087918"
     },
     {
+      "id": "american-revolution-constitution-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "American Revolution & Constitution Unit Bundle",
+      "grades": "9-12",
+      "price": 40,
+      "included": [
+        "10 lessons",
+        "8-bit and plain-font slides",
+        "Packets",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on the American Revolution and the Constitution for grades 9-12.",
+      "description": "American Revolution & Constitution Unit Bundle is a complete U.S. History unit for grades 9-12. The cover marks it for South Carolina USHC Standard 1.\n\nTen lessons run from the taxes after 1763 to the Constitution. Lesson 1, No Tax Without a Vote, asks why new British taxes turned loyal colonists into protesters. Lesson 6, Shays' Rebellion and the Constitutional Convention, 1786-1787, asks what the convention made instead. A checkpoint asks whether July 1776 was remembered, using a painting of the Declaration of Independence, and who is standing and who is seated.\n\nThe bundle includes ten lessons, an 8-bit slide deck and a plain-font slide deck, student packets, a DBQ, and a unit test. The files are Google Docs and Google Slides. The cover also lists real primary sources and ten unique activities.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/american-revolution-cover.png",
+      "coverAlt": "American Revolution and Constitution unit cover. Complete U.S. History unit for grades 9-12, with ten lessons, real primary sources, ten unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/american-revolution-cover.png",
+          "alt": "Preview of the American Revolution and Constitution unit cover, showing No Tax Without a Vote and the July 1776 checkpoint."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/American-Revolution-Constitution-Unit-US-History-Slides-DBQ-Test-9-12-18088204"
+    },
+    {
       "id": "world-war-i-unit-bundle",
       "kind": "unit",
       "subject": "us-history",
