@@ -37,8 +37,11 @@ function sendFile(res, status, file) {
 
 const server = http.createServer((req, res) => {
   let pathname = "/";
+  let search = "";
   try {
-    pathname = new URL(req.url || "/", `http://${host}:${port}`).pathname;
+    const url = new URL(req.url || "/", `http://${host}:${port}`);
+    pathname = url.pathname;
+    search = url.search;
   } catch {
     sendFile(res, 404, notFound);
     return;
@@ -52,6 +55,11 @@ const server = http.createServer((req, res) => {
     return;
   }
   const cleaned = path.posix.normalize(rel).replace(/^\/+/, "");
+  if (cleaned === "resources.html") {
+    res.writeHead(301, { Location: "/store.html" + search });
+    res.end();
+    return;
+  }
   const abs = path.resolve(ROOT, cleaned);
   const inside = abs === ROOT || abs.startsWith(ROOT + path.sep);
   if (!inside || cleaned.includes("..") || !published.has(cleaned) || !fs.existsSync(abs) || !fs.statSync(abs).isFile()) {

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const ASSET_FILES = ["favicon.svg", "favicon.ico", "robots.txt", "sitemap.xml", ".nojekyll"];
-const ASSET_DIRS = ["css", "js", "assets", "fonts", "img"];
+const ASSET_DIRS = ["css", "js", "assets", "fonts", "img", "data"];
 
 export function rootHtmlFiles() {
   return fs
