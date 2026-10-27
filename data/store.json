@@ -133,6 +133,31 @@
       "tptUrl": "https://www.teacherspayteachers.com/Product/Civil-War-Reconstruction-Unit-US-History-Slides-DBQ-Test-Grades-9-12-18088664"
     },
     {
+      "id": "gilded-age-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "Gilded Age: Industry, Labor, Immigration & the West",
+      "grades": "9-12",
+      "price": 40,
+      "included": [
+        "10 lessons",
+        "8-bit and plain-font slides",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on the Gilded Age, 1865-1900, for grades 9-12.",
+      "description": "Gilded Age: Industry, Labor, Immigration & the West is a complete U.S. History unit for grades 9-12, covering 1865-1900. The cover marks it for South Carolina USHC Standard 3.\n\nTen lessons follow industry, labor, immigration, and the West. Students order an invention timeline from patent drawings and test Carnegie's words against Frick's deeds. The cover lists real primary sources and ten unique activities.\n\nThe bundle includes ten lessons, an 8-bit slide deck and a plain-font slide deck, a DBQ, and a unit test. The files are Google Docs and Google Slides.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/gilded-age-cover.jpg",
+      "coverAlt": "Gilded Age unit cover. Complete U.S. History unit for grades 9-12, covering 1865-1900, with ten lessons, real primary sources, ten unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/gilded-age-cover.jpg",
+          "alt": "Preview of the Gilded Age unit cover, showing the industry and labor slides."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Gilded-Age-Unit-US-History-Labor-Immigration-West-DBQ-Test-9-12-18090158"
+    },
+    {
       "id": "world-war-i-unit-bundle",
       "kind": "unit",
       "subject": "us-history",
