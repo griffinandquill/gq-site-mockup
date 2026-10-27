@@ -6,7 +6,7 @@ FAQ questions are disclosure widgets. More than one can be open. The store lists
 
 - `faq-open` opens two questions on the FAQ page and leaves both open.
 - `faq-tutoring` opens the first tutoring question on the tutoring page.
-- `store-board` opens each subject, searches, and opens the Colonial America, American Revolution & Constitution, Expansion & Sectionalism, Civil War & Reconstruction, Gilded Age, Populism, Progressives & Imperialism, World War I, Roaring Twenties, Depression & New Deal, World War II, Cold War and the Postwar Boom, and Civil Rights and Social Movements cards.
+- `store-board` opens each subject, searches, and opens the Colonial America, American Revolution & Constitution, The Early Republic, Expansion & Sectionalism, Civil War & Reconstruction, Gilded Age, Populism, Progressives & Imperialism, World War I, Roaring Twenties, Depression & New Deal, World War II, Cold War and the Postwar Boom, and Civil Rights and Social Movements cards.
 
 ## How to get to it (user POV)
 
@@ -24,7 +24,7 @@ Preconditions:
 - **Open two questions.** Run `npm run verify -- --grep "faq questions"`. The test clicks the first two summaries on `/faq.html`. Both `details` elements have `open` true, and both `.answer` blocks are visible.
 - **Open a tutoring question.** The same test opens the first question in `#tutoring-questions` on `/tutoring.html` and expects the answer to contain `online first`.
 - **Store.** Run `npm run verify -- --grep "old curriculum address"`. `/resources.html` ends on `/store.html`, the header says Store, and the page has no `The Road to Revolution` text and no `href="#"`.
-- **Board.** Run `npm run verify -- --grep "subject tiles"`. Each subject opens, U.S. History shows Colonial America, American Revolution & Constitution, Expansion & Sectionalism, Civil War & Reconstruction, Gilded Age, Populism, Progressives & Imperialism, World War I, Roaring Twenties, Depression & New Deal, World War II, Cold War and the Postwar Boom, then Civil Rights and Social Movements. Colonial, the two world-war units, and Cold War and the Postwar Boom are $36. Revolution & Constitution, Expansion & Sectionalism, Civil War & Reconstruction, the Gilded Age, Populism, Progressives & Imperialism, the Twenties unit, and Civil Rights and Social Movements are $40. Empty subjects say coming soon, search and the Units/Simulations filter run, and each Buy on TPT opens that product page in a new tab.
+- **Board.** Run `npm run verify -- --grep "subject tiles"`. Each subject opens, U.S. History shows Colonial America, American Revolution & Constitution, The Early Republic, Expansion & Sectionalism, Civil War & Reconstruction, Gilded Age, Populism, Progressives & Imperialism, World War I, Roaring Twenties, Depression & New Deal, World War II, Cold War and the Postwar Boom, then Civil Rights and Social Movements. Colonial, the two world-war units, and Cold War and the Postwar Boom are $36. The Early Republic is $28. Revolution & Constitution, Expansion & Sectionalism, Civil War & Reconstruction, the Gilded Age, Populism, Progressives & Imperialism, the Twenties unit, and Civil Rights and Social Movements are $40. Empty subjects say coming soon, search and the Units/Simulations filter run, and each Buy on TPT opens that product page in a new tab.
 - **Proof.** The report rows for those tests are green.
 
 ## Gotchas
