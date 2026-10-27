@@ -49,7 +49,7 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
     await expect(page).toHaveURL(new RegExp(`#${id}$`));
     await expect(page.getByRole("heading", { name: `${name} units` })).toBeVisible();
     if (name === "U.S. History") {
-      await expect(page.locator("article.unit-card")).toHaveCount(10);
+      await expect(page.locator("article.unit-card")).toHaveCount(11);
       await expect(page.locator("article.unit-card h3")).toHaveText([
         "Colonial America Unit Bundle",
         "American Revolution & Constitution Unit Bundle",
@@ -60,6 +60,7 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
         "World War I Unit Bundle",
         "Roaring Twenties, Depression & New Deal Unit Bundle",
         "World War II Unit Bundle",
+        "Cold War and the Postwar Boom",
         "Civil Rights and Social Movements",
       ]);
       const gilded = unitCard(page, "Gilded Age: Industry, Labor, Immigration & the West");
@@ -74,6 +75,12 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
       await expect(populism.getByText("10 lessons")).toBeVisible();
       const populismWidth = await populism.locator("img").evaluate((img: HTMLImageElement) => img.naturalWidth);
       expect(populismWidth).toBeGreaterThan(200);
+      const coldWar = unitCard(page, "Cold War and the Postwar Boom");
+      await expect(coldWar.getByText("$36", { exact: true })).toBeVisible();
+      await expect(coldWar.getByText("Grades 9-12")).toBeVisible();
+      await expect(coldWar.getByText("9 lessons")).toBeVisible();
+      const coldWarWidth = await coldWar.locator("img").evaluate((img: HTMLImageElement) => img.naturalWidth);
+      expect(coldWarWidth).toBeGreaterThan(200);
       const civilRights = unitCard(page, "Civil Rights and Social Movements");
       await expect(civilRights.getByText("$40", { exact: true })).toBeVisible();
       await expect(civilRights.getByText("Grades 9-12")).toBeVisible();
@@ -136,8 +143,8 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
 
   await page.getByRole("radio", { name: "Units" }).check();
   await expect(page).toHaveURL(/kind=unit/);
-  await expect(page.locator("article.unit-card")).toHaveCount(10);
-  await expect(unitCard(page, "Civil Rights and Social Movements").getByText("$40", { exact: true })).toBeVisible();
+  await expect(page.locator("article.unit-card")).toHaveCount(11);
+  await expect(unitCard(page, "Cold War and the Postwar Boom").getByText("$36", { exact: true })).toBeVisible();
 
   await page.getByRole("radio", { name: "Simulations" }).check();
   await expect(page.locator("#store-results")).toContainText("Coming soon, follow our TPT store");
@@ -217,6 +224,19 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
   const civilRightsPopup = await civilRightsPopupPromise;
   await expect(civilRightsPopup).toHaveURL(/Civil-Rights-Movement-Unit-US-History-Brown-to-Selma-DBQ-Test-9-12-18090569/);
   await civilRightsPopup.close();
+
+  const coldWarBuy = unitCard(page, "Cold War and the Postwar Boom").getByRole("link", { name: "Buy on TPT" });
+  await expect(coldWarBuy).toHaveAttribute("target", "_blank");
+  await expect(coldWarBuy).toHaveAttribute("rel", /noopener/);
+  await expect(coldWarBuy).toHaveAttribute(
+    "href",
+    "https://www.teacherspayteachers.com/Product/Cold-War-Unit-US-History-Iron-Curtain-to-Vietnam-DBQ-Test-9-12-18090740",
+  );
+  const coldWarPopupPromise = page.waitForEvent("popup");
+  await coldWarBuy.click();
+  const coldWarPopup = await coldWarPopupPromise;
+  await expect(coldWarPopup).toHaveURL(/Cold-War-Unit-US-History-Iron-Curtain-to-Vietnam-DBQ-Test-9-12-18090740/);
+  await coldWarPopup.close();
 
   const twentiesBuy = unitCard(page, "Roaring Twenties, Depression & New Deal Unit Bundle").getByRole("link", { name: "Buy on TPT" });
   await expect(twentiesBuy).toHaveAttribute("target", "_blank");
@@ -318,7 +338,7 @@ test("the store fits a phone and a desktop window", async ({ page }) => {
   for (const width of [375, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(`/store.html?view=${width}#us-history`);
-    await expect(page.locator("article.unit-card")).toHaveCount(10);
+    await expect(page.locator("article.unit-card")).toHaveCount(11);
     const card = unitCard(page, "World War II Unit Bundle");
     await expect(card.getByText("$36", { exact: true })).toBeVisible();
     await expect(card.getByRole("link", { name: "Buy on TPT" })).toBeVisible();
