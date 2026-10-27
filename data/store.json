@@ -264,6 +264,31 @@
       "tptUrl": "https://www.teacherspayteachers.com/Product/World-War-II-Unit-Bundle-US-History-Slides-Packets-DBQ-Test-Grades-9-12-18087243"
     },
     {
+      "id": "cold-war-postwar-boom-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "Cold War and the Postwar Boom",
+      "grades": "9-12",
+      "price": 36,
+      "included": [
+        "9 lessons",
+        "8-bit and plain-font slides",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on the Cold War and the postwar boom, 1945-1968, for grades 9-12.",
+      "description": "Cold War and the Postwar Boom is a complete U.S. History unit for grades 9-12, covering 1945-1968. The cover marks it for South Carolina USHC Standard 5.\n\nNine lessons follow the Cold War and the postwar boom. One checkpoint uses a declassified photograph of a missile site at San Cristobal. Lesson 5, Suburbs and the 1950s Economy, sits beside a comparison of Marshall Plan aid shares. The cover lists real primary sources and nine unique activities.\n\nThe bundle includes nine lessons, an 8-bit slide deck and a plain-font slide deck, a DBQ, and a unit test. The files are Google Docs and Google Slides.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/cold-war-cover.jpg",
+      "coverAlt": "Cold War and the Postwar Boom unit cover. Complete U.S. History unit for grades 9-12, covering 1945-1968, with nine lessons, real primary sources, nine unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/cold-war-cover.jpg",
+          "alt": "Preview of the Cold War and the Postwar Boom unit cover, showing the San Cristobal photograph and the Marshall Plan comparison."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Cold-War-Unit-US-History-Iron-Curtain-to-Vietnam-DBQ-Test-9-12-18090740"
+    },
+    {
       "id": "civil-rights-social-movements-unit-bundle",
       "kind": "unit",
       "subject": "us-history",
