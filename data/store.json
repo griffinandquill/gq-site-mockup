@@ -81,6 +81,32 @@
       "tptUrl": "https://www.teacherspayteachers.com/Product/American-Revolution-Constitution-Unit-US-History-Slides-DBQ-Test-9-12-18088204"
     },
     {
+      "id": "expansion-sectionalism-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "Expansion & Sectionalism Unit Bundle",
+      "grades": "9-12",
+      "price": 40,
+      "included": [
+        "10 lessons",
+        "8-bit and plain-font slides",
+        "Packets",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on expansion and sectionalism, 1803-1860, for grades 9-12.",
+      "description": "Expansion & Sectionalism Unit Bundle is a complete U.S. History unit for grades 9-12, covering 1803-1860. The cover marks it for South Carolina USHC Standard 2.\n\nTen lessons follow the country as it grew and split over who held power. Lesson 4, Jacksonian Democracy, the Bank and Nullification, is one of them. A checkpoint uses John Gast's 1872 painting, American Progress, and asks students to find the large figure in the center and where the work is. Another checkpoint is a class tally: predict before the reveal which way the class will go.\n\nThe bundle includes ten lessons, an 8-bit slide deck and a plain-font slide deck, student packets, a DBQ, and a unit test. The files are Google Docs and Google Slides. The cover also lists real primary sources and ten unique activities.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/expansion-sectionalism-cover.png",
+      "coverAlt": "Expansion and Sectionalism unit cover. Complete U.S. History unit for grades 9-12, covering 1803-1860, with ten lessons, real primary sources, ten unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/expansion-sectionalism-cover.png",
+          "alt": "Preview of the Expansion and Sectionalism unit cover, showing American Progress and the class tally checkpoint."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Expansion-Sectionalism-Unit-US-History-Slides-DBQ-Test-Grades-9-12-18089162"
+    },
+    {
       "id": "civil-war-reconstruction-unit-bundle",
       "kind": "unit",
       "subject": "us-history",

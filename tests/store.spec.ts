@@ -49,14 +49,21 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
     await expect(page).toHaveURL(new RegExp(`#${id}$`));
     await expect(page.getByRole("heading", { name: `${name} units` })).toBeVisible();
     if (name === "U.S. History") {
-      await expect(page.locator("article.unit-card")).toHaveCount(5);
+      await expect(page.locator("article.unit-card")).toHaveCount(6);
       await expect(page.locator("article.unit-card h3")).toHaveText([
         "Colonial America Unit Bundle",
         "American Revolution & Constitution Unit Bundle",
+        "Expansion & Sectionalism Unit Bundle",
         "Civil War & Reconstruction Unit Bundle",
         "World War I Unit Bundle",
         "World War II Unit Bundle",
       ]);
+      const expansion = unitCard(page, "Expansion & Sectionalism Unit Bundle");
+      await expect(expansion.getByText("$40", { exact: true })).toBeVisible();
+      await expect(expansion.getByText("Grades 9-12")).toBeVisible();
+      await expect(expansion.getByText("10 lessons")).toBeVisible();
+      const expansionWidth = await expansion.locator("img").evaluate((img: HTMLImageElement) => img.naturalWidth);
+      expect(expansionWidth).toBeGreaterThan(200);
       const civilWar = unitCard(page, "Civil War & Reconstruction Unit Bundle");
       await expect(civilWar.getByText("$40", { exact: true })).toBeVisible();
       await expect(civilWar.getByText("Grades 9-12")).toBeVisible();
@@ -101,8 +108,8 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
 
   await page.getByRole("radio", { name: "Units" }).check();
   await expect(page).toHaveURL(/kind=unit/);
-  await expect(page.locator("article.unit-card")).toHaveCount(5);
-  await expect(unitCard(page, "Civil War & Reconstruction Unit Bundle").getByText("$40", { exact: true })).toBeVisible();
+  await expect(page.locator("article.unit-card")).toHaveCount(6);
+  await expect(unitCard(page, "Expansion & Sectionalism Unit Bundle").getByText("$40", { exact: true })).toBeVisible();
 
   await page.getByRole("radio", { name: "Simulations" }).check();
   await expect(page.locator("#store-results")).toContainText("Coming soon, follow our TPT store");
@@ -183,6 +190,19 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
   await expect(revolutionPopup).toHaveURL(/American-Revolution-Constitution-Unit-US-History-Slides-DBQ-Test-9-12-18088204/);
   await revolutionPopup.close();
 
+  const expansionBuy = unitCard(page, "Expansion & Sectionalism Unit Bundle").getByRole("link", { name: "Buy on TPT" });
+  await expect(expansionBuy).toHaveAttribute("target", "_blank");
+  await expect(expansionBuy).toHaveAttribute("rel", /noopener/);
+  await expect(expansionBuy).toHaveAttribute(
+    "href",
+    "https://www.teacherspayteachers.com/Product/Expansion-Sectionalism-Unit-US-History-Slides-DBQ-Test-Grades-9-12-18089162",
+  );
+  const expansionPopupPromise = page.waitForEvent("popup");
+  await expansionBuy.click();
+  const expansionPopup = await expansionPopupPromise;
+  await expect(expansionPopup).toHaveURL(/Expansion-Sectionalism-Unit-US-History-Slides-DBQ-Test-Grades-9-12-18089162/);
+  await expansionPopup.close();
+
   const civilWarBuy = unitCard(page, "Civil War & Reconstruction Unit Bundle").getByRole("link", { name: "Buy on TPT" });
   await expect(civilWarBuy).toHaveAttribute("target", "_blank");
   await expect(civilWarBuy).toHaveAttribute("rel", /noopener/);
@@ -218,7 +238,7 @@ test("the store fits a phone and a desktop window", async ({ page }) => {
   for (const width of [375, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(`/store.html?view=${width}#us-history`);
-    await expect(page.locator("article.unit-card")).toHaveCount(5);
+    await expect(page.locator("article.unit-card")).toHaveCount(6);
     const card = unitCard(page, "World War II Unit Bundle");
     await expect(card.getByText("$36", { exact: true })).toBeVisible();
     await expect(card.getByRole("link", { name: "Buy on TPT" })).toBeVisible();
