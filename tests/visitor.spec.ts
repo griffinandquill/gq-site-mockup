@@ -141,7 +141,9 @@ for (const entry of pages) {
         );
       }
       if (entry.file === "faq.html") {
-        await expect(page.getByRole("link", { name: "Book with Griffin & Quill" })).toHaveAttribute(
+        const price = page.locator("details.faq").filter({ hasText: "How much does tutoring cost?" });
+        await price.locator("summary").click();
+        await expect(price.getByRole("link", { name: "Book with Griffin & Quill" })).toHaveAttribute(
           "href",
           "tutoring.html#book",
         );
