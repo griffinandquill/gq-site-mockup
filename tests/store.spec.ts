@@ -49,10 +49,11 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
     await expect(page).toHaveURL(new RegExp(`#${id}$`));
     await expect(page.getByRole("heading", { name: `${name} units` })).toBeVisible();
     if (name === "U.S. History") {
-      await expect(page.locator("article.unit-card")).toHaveCount(13);
+      await expect(page.locator("article.unit-card")).toHaveCount(14);
       await expect(page.locator("article.unit-card h3")).toHaveText([
         "Colonial America Unit Bundle",
         "American Revolution & Constitution Unit Bundle",
+        "The Constitution and Its 27 Amendments: Your Rights, Your Life",
         "The Early Republic",
         "Expansion & Sectionalism Unit Bundle",
         "Civil War & Reconstruction Unit Bundle",
@@ -119,6 +120,14 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
       await expect(revolution.getByText("10 lessons")).toBeVisible();
       const revolutionWidth = await revolution.locator("img").evaluate((img: HTMLImageElement) => img.naturalWidth);
       expect(revolutionWidth).toBeGreaterThan(200);
+      const constitution = unitCard(page, "The Constitution and Its 27 Amendments: Your Rights, Your Life");
+      await expect(constitution.getByText("$48", { exact: true })).toBeVisible();
+      await expect(constitution.getByText("Grades 9-12")).toBeVisible();
+      await expect(constitution.getByText("12 lessons")).toBeVisible();
+      await expect(constitution.getByText("DBQ")).toBeVisible();
+      await expect(constitution.getByText("Unit test")).toBeVisible();
+      const constitutionWidth = await constitution.locator("img").evaluate((img: HTMLImageElement) => img.naturalWidth);
+      expect(constitutionWidth).toBeGreaterThan(200);
       const earlyRepublic = unitCard(page, "The Early Republic");
       await expect(earlyRepublic.getByText("$28", { exact: true })).toBeVisible();
       await expect(earlyRepublic.getByText("Grades 9-12")).toBeVisible();
@@ -157,8 +166,8 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
 
   await page.getByRole("radio", { name: "Units" }).check();
   await expect(page).toHaveURL(/kind=unit/);
-  await expect(page.locator("article.unit-card")).toHaveCount(13);
-  await expect(unitCard(page, "Modern America: Late Cold War to Today").getByText("$36", { exact: true })).toBeVisible();
+  await expect(page.locator("article.unit-card")).toHaveCount(14);
+  await expect(unitCard(page, "The Constitution and Its 27 Amendments: Your Rights, Your Life").getByText("$48", { exact: true })).toBeVisible();
 
   await page.getByRole("radio", { name: "Simulations" }).check();
   await expect(page.locator("#store-results")).toContainText("Coming soon, follow our TPT store");
@@ -264,6 +273,19 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
   const earlyRepublicPopup = await earlyRepublicPopupPromise;
   await expect(earlyRepublicPopup).toHaveURL(/Early-Republic-Unit-US-History-Hamilton-to-War-of-1812-DBQ-Test-9-12-18090912/);
   await earlyRepublicPopup.close();
+
+  const constitutionBuy = unitCard(page, "The Constitution and Its 27 Amendments: Your Rights, Your Life").getByRole("link", { name: "Buy on TPT" });
+  await expect(constitutionBuy).toHaveAttribute("target", "_blank");
+  await expect(constitutionBuy).toHaveAttribute("rel", /noopener/);
+  await expect(constitutionBuy).toHaveAttribute(
+    "href",
+    "https://www.teacherspayteachers.com/Product/Constitution-Amendments-Unit-Student-Rights-US-Gov-History-DBQ-9-12-18092355",
+  );
+  const constitutionPopupPromise = page.waitForEvent("popup");
+  await constitutionBuy.click();
+  const constitutionPopup = await constitutionPopupPromise;
+  await expect(constitutionPopup).toHaveURL(/Constitution-Amendments-Unit-Student-Rights-US-Gov-History-DBQ-9-12-18092355/);
+  await constitutionPopup.close();
 
   const modernAmericaBuy = unitCard(page, "Modern America: Late Cold War to Today").getByRole("link", { name: "Buy on TPT" });
   await expect(modernAmericaBuy).toHaveAttribute("target", "_blank");
@@ -378,7 +400,7 @@ test("the store fits a phone and a desktop window", async ({ page }) => {
   for (const width of [375, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(`/store.html?view=${width}#us-history`);
-    await expect(page.locator("article.unit-card")).toHaveCount(13);
+    await expect(page.locator("article.unit-card")).toHaveCount(14);
     const card = unitCard(page, "World War II Unit Bundle");
     await expect(card.getByText("$36", { exact: true })).toBeVisible();
     await expect(card.getByRole("link", { name: "Buy on TPT" })).toBeVisible();
