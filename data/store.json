@@ -262,6 +262,31 @@
         }
       ],
       "tptUrl": "https://www.teacherspayteachers.com/Product/World-War-II-Unit-Bundle-US-History-Slides-Packets-DBQ-Test-Grades-9-12-18087243"
+    },
+    {
+      "id": "civil-rights-social-movements-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "Civil Rights and Social Movements",
+      "grades": "9-12",
+      "price": 40,
+      "included": [
+        "10 lessons",
+        "8-bit and plain-font slides",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on civil rights and social movements, 1945-1980, for grades 9-12.",
+      "description": "Civil Rights and Social Movements is a complete U.S. History unit for grades 9-12, covering 1945-1980. The cover marks it for South Carolina USHC Standard 5.\n\nTen lessons follow the civil rights era and the movements that grew with it. One checkpoint uses the Pittsburgh Courier front page from February 7, 1942. Lesson 3, Montgomery and Nonviolence, sits beside a photograph of the March on Washington in 1963. The cover lists real primary sources and ten unique activities.\n\nThe bundle includes ten lessons, an 8-bit slide deck and a plain-font slide deck, a DBQ, and a unit test. The files are Google Docs and Google Slides.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/civil-rights-cover.jpg",
+      "coverAlt": "Civil Rights and Social Movements unit cover. Complete U.S. History unit for grades 9-12, covering 1945-1980, with ten lessons, real primary sources, ten unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/civil-rights-cover.jpg",
+          "alt": "Preview of the Civil Rights and Social Movements unit cover, showing the Pittsburgh Courier checkpoint and the March on Washington."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Civil-Rights-Movement-Unit-US-History-Brown-to-Selma-DBQ-Test-9-12-18090569"
     }
   ]
 }
