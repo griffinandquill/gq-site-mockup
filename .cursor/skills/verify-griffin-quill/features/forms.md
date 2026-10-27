@@ -1,6 +1,6 @@
 # Forms
 
-Four forms post to FormSubmit. A valid submit stays on the page and shows `Thanks. Your note is on its way.` only after a successful JSON response. An empty submit shows the browser's required-field message and does not show that note. A failed response shows the error note and does not show thanks. A filled honeypot sends nothing.
+Five forms post to FormSubmit. A valid submit stays on the page and shows `Thanks. Your note is on its way.` only after a successful JSON response. An empty submit shows the browser's required-field message and does not show that note. A failed response shows the error note and does not show thanks. A filled honeypot sends nothing.
 
 ## Sub-features
 
@@ -16,6 +16,7 @@ Four forms post to FormSubmit. A valid submit stays on the page and shows `Thank
 - Quillhaven (`worlds.html`), section `Waitlist`, button `Join the waitlist`. Inbox `hello@griffinandquill.com`.
 - Schools, section `Inquiry form`, button `Send inquiry`. Inbox `partners@griffinandquill.com`.
 - Contact, section `Message`, button `Send message`. Inbox `hello@griffinandquill.com`.
+- Tutoring (`tutoring.html`), section `Book with us` (`#book`), button `Book with us`. Inbox `tutoring@griffinandquill.com`. The printed flyer QR code opens this section. Wyzant is a text link under the form, not a button in the hero or above the form.
 
 ## Driving it with Playwright
 
@@ -30,7 +31,7 @@ Preconditions:
 - **Valid submit.** The test fills the required labels, chooses the required radio, and clicks the button again. The intercepted response is `{ "success": "true" }`. The note text is `Thanks. Your note is on its way.`, the note is focused, the URL is unchanged, and the request URL contains the inbox. The JSON body has no `_honey`.
 - **Failed send.** Run `npm run verify -- --grep "failed send"`. A 422 response leaves thanks hidden and shows `[data-form-error]`.
 - **Honeypot.** Run `npm run verify -- --grep "honeypot"`. Filling `_honey` and submitting records no request and shows neither note.
-- **Proof.** `verify-results/form-thanks.png` shows the contact note. The report rows named `newsletter form stays on the page` through `contact form stays on the page` are green.
+- **Proof.** `verify-results/form-thanks.png` shows the contact note. The report rows named `newsletter form stays on the page` through `tutoring form stays on the page` are green.
 
 ## Gotchas
 
