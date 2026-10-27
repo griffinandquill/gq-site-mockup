@@ -81,6 +81,31 @@
       "tptUrl": "https://www.teacherspayteachers.com/Product/American-Revolution-Constitution-Unit-US-History-Slides-DBQ-Test-9-12-18088204"
     },
     {
+      "id": "constitution-amendments-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "The Constitution and Its 27 Amendments: Your Rights, Your Life",
+      "grades": "9-12",
+      "price": 48,
+      "included": [
+        "12 lessons",
+        "8-bit and plain-font slides",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete unit on the Constitution and its 27 amendments for grades 9-12.",
+      "description": "The Constitution and Its 27 Amendments: Your Rights, Your Life is a complete unit for grades 9-12. The cover marks it for South Carolina USG and USHC.\n\nTwelve lessons follow the Constitution and the amendments that set out a student's rights. One checkpoint reads Gideon's handwritten petition. Lesson 6, Student Speech After Tinker, sits beside a photograph of the Voting Rights Act signing in 1965. The cover lists student rights and twelve unique activities.\n\nThe bundle includes twelve lessons, an 8-bit slide deck and a plain-font slide deck, a DBQ, and a unit test. The files are Google Docs and Google Slides.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/constitution-amendments-cover.jpg",
+      "coverAlt": "The Constitution and Its 27 Amendments unit cover. Complete unit for grades 9-12, with twelve lessons, student rights, twelve unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/constitution-amendments-cover.jpg",
+          "alt": "Preview of The Constitution and Its 27 Amendments unit cover, showing Gideon's petition and the Voting Rights Act signing."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Constitution-Amendments-Unit-Student-Rights-US-Gov-History-DBQ-9-12-18092355"
+    },
+    {
       "id": "early-republic-unit-bundle",
       "kind": "unit",
       "subject": "us-history",
