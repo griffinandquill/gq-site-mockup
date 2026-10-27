@@ -6,7 +6,7 @@ FAQ questions are disclosure widgets. More than one can be open. The store lists
 
 - `faq-open` opens two questions on the FAQ page and leaves both open.
 - `faq-tutoring` opens the first tutoring question on the tutoring page.
-- `store-board` opens each subject, searches, and opens the Colonial America, American Revolution & Constitution, World War I, and World War II cards.
+- `store-board` opens each subject, searches, and opens the Colonial America, American Revolution & Constitution, Civil War & Reconstruction, World War I, and World War II cards.
 
 ## How to get to it (user POV)
 
@@ -24,7 +24,7 @@ Preconditions:
 - **Open two questions.** Run `npm run verify -- --grep "faq questions"`. The test clicks the first two summaries on `/faq.html`. Both `details` elements have `open` true, and both `.answer` blocks are visible.
 - **Open a tutoring question.** The same test opens the first question in `#tutoring-questions` on `/tutoring.html` and expects the answer to contain `online first`.
 - **Store.** Run `npm run verify -- --grep "old curriculum address"`. `/resources.html` ends on `/store.html`, the header says Store, and the page has no `The Road to Revolution` text and no `href="#"`.
-- **Board.** Run `npm run verify -- --grep "subject tiles"`. Each subject opens, U.S. History shows Colonial America, American Revolution & Constitution, World War I, then World War II. Colonial and the two war units are $36, and Revolution & Constitution is $40. Empty subjects say coming soon, search and the Units/Simulations filter run, and each Buy on TPT opens that product page in a new tab.
+- **Board.** Run `npm run verify -- --grep "subject tiles"`. Each subject opens, U.S. History shows Colonial America, American Revolution & Constitution, Civil War & Reconstruction, World War I, then World War II. Colonial and the two world-war units are $36. Revolution & Constitution and Civil War & Reconstruction are $40. Empty subjects say coming soon, search and the Units/Simulations filter run, and each Buy on TPT opens that product page in a new tab.
 - **Proof.** The report rows for those tests are green.
 
 ## Gotchas
