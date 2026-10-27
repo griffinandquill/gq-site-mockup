@@ -161,6 +161,32 @@
       "tptUrl": "https://www.teacherspayteachers.com/Product/Griffin-Quill-World-War-1-Unit-Bundle-18086100"
     },
     {
+      "id": "roaring-twenties-depression-new-deal-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "Roaring Twenties, Depression & New Deal Unit Bundle",
+      "grades": "9-12",
+      "price": 40,
+      "included": [
+        "10 lessons",
+        "8-bit and plain-font slides",
+        "Packets",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on the Twenties, the Depression, and the New Deal, 1920-1941, for grades 9-12.",
+      "description": "Roaring Twenties, Depression & New Deal Unit Bundle is a complete U.S. History unit for grades 9-12, covering 1920-1941. The cover marks it for South Carolina USHC Standard 4.\n\nTen lessons run from the boom of the 1920s through the crash and the New Deal. Lesson 5, Causes of the Stock Market Crash of 1929, opens with Black Tuesday and asks what caused the crash and what it set off. A checkpoint uses the signing of the Social Security Act on August 14, 1935, and asks what old-age benefits did and why the law is called a reform.\n\nThe bundle includes ten lessons, an 8-bit slide deck and a plain-font slide deck, student packets, a DBQ, and a unit test. The files are Google Docs and Google Slides. The cover also lists real primary sources and ten unique activities.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/roaring-twenties-cover.png",
+      "coverAlt": "Roaring Twenties, Depression, and New Deal unit cover. Complete U.S. History unit for grades 9-12, covering 1920-1941, with ten lessons, real primary sources, ten unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/roaring-twenties-cover.png",
+          "alt": "Preview of the Roaring Twenties and New Deal unit cover, showing Black Tuesday and the Social Security Act checkpoint."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Roaring-Twenties-Depression-New-Deal-Unit-US-History-DBQ-Test-9-12-18089503"
+    },
+    {
       "id": "world-war-ii-unit-bundle",
       "kind": "unit",
       "subject": "us-history",

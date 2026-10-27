@@ -49,15 +49,22 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
     await expect(page).toHaveURL(new RegExp(`#${id}$`));
     await expect(page.getByRole("heading", { name: `${name} units` })).toBeVisible();
     if (name === "U.S. History") {
-      await expect(page.locator("article.unit-card")).toHaveCount(6);
+      await expect(page.locator("article.unit-card")).toHaveCount(7);
       await expect(page.locator("article.unit-card h3")).toHaveText([
         "Colonial America Unit Bundle",
         "American Revolution & Constitution Unit Bundle",
         "Expansion & Sectionalism Unit Bundle",
         "Civil War & Reconstruction Unit Bundle",
         "World War I Unit Bundle",
+        "Roaring Twenties, Depression & New Deal Unit Bundle",
         "World War II Unit Bundle",
       ]);
+      const twenties = unitCard(page, "Roaring Twenties, Depression & New Deal Unit Bundle");
+      await expect(twenties.getByText("$40", { exact: true })).toBeVisible();
+      await expect(twenties.getByText("Grades 9-12")).toBeVisible();
+      await expect(twenties.getByText("10 lessons")).toBeVisible();
+      const twentiesWidth = await twenties.locator("img").evaluate((img: HTMLImageElement) => img.naturalWidth);
+      expect(twentiesWidth).toBeGreaterThan(200);
       const expansion = unitCard(page, "Expansion & Sectionalism Unit Bundle");
       await expect(expansion.getByText("$40", { exact: true })).toBeVisible();
       await expect(expansion.getByText("Grades 9-12")).toBeVisible();
@@ -108,8 +115,8 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
 
   await page.getByRole("radio", { name: "Units" }).check();
   await expect(page).toHaveURL(/kind=unit/);
-  await expect(page.locator("article.unit-card")).toHaveCount(6);
-  await expect(unitCard(page, "Expansion & Sectionalism Unit Bundle").getByText("$40", { exact: true })).toBeVisible();
+  await expect(page.locator("article.unit-card")).toHaveCount(7);
+  await expect(unitCard(page, "Roaring Twenties, Depression & New Deal Unit Bundle").getByText("$40", { exact: true })).toBeVisible();
 
   await page.getByRole("radio", { name: "Simulations" }).check();
   await expect(page.locator("#store-results")).toContainText("Coming soon, follow our TPT store");
@@ -150,6 +157,19 @@ test("subject tiles, search, filters, and the World War I card", async ({ page }
   const wwiPopup = await wwiPopupPromise;
   await expect(wwiPopup).toHaveURL(/teacherspayteachers\.com\/Product\/Griffin-Quill-World-War-1-Unit-Bundle-18086100/);
   await wwiPopup.close();
+
+  const twentiesBuy = unitCard(page, "Roaring Twenties, Depression & New Deal Unit Bundle").getByRole("link", { name: "Buy on TPT" });
+  await expect(twentiesBuy).toHaveAttribute("target", "_blank");
+  await expect(twentiesBuy).toHaveAttribute("rel", /noopener/);
+  await expect(twentiesBuy).toHaveAttribute(
+    "href",
+    "https://www.teacherspayteachers.com/Product/Roaring-Twenties-Depression-New-Deal-Unit-US-History-DBQ-Test-9-12-18089503",
+  );
+  const twentiesPopupPromise = page.waitForEvent("popup");
+  await twentiesBuy.click();
+  const twentiesPopup = await twentiesPopupPromise;
+  await expect(twentiesPopup).toHaveURL(/Roaring-Twenties-Depression-New-Deal-Unit-US-History-DBQ-Test-9-12-18089503/);
+  await twentiesPopup.close();
 
   const wwiiBuy = unitCard(page, "World War II Unit Bundle").getByRole("link", { name: "Buy on TPT" });
   await expect(wwiiBuy).toHaveAttribute("target", "_blank");
@@ -238,7 +258,7 @@ test("the store fits a phone and a desktop window", async ({ page }) => {
   for (const width of [375, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(`/store.html?view=${width}#us-history`);
-    await expect(page.locator("article.unit-card")).toHaveCount(6);
+    await expect(page.locator("article.unit-card")).toHaveCount(7);
     const card = unitCard(page, "World War II Unit Bundle");
     await expect(card.getByText("$36", { exact: true })).toBeVisible();
     await expect(card.getByRole("link", { name: "Buy on TPT" })).toBeVisible();
