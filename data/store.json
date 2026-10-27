@@ -81,6 +81,31 @@
       "tptUrl": "https://www.teacherspayteachers.com/Product/American-Revolution-Constitution-Unit-US-History-Slides-DBQ-Test-9-12-18088204"
     },
     {
+      "id": "early-republic-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "The Early Republic",
+      "grades": "9-12",
+      "price": 28,
+      "included": [
+        "7 lessons",
+        "8-bit and plain-font slides",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on the Early Republic, 1789-1815, for grades 9-12.",
+      "description": "The Early Republic is a complete U.S. History unit for grades 9-12, covering 1789-1815. The cover marks it for South Carolina USHC Standard 1.\n\nSeven lessons follow the first generation of the republic. One checkpoint reads a 1791 print of an exciseman. Lesson 5, The Election of 1800 and Marbury v. Madison, sits beside a checkpoint on Tecumseh in 1811. The cover lists real primary sources and seven unique activities.\n\nThe bundle includes seven lessons, an 8-bit slide deck and a plain-font slide deck, a DBQ, and a unit test. The files are Google Docs and Google Slides.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/early-republic-cover.jpg",
+      "coverAlt": "The Early Republic unit cover. Complete U.S. History unit for grades 9-12, covering 1789-1815, with seven lessons, real primary sources, seven unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/early-republic-cover.jpg",
+          "alt": "Preview of The Early Republic unit cover, showing the 1791 exciseman print and the Tecumseh checkpoint."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Early-Republic-Unit-US-History-Hamilton-to-War-of-1812-DBQ-Test-9-12-18090912"
+    },
+    {
       "id": "expansion-sectionalism-unit-bundle",
       "kind": "unit",
       "subject": "us-history",
