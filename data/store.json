@@ -337,6 +337,31 @@
         }
       ],
       "tptUrl": "https://www.teacherspayteachers.com/Product/Civil-Rights-Movement-Unit-US-History-Brown-to-Selma-DBQ-Test-9-12-18090569"
+    },
+    {
+      "id": "modern-america-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "Modern America: Late Cold War to Today",
+      "grades": "9-12",
+      "price": 36,
+      "included": [
+        "9 lessons",
+        "8-bit and plain-font slides",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on modern America, from the late Cold War to today, 1968-present, for grades 9-12.",
+      "description": "Modern America: Late Cold War to Today is a complete U.S. History unit for grades 9-12, covering 1968 to the present. The cover marks it for South Carolina USHC Standard 5.\n\nNine lessons follow the late Cold War through the years since. One checkpoint uses a photograph at the Brandenburg Gate in 1987. Lesson 3, The 1970s: Oil, Inflation and a Crisis of Confidence, sits beside a June 1973 photograph of a gas line. The cover lists real primary sources and nine unique activities.\n\nThe bundle includes nine lessons, an 8-bit slide deck and a plain-font slide deck, a DBQ, and a unit test. The files are Google Docs and Google Slides.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/modern-america-cover.jpg",
+      "coverAlt": "Modern America unit cover. Complete U.S. History unit for grades 9-12, covering 1968 to the present, with nine lessons, real primary sources, nine unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/modern-america-cover.jpg",
+          "alt": "Preview of the Modern America unit cover, showing the Brandenburg Gate in 1987 and a June 1973 gas line."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Modern-America-Unit-US-History-1968-to-Today-Watergate-911-DBQ-9-12-18091106"
     }
   ]
 }
