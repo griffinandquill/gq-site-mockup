@@ -158,6 +158,31 @@
       "tptUrl": "https://www.teacherspayteachers.com/Product/Gilded-Age-Unit-US-History-Labor-Immigration-West-DBQ-Test-9-12-18090158"
     },
     {
+      "id": "populism-progressives-imperialism-unit-bundle",
+      "kind": "unit",
+      "subject": "us-history",
+      "title": "Populism, Progressives & Imperialism",
+      "grades": "9-12",
+      "price": 40,
+      "included": [
+        "10 lessons",
+        "8-bit and plain-font slides",
+        "DBQ",
+        "Unit test"
+      ],
+      "summary": "A complete U.S. History unit on populism, progressives, and imperialism, 1877-1917, for grades 9-12.",
+      "description": "Populism, Progressives & Imperialism is a complete U.S. History unit for grades 9-12, covering 1877-1917. The cover marks it for South Carolina USHC Standard 3.\n\nTen lessons follow populism, the progressives, and imperialism. One checkpoint reads a cartoon of the big stick in the Caribbean. Lesson 4, Muckrakers and the Jungle, uses Upton Sinclair. The cover lists real primary sources and ten unique activities.\n\nThe bundle includes ten lessons, an 8-bit slide deck and a plain-font slide deck, a DBQ, and a unit test. The files are Google Docs and Google Slides.\n\nGriffin & Quill is a Teachers Pay Teachers Exclusive Seller. This site does not take payment. Buy on TPT opens this unit on Teachers Pay Teachers.",
+      "cover": "img/store/populism-progressives-cover.jpg",
+      "coverAlt": "Populism, Progressives and Imperialism unit cover. Complete U.S. History unit for grades 9-12, covering 1877-1917, with ten lessons, real primary sources, ten unique activities, a DBQ, and a test.",
+      "previews": [
+        {
+          "src": "img/store/populism-progressives-cover.jpg",
+          "alt": "Preview of the Populism, Progressives and Imperialism unit cover, showing the big stick cartoon and the Muckrakers lesson."
+        }
+      ],
+      "tptUrl": "https://www.teacherspayteachers.com/Product/Populism-Progressives-Unit-US-History-Imperialism-DBQ-Test-9-12-18090347"
+    },
+    {
       "id": "world-war-i-unit-bundle",
       "kind": "unit",
       "subject": "us-history",
