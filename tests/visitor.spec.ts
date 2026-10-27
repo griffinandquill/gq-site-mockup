@@ -129,6 +129,22 @@ for (const entry of pages) {
       if (entry.file === "index.html") {
         await expect(page.getByText("Quotes we hope to earn")).toHaveCount(0);
         await expect(page.getByText("after Ryan has permission")).toHaveCount(0);
+        await expect(page.getByRole("link", { name: "Book tutoring", exact: true })).toHaveAttribute(
+          "href",
+          "tutoring.html#book",
+        );
+      }
+      if (entry.file === "contact.html") {
+        await expect(page.getByRole("link", { name: "Book with us", exact: true })).toHaveAttribute(
+          "href",
+          "tutoring.html#book",
+        );
+      }
+      if (entry.file === "faq.html") {
+        await expect(page.getByRole("link", { name: "Book with Griffin & Quill" })).toHaveAttribute(
+          "href",
+          "tutoring.html#book",
+        );
       }
       if (entry.file === "about.html") {
         await expect(page.getByText("each built by a practicing teacher around one habit")).toBeVisible();
@@ -138,11 +154,26 @@ for (const entry of pages) {
       }
       if (entry.file === "tutoring.html") {
         await expect(page.locator('a[href*="stripe.com"]')).toHaveCount(0);
-        await expect(page.getByRole("link", { name: "Book on Wyzant" }).first()).toHaveAttribute(
-          "href",
-          "https://www.wyzant.com/match/tutor/90199286",
-        );
-        await expect(page.getByRole("link", { name: "contact page" })).toHaveAttribute("href", "contact.html");
+        await expect(page.getByRole("link", { name: "Book with us", exact: true })).toHaveAttribute("href", "#book");
+        await expect(page.locator(".page-hero a[href*='wyzant.com']")).toHaveCount(0);
+        await expect(page.locator("#book a.btn")).toHaveCount(0);
+        const wyzant = page.getByRole("link", { name: "Already on Wyzant? Book there." });
+        await expect(wyzant).toHaveCount(1);
+        await expect(wyzant).toHaveAttribute("href", "https://www.wyzant.com/match/tutor/90199286");
+        await expect(wyzant).not.toHaveClass(/btn/);
+        const bookOrder = await page.locator("#book").evaluate((section) => {
+          const form = section.querySelector("form");
+          const link = section.querySelector("a[href*='wyzant.com']");
+          if (!form || !link) return "missing";
+          const position = form.compareDocumentPosition(link);
+          const afterForm = (position & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+          const before = section.innerHTML.slice(0, section.innerHTML.indexOf("<form")).toLowerCase();
+          const outsideForm = !form.contains(link);
+          return afterForm && outsideForm && !before.includes("wyzant") ? "form-first" : "wyzant-first";
+        });
+        expect(bookOrder).toBe("form-first");
+        await expect(page.locator("#book form[data-form='tutoring']")).toBeVisible();
+        await expect(page.getByText("This site does not take payment.").first()).toBeVisible();
       }
       if (entry.file === "worlds.html") {
         await expect(page.getByText("Library: Professor Bramble keeps the books.")).toBeVisible();
@@ -263,6 +294,21 @@ for (const form of forms) {
     expect(posts).toHaveLength(1);
     expect(posts[0].url).toContain(encodeURIComponent(form.inbox));
     expect(posts[0].body._honey).toBeUndefined();
+    if (form.id === "tutoring") {
+      expect(posts[0].url).toBe("https://formsubmit.co/ajax/tutoring%40griffinandquill.com");
+      expect(posts[0].body).toEqual({
+        parent_name: "Ada Lovelace",
+        email: "qa@example.com",
+        phone: "843-555-0100",
+        grade: "Grade 9",
+        subject: "History and social studies",
+        meeting: "Online",
+        preferred_times: "Weekday evenings",
+        message: "Layout check for the tutoring form.",
+        _subject: "New tutoring booking request",
+        _captcha: "false",
+      });
+    }
     if (form.id === "contact") {
       await page.screenshot({ path: "verify-results/form-thanks.png" });
     }

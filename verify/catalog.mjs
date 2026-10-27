@@ -133,6 +133,24 @@ export const forms = [
       { kind: "fill", label: "Message (required)", value: "Layout check for the contact form." },
     ],
   },
+  {
+    id: "tutoring",
+    page: "/tutoring.html",
+    section: "#book",
+    submit: "Book with us",
+    route: "tutoring",
+    inbox: "tutoring@griffinandquill.com",
+    fields: [
+      { kind: "fill", label: "Parent or guardian name (required)", value: "Ada Lovelace" },
+      { kind: "fill", label: "Email (required)", value: "qa@example.com" },
+      { kind: "fill", label: "Phone (optional)", value: "843-555-0100" },
+      { kind: "select", label: "Student grade (required)", value: "Grade 9" },
+      { kind: "select", label: "Subject or need (required)", value: "History and social studies" },
+      { kind: "radio", label: "Online" },
+      { kind: "fill", label: "Preferred days and times (optional)", value: "Weekday evenings" },
+      { kind: "fill", label: "Message (optional)", value: "Layout check for the tutoring form." },
+    ],
+  },
 ];
 
 export const viewports = [

@@ -58,7 +58,7 @@
   </header>
   <main id="main" tabindex="-1">
     <noscript>
-      <p class="container note">JavaScript is off, so the menu button will not run. Page links still work.</p>
+      <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. The booking form needs JavaScript to send, or you can email tutoring@griffinandquill.com.</p>
     </noscript>
 
     <div class="container page-hero">
@@ -66,10 +66,9 @@
       <h1>One-to-one online tutoring.</h1>
       <p class="lede">One-to-one online tutoring is a flat $50 per hour. Sessions teach, grow, and maintain the academic skills a student needs to strengthen understanding in the courses they are taking.</p>
       <div class="cluster">
-        <a class="btn btn-primary" href="https://www.wyzant.com/match/tutor/90199286" target="_blank" rel="noopener">Book on Wyzant<span class="visually-hidden"> (opens in a new tab)</span></a>
-        <a class="btn btn-secondary" href="contact.html">Contact Griffin &amp; Quill</a>
+        <a class="btn btn-primary" href="#book">Book with us</a>
       </div>
-      <p class="note">Direct booking with Griffin &amp; Quill is available on the contact page. This site does not take payment.</p>
+      <p class="note">Book a free 15-minute consult on this page. This site does not take payment.</p>
     </div>
 
     <section class="section" id="subjects" aria-labelledby="subjects-title">
@@ -115,7 +114,7 @@
       <div class="container">
         <h2 id="pricing-title">Rate and availability</h2>
         <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">One-to-one online tutoring is $50 per hour. The rate is flat. Sessions are available on weekday evenings and weekend afternoons. Payment is not taken on this page.</p>
+        <p class="section-intro">One-to-one online tutoring is $50 per hour. The rate is flat. Sessions are available on weekday evenings and weekend afternoons. Book on this page first. This site does not take payment.</p>
       </div>
     </section>
 
@@ -142,7 +141,7 @@
           </details>
           <details class="faq">
             <summary>How much does tutoring cost?</summary>
-            <div class="answer"><p>One-to-one online tutoring is $50 per hour. Book on Wyzant, or use the contact page for direct booking with Griffin &amp; Quill. Payment is not taken on this site.</p></div>
+            <div class="answer"><p>One-to-one online tutoring is $50 per hour. Book with Griffin &amp; Quill on this page first. Wyzant is also available. This site does not take payment.</p></div>
           </details>
           <p><a href="faq.html">More questions</a></p>
         </div>
@@ -152,10 +151,73 @@
     <section class="section" id="book" aria-labelledby="book-title">
       <div class="container">
         <div class="form-card form-wrap">
-          <h2 id="book-title">Book a session</h2>
-          <p>One-to-one online tutoring is $50 per hour. Sessions are available on weekday evenings and weekend afternoons. Tutoring questions: <a href="mailto:tutoring@griffinandquill.com">tutoring@griffinandquill.com</a>.</p>
-          <p><a class="btn btn-primary" href="https://www.wyzant.com/match/tutor/90199286" target="_blank" rel="noopener">Book on Wyzant<span class="visually-hidden"> (opens in a new tab)</span></a></p>
-          <p>Direct booking with Griffin &amp; Quill is available on the <a href="contact.html">contact page</a>. This site does not take payment.</p>
+          <h2 id="book-title">Book with us</h2>
+          <p>A free 15-minute consult. Weekday evenings and weekend afternoons. Questions: <a href="mailto:tutoring@griffinandquill.com">tutoring@griffinandquill.com</a>.</p>
+          <form data-form="tutoring" method="POST" action="#">
+            <p class="thanks" data-thanks tabindex="-1" hidden>Thanks. Your note is on its way.</p>
+            <p class="form-error" data-form-error tabindex="-1" hidden>That note did not send. Write to <a href="mailto:tutoring@griffinandquill.com">tutoring@griffinandquill.com</a>.</p>
+            <p class="visually-hidden"><label for="hp-tutoring">Leave this empty</label><input id="hp-tutoring" name="_honey" type="text" tabindex="-1" autocomplete="off"></p>
+            <input type="hidden" name="_subject" value="New tutoring booking request">
+            <input type="hidden" name="_captcha" value="false">
+            <div class="form-grid two">
+              <div class="field">
+                <label for="tutor-name">Parent or guardian name (required)</label>
+                <input id="tutor-name" name="parent_name" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="tutor-email">Email (required)</label>
+                <input id="tutor-email" name="email" type="email" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="form-grid two">
+              <div class="field">
+                <label for="tutor-phone">Phone (optional)</label>
+                <input id="tutor-phone" name="phone" type="tel" autocomplete="tel">
+              </div>
+              <div class="field">
+                <label for="tutor-grade">Student grade (required)</label>
+                <select id="tutor-grade" name="grade" required>
+                  <option value="">Select one</option>
+                  <option>Grade 6</option>
+                  <option>Grade 7</option>
+                  <option>Grade 8</option>
+                  <option>Grade 9</option>
+                  <option>Grade 10</option>
+                  <option>Grade 11</option>
+                  <option>Grade 12</option>
+                  <option>Adult</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="tutor-subject">Subject or need (required)</label>
+              <select id="tutor-subject" name="subject" required>
+                <option value="">Select one</option>
+                <option>History and social studies</option>
+                <option>Essays and DBQ</option>
+                <option>Study skills</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <fieldset>
+              <legend>Online or in person (required)</legend>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="meeting" value="Online" required> Online</label>
+                <label class="choice"><input type="radio" name="meeting" value="In person"> In person</label>
+              </div>
+            </fieldset>
+            <div class="field">
+              <label for="tutor-times">Preferred days and times (optional)</label>
+              <input id="tutor-times" name="preferred_times" type="text" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="tutor-message">Message (optional)</label>
+              <textarea id="tutor-message" name="message"></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Book with us</button>
+            <p class="note">Do not include a child’s full name or other private details. This note goes to tutoring@griffinandquill.com. This site does not take payment.</p>
+          </form>
+          <p class="note"><a href="https://www.wyzant.com/match/tutor/90199286" target="_blank" rel="noopener">Already on Wyzant? Book there.<span class="visually-hidden"> (opens in a new tab)</span></a></p>
         </div>
       </div>
     </section>
@@ -201,6 +263,7 @@
       <p class="fineprint">© 2026 Griffin &amp; Quill LLC.</p>
     </div>
   </footer>
+  <script src="js/form-config.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
