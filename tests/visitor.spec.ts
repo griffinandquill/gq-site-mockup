@@ -388,33 +388,26 @@ test("the old curriculum address opens the store", async ({ page }) => {
 });
 
 const sceneNpcs = [
-  { name: "Bramble", selector: ".qh-bramble", sheet: "bramble-idle.png" },
-  { name: "Merlin", selector: ".qh-merlin", sheet: "merlin-idle.png" },
-  { name: "Tahne", selector: ".qh-tahne", sheet: "tahne-idle.png" },
-  { name: "Winston", selector: ".qh-winston", sheet: "winston-idle.png" },
-  { name: "Brittany", selector: ".qh-brittany", sheet: "brittany-idle.png" },
-  { name: "Ruth", selector: ".qh-ruth", sheet: "ruth-idle.png" },
-  { name: "Rudy", selector: ".qh-rudy", sheet: "rudy-idle.png" },
+  { name: "Bramble", who: "bramble", sheet: "bramble-idle.png" },
+  { name: "Merlin", who: "merlin", sheet: "merlin-idle.png" },
+  { name: "Tahne", who: "tahne", sheet: "tahne-idle.png" },
+  { name: "Winston", who: "winston", sheet: "winston-idle.png" },
+  { name: "Brittany", who: "brittany", sheet: "brittany-idle.png" },
+  { name: "Ruth", who: "ruth", sheet: "ruth-idle.png" },
+  { name: "Rudy", who: "rudy", sheet: "rudy-idle.png" },
 ] as const;
 
 test("quillhaven npc sprites have size inside the panorama", async ({ page }) => {
   for (const width of [1280, 375]) {
     await page.setViewportSize({ width, height: 800 });
-    await page.goto("/worlds.html");
-    const scene = page.locator(".qh-scene");
+    await page.goto("/worlds.html#play");
+    const scene = page.locator(".play-fit");
     await expect(scene).toBeVisible();
     for (const npc of sceneNpcs) {
-      await scene.evaluate((el, selector) => {
-        const node = el.querySelector(selector);
-        if (!node) throw new Error(`missing ${selector}`);
-        const sceneBox = el.getBoundingClientRect();
-        const box = node.getBoundingClientRect();
-        const next = el.scrollLeft + (box.left - sceneBox.left) - (el.clientWidth - box.width) / 2;
-        el.scrollLeft = Math.max(0, next);
-      }, npc.selector);
-      const box = await scene.evaluate((el, selector) => {
-        const node = el.querySelector(selector);
-        if (!node) throw new Error(`missing ${selector}`);
+      const selector = `[data-who="${npc.who}"] .qh-npc`;
+      const box = await scene.evaluate((el, sel) => {
+        const node = el.querySelector(sel);
+        if (!node) throw new Error(`missing ${sel}`);
         const sceneBox = el.getBoundingClientRect();
         const rect = node.getBoundingClientRect();
         const style = getComputedStyle(node);
@@ -432,7 +425,7 @@ test("quillhaven npc sprites have size inside the panorama", async ({ page }) =>
           opacity: style.opacity,
           backgroundImage: style.backgroundImage,
         };
-      }, npc.selector);
+      }, selector);
       const minSprite = width >= 1000 ? 20 : 6;
       expect(box.width, `${npc.name} width at ${width}`).toBeGreaterThan(minSprite);
       expect(box.height, `${npc.name} height at ${width}`).toBeGreaterThan(minSprite);
@@ -442,12 +435,100 @@ test("quillhaven npc sprites have size inside the panorama", async ({ page }) =>
       expect(box.right, `${npc.name} right`).toBeLessThanOrEqual(box.sceneRight + 1);
       expect(box.top, `${npc.name} top`).toBeGreaterThanOrEqual(box.sceneTop - 1);
       expect(box.bottom, `${npc.name} bottom`).toBeLessThanOrEqual(box.sceneBottom + 1);
-      await expect(page.locator(npc.selector)).toBeVisible();
+      await expect(scene.locator(selector)).toBeVisible();
     }
   }
 });
 
+test("town square banner keeps the tagline and play control readable", async ({ page }) => {
+  const playHref = "https://game-hub-7qg.pages.dev";
+  for (const width of [1280, 375]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/worlds.html");
+    const banner = page.locator(".town-square");
+    await expect(banner).toBeVisible();
+    await expect(page.locator("#town-square-tagline")).toContainText("Write your own legend. Learn it. Live it.");
+    await expect(page.locator(".town-square-prove")).toHaveText("PROVE IT!");
+    const play = banner.getByRole("link", { name: "Play", exact: true });
+    await expect(play).toHaveAttribute("href", playHref);
+    await expect(play).toHaveAttribute("target", "_blank");
+    await expect(play).toHaveAttribute("rel", /noopener/);
+    await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-art", "greybox");
+    await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-town-motion", "static");
+    await expect(page.locator("footer")).toContainText("Super Retro World (SRW), Franuka, and Wizards Academy");
+    const layout = await page.evaluate(() => {
+      const stage = document.querySelector(".town-square-stage");
+      const copy = document.querySelector(".town-square-copy");
+      const canvas = document.querySelector(".town-square-canvas");
+      if (!stage || !copy || !canvas) throw new Error("missing town square");
+      const stageBox = stage.getBoundingClientRect();
+      const copyBox = copy.getBoundingClientRect();
+      const pixels = (canvas as HTMLCanvasElement).getContext("2d");
+      if (!pixels) throw new Error("missing canvas context");
+      const sample = pixels.getImageData(8, Math.floor(canvas.height * 0.72), 24, 24).data;
+      let ink = 0;
+      for (let i = 0; i < sample.length; i += 4) {
+        if (sample[i] + sample[i + 1] + sample[i + 2] > 40) ink += 1;
+      }
+      return {
+        stageTop: stageBox.top,
+        stageBottom: stageBox.bottom,
+        stageHeight: stageBox.height,
+        stageWidth: stageBox.width,
+        copyTop: copyBox.top,
+        copyBottom: copyBox.bottom,
+        ink,
+      };
+    });
+    expect(layout.stageWidth, `banner width at ${width}`).toBeGreaterThan(width - 2);
+    expect(layout.ink, `painted pixels at ${width}`).toBeGreaterThan(20);
+    if (width <= 640) {
+      expect(layout.stageHeight, "short phone scene").toBeLessThanOrEqual(180);
+      expect(layout.copyTop, "copy sits below the scene").toBeGreaterThanOrEqual(layout.stageBottom - 1);
+    } else {
+      expect(layout.copyTop, "copy overlays the scene").toBeLessThan(layout.stageBottom);
+      expect(layout.copyBottom, "copy stays above the street").toBeLessThanOrEqual(layout.stageTop + layout.stageHeight * 0.62);
+    }
+  }
+});
+
+test.describe("town square walks when motion is allowed", () => {
+  test.use({ reducedMotion: "no-preference" });
+
+  test("the banner animates after it is on screen and holds still when reduced motion is on", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/worlds.html");
+    await page.waitForFunction(() => {
+      const canvas = document.querySelector(".town-square-canvas");
+      return canvas && canvas.getAttribute("data-town-motion") === "live";
+    }, null, { timeout: 10_000 });
+    const first = await page.locator(".town-square-canvas").getAttribute("data-town-frame");
+    await page.waitForFunction((start) => {
+      const canvas = document.querySelector(".town-square-canvas");
+      const frame = Number(canvas ? canvas.getAttribute("data-town-frame") : "0");
+      return frame > Number(start);
+    }, first || "0", { timeout: 10_000 });
+  });
+});
+
 const castWho = ["bramble", "brittany", "ruth", "winston", "merlin", "tahne", "rudy"];
+
+function realDelay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function showPoster(page: Page) {
+  await page.evaluate(() => {
+    const stage = document.querySelector(".play-stage");
+    if (stage) stage.scrollIntoView({ block: "center", inline: "nearest" });
+  });
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    const live = await page.evaluate(() => document.querySelector(".play-stage")?.classList.contains("is-live") === true);
+    if (live) return;
+    await realDelay(50);
+  }
+  throw new Error("play poster did not start");
+}
 
 async function waitForCast(page: Page) {
   for (let attempt = 0; attempt < 80; attempt += 1) {
@@ -515,7 +596,7 @@ test.describe("quillhaven cast stays on screen", () => {
     }
 
     async function heroXs() {
-      return page.evaluate(() => Array.from(document.querySelectorAll(".qh-scene .qh-actor")).map((actor) => {
+      return page.evaluate(() => Array.from(document.querySelectorAll(".play-panorama .qh-actor")).map((actor) => {
         const el = actor as HTMLElement;
         return el.style.getPropertyValue("--x");
       }).join(","));
@@ -536,14 +617,15 @@ test.describe("quillhaven cast stays on screen", () => {
     for (const run of runs) {
       await page.setViewportSize({ width: run.width, height: run.height });
       await page.goto(`/worlds.html?cast=${run.width}x${run.height}`);
-      await expect(page.locator(".qh-scene")).toBeVisible();
+      await expect(page.locator(".play-stage")).toBeVisible();
       await waitForCast(page);
+      await showPoster(page);
       await page.clock.fastForward(400);
       const step = run.seconds > 40 ? 5 : 10;
       for (let sec = 0; sec <= run.seconds; sec += step) {
         if (sec) await page.clock.fastForward(step * 1000);
         if (sec === 60) await page.clock.fastForward(10 * 60 * 1000);
-        await expectCast(".qh-scene", ".qh-scene", `hero ${run.width}x${run.height} t=${sec}`);
+        await expectCast(".play-fit", ".play-panorama", `hero ${run.width}x${run.height} t=${sec}`);
       }
       if (!run.poster) continue;
       await page.evaluate(() => {
@@ -569,10 +651,11 @@ test.describe("quillhaven cast stays on screen", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/worlds.html?cast=resize");
     await waitForCast(page);
+    await showPoster(page);
     await page.clock.fastForward(400);
     for (let step = 0; step < 20; step += 1) {
       const rudy = await page.evaluate(() => {
-        const style = document.querySelector('.qh-scene [data-who="rudy"]')?.getAttribute("style") || "";
+        const style = document.querySelector('.play-panorama [data-who="rudy"]')?.getAttribute("style") || "";
         const match = /--x:\s*([0-9.]+)/.exec(style);
         return match ? Number(match[1]) : 0;
       });
@@ -581,19 +664,21 @@ test.describe("quillhaven cast stays on screen", () => {
     }
     for (const width of [1440, 1366, 1280, 1100, 1024, 960, 853, 768, 1440, 1920, 1536]) {
       await resizeTo(width, 800);
-      await expectCast(".qh-scene", ".qh-scene", `resized to ${width}`);
+      await expectCast(".play-fit", ".play-panorama", `resized to ${width}`);
     }
     await resizeTo(853, 700);
     await page.goto("/worlds.html?cast=grow");
     await waitForCast(page);
+    await showPoster(page);
     await page.clock.fastForward(17_000);
-    await expectCast(".qh-scene", ".qh-scene", "opened at 150% zoom");
+    await expectCast(".play-fit", ".play-panorama", "opened at 150% zoom");
     await resizeTo(1440, 900);
-    await expectCast(".qh-scene", ".qh-scene", "grown from zoom to laptop");
+    await expectCast(".play-fit", ".play-panorama", "grown from zoom to laptop");
 
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/worlds.html?cast=resume");
     await waitForCast(page);
+    await showPoster(page);
     await page.clock.fastForward(400);
     await page.evaluate(() => {
       Object.defineProperty(Document.prototype, "hidden", {
@@ -612,16 +697,22 @@ test.describe("quillhaven cast stays on screen", () => {
     });
     await page.clock.fastForward(4000);
     expect(await heroXs()).not.toBe(whileHidden);
-    await expectCast(".qh-scene", ".qh-scene", "hero after tab show");
+    await expectCast(".play-fit", ".play-panorama", "hero after tab show");
 
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    for (let attempt = 0; attempt < 40; attempt += 1) {
+      const paused = await page.evaluate(() => document.querySelector(".play-stage")?.classList.contains("is-live") !== true);
+      if (paused) break;
+      await realDelay(50);
+      if (attempt === 39) throw new Error("play poster stayed on screen");
+    }
     const whileAway = await heroXs();
     await page.clock.fastForward(5000);
     expect(await heroXs()).toBe(whileAway);
-    await page.evaluate(() => window.scrollTo(0, 0));
+    await showPoster(page);
     await page.clock.fastForward(4000);
     expect(await heroXs()).not.toBe(whileAway);
-    await expectCast(".qh-scene", ".qh-scene", "hero after scroll back");
+    await expectCast(".play-fit", ".play-panorama", "hero after scroll back");
   });
 
   test("each sprite stays on a drawn frame for a full cast loop", async ({ page }) => {
@@ -633,6 +724,7 @@ test.describe("quillhaven cast stays on screen", () => {
     const pageErrors: string[] = [];
     page.on("pageerror", (error) => pageErrors.push(error.message));
     await page.goto("/worlds.html?frames=cast");
+    await showPoster(page);
     await page.waitForFunction(() => {
       const root = document.documentElement;
       return root.dataset.castReady === "1" || root.dataset.castError;
@@ -656,7 +748,7 @@ test.describe("quillhaven cast stays on screen", () => {
     });
 
     await page.evaluate(() => {
-      document.querySelectorAll(".qh-scene [data-sprite]").forEach((node) => {
+      document.querySelectorAll(".play-panorama [data-sprite]").forEach((node) => {
         (node as HTMLElement).style.visibility = "hidden";
       });
     });
@@ -668,7 +760,7 @@ test.describe("quillhaven cast stays on screen", () => {
     shots.length = 0;
 
     await page.evaluate(() => {
-      document.querySelectorAll(".qh-scene [data-sprite]").forEach((node) => {
+      document.querySelectorAll(".play-panorama [data-sprite]").forEach((node) => {
         (node as HTMLElement).style.visibility = "";
       });
       const samples: CastFrame[] = [];
@@ -676,7 +768,7 @@ test.describe("quillhaven cast stays on screen", () => {
       const log = () => {
         samples.push({
           t: Date.now(),
-          rows: Array.from(document.querySelectorAll(".qh-scene [data-sprite]")).map((sprite) => {
+          rows: Array.from(document.querySelectorAll(".play-panorama [data-sprite]")).map((sprite) => {
             const actor = sprite.closest("[data-who]");
             const rect = sprite.getBoundingClientRect();
             const style = getComputedStyle(sprite);
@@ -909,14 +1001,17 @@ for (const dpr of [1.25, 1.5, 2]) {
       await page.clock.install();
       await page.goto(`/worlds.html?dpr=${dpr}`);
       await waitForCast(page);
+      await showPoster(page);
       await page.clock.fastForward(17_000);
-      await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} laptop`);
+      await expectCastInCrop(page, ".play-fit", ".play-panorama", `dpr ${dpr} laptop`);
       await page.setViewportSize({ width: 853, height: 480 });
       await page.evaluate(() => window.dispatchEvent(new Event("resize")));
-      await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} zoom`);
+      await showPoster(page);
+      await expectCastInCrop(page, ".play-fit", ".play-panorama", `dpr ${dpr} zoom`);
       await page.setViewportSize({ width: 1280, height: 720 });
       await page.evaluate(() => window.dispatchEvent(new Event("resize")));
-      await expectCastInCrop(page, ".qh-scene", ".qh-scene", `dpr ${dpr} restored`);
+      await showPoster(page);
+      await expectCastInCrop(page, ".play-fit", ".play-panorama", `dpr ${dpr} restored`);
     });
   });
 }

@@ -20,9 +20,9 @@ export function assetVersion() {
 export function bustReferences(text, version) {
   const suffix = `?v=${version}`;
   const htmlRef =
-    /(href|src)="(css\/[^"?]+\.css|js\/[^"?]+\.js|img\/(?:characters|buildings|quillhaven\/sprites)\/[^"?]+|data\/[^"?]+\.json)"/g;
+    /(href|src|data-sheets)="(css\/[^"?]+\.css|js\/[^"?]+\.js|img\/(?:characters|buildings|quillhaven\/(?:sprites|hero))\/[^"?]+|data\/[^"?]+\.json)"/g;
   const cssUrl =
-    /url\((["']?)((?:\.\.\/)?img\/(?:characters|buildings|quillhaven\/sprites)\/[^"'()\s?]+)(\1)\)/g;
+    /url\((["']?)((?:\.\.\/)?img\/(?:characters|buildings|quillhaven\/(?:sprites|hero))\/[^"'()\s?]+)(\1)\)/g;
   return text
     .replace(htmlRef, (_, attr, url) => `${attr}="${url}${suffix}"`)
     .replace(cssUrl, (_, open, url, close) => `url(${open}${url}${suffix}${close})`);
