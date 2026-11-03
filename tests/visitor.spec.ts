@@ -453,7 +453,7 @@ test("town square banner keeps the tagline and play control readable", async ({ 
     await expect(play).toHaveAttribute("href", playHref);
     await expect(play).toHaveAttribute("target", "_blank");
     await expect(play).toHaveAttribute("rel", /noopener/);
-    await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-art", "greybox");
+    await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-art", "atlases");
     await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-town-motion", "static");
     await expect(page.locator("footer")).toContainText("Gif");
     await expect(page.locator("footer")).toContainText("Noiracide");
