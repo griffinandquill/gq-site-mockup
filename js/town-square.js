@@ -16,13 +16,14 @@
 
   var reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var reduced = reducedQuery.matches;
-  var sheets = null;
   var onScreen = false;
   var raf = 0;
   var elapsed = 0;
   var lastStamp = 0;
   var frames = 0;
   var started = false;
+  var retired = false;
+  var handingOff = false;
 
   var folk = [
     {
@@ -129,19 +130,7 @@
     };
   }
 
-  function blit(ctx, id, x, foot, frame, row) {
-    if (!sheets || !sheets[id] || !sheets[id].image) return false;
-    var sprite = sheets[id];
-    var count = sprite.frames || 1;
-    var index = count > 1 ? frame % count : 0;
-    var sy = (row || 0) * sprite.h;
-    if (sy + sprite.h > sprite.image.height) sy = 0;
-    ctx.drawImage(sprite.image, index * sprite.w, sy, sprite.w, sprite.h, x, foot - sprite.h, sprite.w, sprite.h);
-    return true;
-  }
-
   function drawAcademy(ctx, x, foot) {
-    if (blit(ctx, "academy", x, foot, 0, 0)) return;
     var top = foot - 92;
     box(ctx, x + 8, top + 28, 28, 64, "#d7c4a3");
     box(ctx, x + 92, top + 28, 28, 64, "#d7c4a3");
@@ -163,7 +152,6 @@
   }
 
   function drawHouse(ctx, x, foot, roof) {
-    if (blit(ctx, "house", x, foot, 0, 0)) return;
     var top = foot - 58;
     box(ctx, x + 6, top + 22, 56, 36, "#e4d3b4");
     box(ctx, x + 4, top + 14, 60, 10, roof);
@@ -178,7 +166,6 @@
   }
 
   function drawStall(ctx, x, foot) {
-    if (blit(ctx, "stall", x, foot, 0, 0)) return;
     box(ctx, x + 4, foot - 28, 4, 28, "#6e5340");
     box(ctx, x + 40, foot - 28, 4, 28, "#6e5340");
     box(ctx, x + 2, foot - 34, 44, 8, "#faf6ea");
@@ -187,7 +174,6 @@
   }
 
   function drawTree(ctx, x, foot) {
-    if (blit(ctx, "tree", x, foot, 0, 0)) return;
     box(ctx, x + 14, foot - 22, 8, 22, "#6e5340");
     box(ctx, x + 6, foot - 36, 24, 18, "#2f6b3a");
     box(ctx, x + 2, foot - 46, 32, 14, "#3e8a4a");
@@ -195,7 +181,6 @@
   }
 
   function drawLamp(ctx, x, foot, time) {
-    if (blit(ctx, "lamp", x, foot, Math.floor(time * 4) % 2, 0)) return;
     box(ctx, x + 5, foot - 36, 4, 36, "#2b2b2b");
     box(ctx, x, foot - 44, 14, 8, "#1f2a44");
     var glow = reduced ? "#e6c15a" : (Math.floor(time * 5) % 2 === 0 ? "#faf6ea" : "#e6c15a");
@@ -204,14 +189,12 @@
 
   function drawTorch(ctx, x, foot, time) {
     var frame = reduced ? 0 : Math.floor(time * 8) % 2;
-    if (blit(ctx, "torch", x, foot, frame, 0)) return;
     box(ctx, x + 4, foot - 16, 3, 16, "#6e5340");
     box(ctx, x + 2, foot - 22, 7, 6, frame ? "#e6c15a" : "#d2691e");
     box(ctx, x + 4, foot - 26, 3, 5, frame ? "#faf6ea" : "#e6c15a");
   }
 
   function drawBench(ctx, x, foot) {
-    if (blit(ctx, "bench", x, foot, 0, 0)) return;
     box(ctx, x + 2, foot - 10, 32, 4, "#8d6a45");
     box(ctx, x, foot - 16, 36, 4, "#a67c52");
     box(ctx, x + 4, foot - 6, 3, 6, "#6e5340");
@@ -220,7 +203,6 @@
 
   function drawFountain(ctx, x, foot, time) {
     var frame = reduced ? 0 : Math.floor(time * 3) % 3;
-    if (blit(ctx, "fountain", x, foot, frame, 0)) return;
     box(ctx, x + 4, foot - 14, 56, 14, "#d7c4a3");
     box(ctx, x + 8, foot - 22, 48, 10, "#7ea4b8");
     box(ctx, x + 28, foot - 34, 8, 16, "#cbbd9a");
@@ -233,26 +215,6 @@
   function drawPerson(ctx, person, state, time) {
     var frame = state.pose === "walk" && !reduced ? Math.floor(time * 6) % 4 : 0;
     var height = 24;
-    if (sheets && sheets.folk && sheets.folk.image) {
-      var sprite = sheets.folk;
-      var count = sprite.frames || 1;
-      var index = count > 1 ? frame % count : 0;
-      var sy = person.row * sprite.h;
-      if (sy + sprite.h > sprite.image.height) sy = 0;
-      var dx = state.x - Math.round(sprite.w / 2);
-      var dy = state.y - sprite.h;
-      if (state.face < 0) {
-        ctx.save();
-        ctx.translate(state.x, 0);
-        ctx.scale(-1, 1);
-        ctx.drawImage(sprite.image, index * sprite.w, sy, sprite.w, sprite.h, -Math.round(sprite.w / 2), dy, sprite.w, sprite.h);
-        ctx.restore();
-      } else {
-        ctx.drawImage(sprite.image, index * sprite.w, sy, sprite.w, sprite.h, dx, dy, sprite.w, sprite.h);
-      }
-      if (state.chat) drawBubble(ctx, state.x, dy - 2);
-      return height;
-    }
     var x = state.x;
     var y = state.y;
     var bob = state.pose === "walk" && !reduced ? (frame % 2) : 0;
@@ -361,6 +323,7 @@
   }
 
   function paint(time) {
+    if (retired || handingOff) return false;
     drawTown(time);
     if (!present()) return false;
     canvas.setAttribute("data-town-frame", String(frames));
@@ -377,6 +340,7 @@
 
   function tick(now) {
     raf = 0;
+    if (retired || handingOff) return;
     if (reduced || !onScreen || document.hidden) {
       paint(reduced ? 0 : elapsed);
       return;
@@ -392,7 +356,7 @@
   }
 
   function arm() {
-    if (reduced || raf || !onScreen || document.hidden) return;
+    if (retired || handingOff || reduced || raf || !onScreen || document.hidden) return;
     raf = window.requestAnimationFrame(tick);
   }
 
@@ -415,20 +379,15 @@
   }
   canvas.setAttribute("data-art-used", "greybox");
   window.addEventListener("resize", function () { paint(reduced ? 0 : elapsed); });
-  if (!reduced) {
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(function () { watch(); }, { timeout: 700 });
-    } else {
-      window.setTimeout(watch, 280);
-    }
-    document.addEventListener("visibilitychange", function () {
-      if (document.hidden) stop();
-      else arm();
-    });
-  }
+  document.addEventListener("visibilitychange", function () {
+    if (retired || handingOff) return;
+    if (document.hidden) stop();
+    else arm();
+  });
   if (reducedQuery.addEventListener) {
     reducedQuery.addEventListener("change", function () {
       reduced = reducedQuery.matches;
+      if (retired || handingOff) return;
       if (reduced) {
         stop();
         elapsed = 0;
@@ -439,43 +398,47 @@
     });
   }
 
-  if (canvas.getAttribute("data-art") !== "sheets") return;
-  var manifestUrl = canvas.getAttribute("data-sheets");
-  if (!manifestUrl) return;
-  fetch(manifestUrl).then(function (res) {
-    if (!res.ok) return null;
-    return res.json();
-  }).then(function (manifest) {
-    if (!manifest || manifest.version !== 1 || !manifest.sprites) return null;
-    var base = manifestUrl.replace(/[^/]+$/, "");
-    var ids = Object.keys(manifest.sprites);
-    return Promise.all(ids.map(function (id) {
-      var spec = manifest.sprites[id];
-      if (!spec || typeof spec.src !== "string") return null;
-      if (/[\\/]/.test(spec.src) || spec.src.indexOf("..") !== -1) return null;
-      if (!/\.(png|webp)$/i.test(spec.src)) return null;
-      return new Promise(function (resolve) {
-        var image = new Image();
-        image.decoding = "async";
-        image.onload = function () {
-          sheets = sheets || {};
-          sheets[id] = {
-            image: image,
-            w: spec.w || image.width,
-            h: spec.h || image.height,
-            frames: spec.frames || 1
-          };
-          resolve(true);
-        };
-        image.onerror = function () { resolve(false); };
-        image.src = base + spec.src;
-      });
-    }));
-  }).then(function (loaded) {
-    if (!loaded) return;
-    canvas.setAttribute("data-art-used", "sheets");
-    paint(reduced ? 0 : elapsed);
-  }).catch(function () {
+  function useGreybox() {
+    handingOff = false;
+    retired = false;
+    canvas.setAttribute("data-art", "greybox");
     canvas.setAttribute("data-art-used", "greybox");
-  });
+    paint(0);
+    if (!reduced) watch();
+  }
+
+  function beginHero() {
+    if (!window.QuillhavenHero || typeof window.QuillhavenHero.startScene !== "function") {
+      if (!reduced) watch();
+      return;
+    }
+    handingOff = true;
+    stop();
+    var heroFrames = 0;
+    window.QuillhavenHero.startScene({
+      canvas: canvas,
+      atlasBase: "img/quillhaven/hero/",
+      testMode: false,
+      getScale: function () { return 1; },
+      isReduced: function () { return reducedQuery.matches; },
+      onFrame: function (_world, paused, frameReduced) {
+        heroFrames += 1;
+        canvas.setAttribute("data-town-frame", String(heroFrames));
+        canvas.setAttribute("data-town-motion", frameReduced ? "static" : (paused ? "paused" : "live"));
+        canvas.setAttribute("data-art", "atlases");
+        canvas.setAttribute("data-art-used", "atlases");
+      }
+    }).then(function () {
+      retired = true;
+      handingOff = false;
+    }).catch(function () {
+      useGreybox();
+    });
+  }
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(beginHero, { timeout: 700 });
+  } else {
+    window.setTimeout(beginHero, 280);
+  }
 })();

@@ -455,7 +455,11 @@ test("town square banner keeps the tagline and play control readable", async ({ 
     await expect(play).toHaveAttribute("rel", /noopener/);
     await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-art", "greybox");
     await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-town-motion", "static");
-    await expect(page.locator("footer")).toContainText("Super Retro World (SRW), Franuka, and Wizards Academy");
+    await expect(page.locator("footer")).toContainText("Gif");
+    await expect(page.locator("footer")).toContainText("Noiracide");
+    await expect(page.locator("footer")).toContainText("Romi");
+    await expect(page.locator("footer")).toContainText("Franuka");
+    await expect(page.locator("footer")).toContainText("MutterPixel");
     const layout = await page.evaluate(() => {
       const stage = document.querySelector(".town-square-stage");
       const copy = document.querySelector(".town-square-copy");
