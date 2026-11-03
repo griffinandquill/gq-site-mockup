@@ -1345,6 +1345,77 @@ legend { padding: 0 0.3rem; }
 
 .play-open a:hover { color: var(--white); }
 
+.town-square {
+  position: relative;
+  border-bottom: 4px solid var(--gold);
+  background: #1b2744;
+}
+
+.town-square-stage {
+  position: relative;
+  height: clamp(300px, 36vw, 440px);
+  overflow: hidden;
+  background: #1b2744;
+}
+
+.town-square-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+.town-square-logo-hold {
+  position: absolute;
+  top: 12px;
+  right: max(12px, calc((100% - 1120px) / 2));
+  width: min(220px, 22vw);
+  height: 64px;
+  pointer-events: none;
+}
+
+.town-square-copy {
+  position: absolute;
+  z-index: 2;
+  top: 0.85rem;
+  left: max(0.85rem, calc((100% - 1120px) / 2));
+  max-width: min(34rem, calc(100% - 1.7rem));
+  padding: 0.85rem 1rem 1rem;
+  background: #1f2a44;
+  border: 2px solid rgba(250, 246, 234, 0.35);
+}
+
+.town-square-tagline {
+  margin: 0 0 0.75rem;
+  max-width: 22em;
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--cream);
+}
+
+.town-square-prove {
+  color: var(--gold);
+  font-size: 1.15em;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 640px) {
+  .town-square-stage { height: 168px; }
+  .town-square-logo-hold { display: none; }
+  .town-square-copy {
+    position: static;
+    max-width: none;
+    margin: 0;
+    border-width: 0 0 0;
+    border-top: 2px solid rgba(250, 246, 234, 0.35);
+  }
+}
+
 .qh-scene {
   position: relative;
   height: 456px;

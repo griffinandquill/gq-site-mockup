@@ -61,47 +61,20 @@
       <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. A form on this page needs JavaScript to send, or you can email the address in the footer.</p>
     </noscript>
 
+    <section class="town-square" aria-labelledby="town-square-tagline">
+      <div class="town-square-stage">
+        <canvas class="town-square-canvas" width="480" height="220" aria-hidden="true" data-art="greybox"></canvas>
+        <!-- Empty on purpose. The pixel-art town logo is still coming. -->
+        <div class="town-square-logo-hold" aria-hidden="true"></div>
+      </div>
+      <div class="town-square-copy">
+        <p class="town-square-tagline" id="town-square-tagline">Write your own legend. Learn it. Live it. <span class="town-square-prove">PROVE IT!</span></p>
+        <a class="btn btn-primary" href="https://game-hub-7qg.pages.dev" target="_blank" rel="noopener">Play</a>
+      </div>
+    </section>
+
     <div class="container page-hero">
       <p class="eyebrow">Quillhaven</p>
-      <div class="qh-scene" aria-hidden="true">
-        <div class="qh-panorama">
-          <img class="qh-layer" data-parallax="0.12" src="img/quillhaven/sky.png" width="1280" height="512" alt="">
-          <div class="qh-sky-anim" data-parallax="0.12">
-            <!-- Open sky above the academy. Left clear for the pixel-art town logo. -->
-            <div class="qh-logo-hold"></div>
-            <span class="qh-cloud qh-cloud-a"></span>
-            <span class="qh-cloud qh-cloud-b"></span>
-            <span class="qh-cloud qh-cloud-c"></span>
-          </div>
-          <img class="qh-layer" data-parallax="0.38" src="img/quillhaven/far.png" width="1280" height="512" alt="">
-          <img class="qh-layer" data-parallax="0.8" src="img/quillhaven/town.png" width="1280" height="512" alt="">
-          <div class="qh-stage" data-parallax="0.8">
-            <span class="qh-lamp lamp-a"></span>
-            <span class="qh-lamp lamp-b"></span>
-            <span class="qh-lamp lamp-c"></span>
-            <span class="qh-lamp lamp-d"></span>
-            <span class="qh-lamp lamp-e"></span>
-            <span class="qh-lamp lamp-f"></span>
-            <span class="qh-window window-academy-l"></span>
-            <span class="qh-window window-academy-r"></span>
-            <span class="qh-window window-printers"></span>
-            <span class="qh-fly fly-a"></span>
-            <span class="qh-fly fly-b"></span>
-            <span class="qh-fly fly-c"></span>
-            <span class="qh-fly fly-d"></span>
-            <span class="qh-fly fly-e"></span>
-            <div class="qh-cast" data-cast>
-              <span class="qh-actor" data-who="bramble" style="--x:100"><span class="qh-npc qh-breathe qh-bramble" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
-              <span class="qh-actor" data-who="brittany" style="--x:168"><span class="qh-npc qh-brittany" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
-              <span class="qh-actor" data-who="ruth" style="--x:236"><span class="qh-npc qh-ruth" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
-              <span class="qh-actor" data-who="winston" style="--x:304"><span class="qh-npc qh-breathe qh-winston" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
-              <span class="qh-actor" data-who="merlin" style="--x:372"><span class="qh-npc qh-breathe qh-merlin" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
-              <span class="qh-actor" data-who="tahne" style="--x:456"><span class="qh-npc qh-breathe qh-tahne" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
-              <span class="qh-actor" data-who="rudy" style="--x:540"><span class="qh-npc qh-rudy" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
-            </div>
-          </div>
-        </div>
-      </div>
       <div>
           <h1>Quillhaven</h1>
           <p class="town-banner">Where knowledge is power and every street holds a new adventure.</p>
@@ -111,7 +84,6 @@
             <a class="btn btn-secondary" href="schools.html">Schools and districts</a>
         </div>
       </div>
-      <p class="note">This panorama is a dusk view of the town.</p>
     </div>
 
     <section class="section" id="play" aria-labelledby="play-title">
@@ -346,10 +318,12 @@
       </div>
     </div>
     <div class="container">
-      <p class="fineprint">© 2026 Griffin &amp; Quill LLC.</p>
+      <p class="fineprint">Town square art: townsfolk, houses, stalls, and plaza props by Gif, Noiracide, and Romi. Emotes by Franuka / @franuka_art. Academy by MutterPixel Studio. © 2026 Griffin &amp; Quill LLC.</p>
     </div>
   </footer>
   <script src="js/form-config.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/hero-scene.js"></script>
+  <script src="js/town-square.js"></script>
 </body>
 </html>
