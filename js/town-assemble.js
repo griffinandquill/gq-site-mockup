@@ -58,6 +58,16 @@
     root.appendChild(badge);
     section.appendChild(root);
 
+    var narrowQuery = window.matchMedia("(max-width: 640px)");
+
+    function placeBadge() {
+      var narrow = narrowQuery.matches;
+      if (narrow && copy && badge.parentNode !== copy) copy.insertBefore(badge, copy.firstChild);
+      else if (!narrow && badge.parentNode !== root) root.appendChild(badge);
+    }
+
+    placeBadge();
+
     var layout = null;
     var layoutWidth = -1;
     var layoutHeight = -1;
@@ -97,18 +107,26 @@
       }
       var sectionRect = section.getBoundingClientRect();
       var stageRect = stage.getBoundingClientRect();
-      var scale = Math.max(stageRect.width / SCENE_W, stageRect.height / SCENE_H);
-      var dispW = SCENE_W * scale;
-      var dispH = SCENE_H * scale;
+      var picture = stage.querySelector(".town-square-canvas");
+      var pictureRect = picture ? picture.getBoundingClientRect() : stageRect;
+      var scale = pictureRect.width / SCENE_W || 1;
+      var visLeft = Math.max(pictureRect.left, stageRect.left);
+      var visTop = Math.max(pictureRect.top, stageRect.top);
+      var visRight = Math.min(pictureRect.right, stageRect.right);
+      var visBottom = Math.min(pictureRect.bottom, stageRect.bottom);
       layout = {
         dpr: dpr,
         scale: scale,
-        ox: stageRect.left - sectionRect.left + (stageRect.width - dispW) / 2,
-        oy: stageRect.top - sectionRect.top + (stageRect.height - dispH),
+        ox: pictureRect.left - sectionRect.left,
+        oy: pictureRect.top - sectionRect.top,
         stageLeft: stageRect.left - sectionRect.left,
         stageTop: stageRect.top - sectionRect.top,
         stageWidth: stageRect.width,
-        stageHeight: stageRect.height
+        stageHeight: stageRect.height,
+        scanLeft: visLeft - sectionRect.left,
+        scanTop: visTop - sectionRect.top,
+        scanWidth: Math.max(0, visRight - visLeft),
+        scanHeight: Math.max(0, visBottom - visTop)
       };
       var bw = Math.max(1, Math.round(w * dpr));
       var bh = Math.max(1, Math.round(h * dpr));
@@ -196,24 +214,24 @@
       ctx.setTransform(lay.dpr, 0, 0, lay.dpr, 0, 0);
       ctx.clearRect(0, 0, layoutWidth, layoutHeight);
       if (state.phase === "scan" && state.scan >= 0) {
-        var edge = lay.stageLeft + state.scan * lay.stageWidth;
-        var trail = Math.max(lay.stageLeft, edge - lay.stageWidth * 0.28);
+        var edge = lay.scanLeft + state.scan * lay.scanWidth;
+        var trail = Math.max(lay.scanLeft, edge - lay.scanWidth * 0.28);
         var grad = ctx.createLinearGradient(trail, 0, edge, 0);
         grad.addColorStop(0, "rgba(47, 107, 255, 0)");
         grad.addColorStop(1, "rgba(47, 107, 255, 0.28)");
         ctx.fillStyle = grad;
-        ctx.fillRect(trail, lay.stageTop, Math.max(0, edge - trail), lay.stageHeight);
+        ctx.fillRect(trail, lay.scanTop, Math.max(0, edge - trail), lay.scanHeight);
         ctx.strokeStyle = "rgba(31, 42, 68, 0.16)";
         ctx.lineWidth = 1;
         ctx.beginPath();
         var gx;
-        for (gx = lay.stageLeft; gx <= lay.stageLeft + lay.stageWidth; gx += 32) {
-          ctx.moveTo(gx + 0.5, lay.stageTop);
-          ctx.lineTo(gx + 0.5, lay.stageTop + lay.stageHeight);
+        for (gx = lay.scanLeft; gx <= lay.scanLeft + lay.scanWidth; gx += 32) {
+          ctx.moveTo(gx + 0.5, lay.scanTop);
+          ctx.lineTo(gx + 0.5, lay.scanTop + lay.scanHeight);
         }
         ctx.stroke();
         ctx.fillStyle = "rgba(250, 246, 234, 0.92)";
-        ctx.fillRect(edge, lay.stageTop, 2, lay.stageHeight);
+        ctx.fillRect(edge, lay.scanTop, 2, lay.scanHeight);
       }
       var now = performance.now();
       if (state.mark !== lastMark) {
@@ -287,6 +305,7 @@
     function onResize() {
       layout = null;
       layoutWidth = -1;
+      placeBadge();
     }
 
     skip.addEventListener("click", function () {
@@ -296,11 +315,14 @@
       if (handlers && handlers.onReplay) handlers.onReplay();
     });
     window.addEventListener("resize", onResize);
+    if (narrowQuery.addEventListener) narrowQuery.addEventListener("change", onResize);
 
     return {
       sync: sync,
       destroy: function () {
         window.removeEventListener("resize", onResize);
+        if (narrowQuery.removeEventListener) narrowQuery.removeEventListener("change", onResize);
+        if (badge.parentNode) badge.parentNode.removeChild(badge);
         if (root.parentNode) root.parentNode.removeChild(root);
         section.classList.remove("is-assembling", "is-ui");
         setPlayHidden(false);
