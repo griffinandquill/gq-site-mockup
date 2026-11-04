@@ -460,6 +460,9 @@ test("town square banner keeps the tagline and play control readable", async ({ 
     await expect(page.locator("footer")).toContainText("Romi");
     await expect(page.locator("footer")).toContainText("Franuka");
     await expect(page.locator("footer")).toContainText("MutterPixel");
+    await expect(page.locator(".town-square")).toHaveAttribute("data-assemble", "static");
+    await expect(page.getByRole("button", { name: "Skip" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Replay" })).toHaveCount(0);
     const layout = await page.evaluate(() => {
       const stage = document.querySelector(".town-square-stage");
       const copy = document.querySelector(".town-square-copy");
@@ -476,16 +479,35 @@ test("town square banner keeps the tagline and play control readable", async ({ 
       }
       return {
         stageTop: stageBox.top,
+        stageLeft: stageBox.left,
         stageBottom: stageBox.bottom,
         stageHeight: stageBox.height,
         stageWidth: stageBox.width,
         copyTop: copyBox.top,
         copyBottom: copyBox.bottom,
         ink,
+        scale: Number(canvas.getAttribute("data-town-scale")),
+        bitmapWidth: canvas.width,
+        bitmapHeight: canvas.height,
+        canvasWidth: canvas.getBoundingClientRect().width,
+        canvasHeight: canvas.getBoundingClientRect().height,
+        canvasLeft: canvas.getBoundingClientRect().left,
+        canvasTop: canvas.getBoundingClientRect().top,
+        canvasBottom: canvas.getBoundingClientRect().bottom,
       };
     });
     expect(layout.stageWidth, `banner width at ${width}`).toBeGreaterThan(width - 2);
     expect(layout.ink, `painted pixels at ${width}`).toBeGreaterThan(20);
+    expect(layout.bitmapWidth, `scene bitmap width at ${width}`).toBe(384);
+    expect(layout.bitmapHeight, `scene bitmap height at ${width}`).toBe(216);
+    expect(layout.scale, `whole-number scale at ${width}`).toBeGreaterThanOrEqual(1);
+    expect(layout.canvasWidth, `integer canvas width at ${width}`).toBe(384 * layout.scale);
+    expect(layout.canvasHeight, `integer canvas height at ${width}`).toBe(216 * layout.scale);
+    expect(Math.abs(layout.canvasLeft + layout.canvasWidth / 2 - (layout.stageLeft + layout.stageWidth / 2)), `canvas centered at ${width}`).toBeLessThan(1.25);
+    expect(Math.abs(layout.canvasBottom - layout.stageBottom), `canvas sits on the stage bottom at ${width}`).toBeLessThan(1.25);
+    if (layout.canvasWidth + 1 < layout.stageWidth) {
+      expect(layout.canvasLeft, `letterbox starts at ${width}`).toBeGreaterThan(layout.stageLeft + 0.5);
+    }
     if (width <= 640) {
       expect(layout.stageHeight, "short phone scene").toBeLessThanOrEqual(180);
       expect(layout.copyTop, "copy sits below the scene").toBeGreaterThanOrEqual(layout.stageBottom - 1);
@@ -512,6 +534,128 @@ test.describe("town square walks when motion is allowed", () => {
       const frame = Number(canvas ? canvas.getAttribute("data-town-frame") : "0");
       return frame > Number(start);
     }, first || "0", { timeout: 10_000 });
+  });
+});
+
+test.describe("town square assembles in", () => {
+  test.use({ reducedMotion: "no-preference" });
+
+  test("skip ends on the badge and replay starts the sweep again", async ({ page }) => {
+    const errors = collectErrors(page);
+    for (const width of [1366, 481, 375]) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto("/worlds.html");
+      const skip = page.getByRole("button", { name: "Skip" });
+      await expect(skip).toBeVisible({ timeout: 10_000 });
+      await expect(page.locator(".town-assemble-readout")).toBeVisible();
+      await expect(page.getByRole("button", { name: "Replay" })).toBeHidden();
+      await expect(page.locator(".town-square")).toHaveAttribute("data-assemble", /scan|ground|buildings|props|folk|ui/);
+      await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-art", "atlases");
+      const during = await page.evaluate(() => {
+        const copy = document.querySelector(".town-square-copy");
+        const tagline = document.querySelector("#town-square-tagline");
+        const skipBtn = document.querySelector(".town-assemble-skip");
+        const stage = document.querySelector(".town-square-stage");
+        const canvas = document.querySelector(".town-square-canvas");
+        if (!copy || !tagline || !skipBtn || !stage || !canvas) return null;
+        const skipBox = skipBtn.getBoundingClientRect();
+        const stageBox = stage.getBoundingClientRect();
+        const canvasBox = canvas.getBoundingClientRect();
+        const taglineBox = tagline.getBoundingClientRect();
+        const scale = canvasBox.width / canvas.width;
+        return {
+          opacity: getComputedStyle(copy).opacity,
+          taglineTop: taglineBox.top,
+          stageTop: stageBox.top,
+          transform: getComputedStyle(tagline).transform,
+          scale,
+          bitmapWidth: canvas.width,
+          bitmapHeight: canvas.height,
+          canvasWidth: canvasBox.width,
+          canvasHeight: canvasBox.height,
+          centered: Math.abs(canvasBox.left + canvasBox.width / 2 - (stageBox.left + stageBox.width / 2)),
+          bottomed: Math.abs(canvasBox.bottom - stageBox.bottom),
+          letterboxed: canvasBox.width + 1 < stageBox.width,
+          skipInside:
+            skipBox.top >= stageBox.top - 1 &&
+            skipBox.left >= stageBox.left - 1 &&
+            skipBox.right <= stageBox.right + 1 &&
+            skipBox.bottom <= stageBox.bottom + 1,
+        };
+      });
+      expect(during, `intro chrome at ${width}`).not.toBeNull();
+      expect(during?.opacity, `tagline waits at ${width}`).toBe("0");
+      expect(during?.transform, `tagline holds still at ${width}`).toBe("none");
+      expect(during?.skipInside, `skip stays on the scene at ${width}`).toBe(true);
+      expect(during?.bitmapWidth, `scene bitmap width at ${width}`).toBe(384);
+      expect(during?.bitmapHeight, `scene bitmap height at ${width}`).toBe(216);
+      expect(during?.scale, `whole-number scale at ${width}`).toBe(Math.round(during?.scale || 0));
+      expect(during?.canvasWidth, `integer canvas width at ${width}`).toBe(384 * (during?.scale || 0));
+      expect(during?.canvasHeight, `integer canvas height at ${width}`).toBe(216 * (during?.scale || 0));
+      expect(during?.centered || 0, `canvas centered at ${width}`).toBeLessThan(1.25);
+      expect(during?.bottomed || 0, `canvas sits on the stage bottom at ${width}`).toBeLessThan(1.25);
+      if (width >= 1366) expect(during?.letterboxed, `wide stage letterboxes at ${width}`).toBe(true);
+      if (width <= 400) expect(during?.scale, `phone snaps to 1× at ${width}`).toBe(1);
+      await skip.click();
+      await expect(page.locator(".town-square")).toHaveAttribute("data-assemble", "done");
+      const badge = page.locator(".town-assemble-badge");
+      await expect(badge).toBeVisible();
+      await expect(badge).toContainText("Quillhaven, built tile by tile");
+      await expect(page.getByRole("button", { name: "Replay" })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Skip" })).toBeHidden();
+      const ended = await page.evaluate(() => {
+        const copy = document.querySelector(".town-square-copy");
+        const tagline = document.querySelector("#town-square-tagline");
+        const badgeEl = document.querySelector(".town-assemble-badge");
+        const stage = document.querySelector(".town-square-stage");
+        const label = badgeEl ? badgeEl.querySelector("p") : null;
+        if (!copy || !tagline || !badgeEl || !stage || !label) return null;
+        const badgeBox = badgeEl.getBoundingClientRect();
+        const stageBox = stage.getBoundingClientRect();
+        const taglineBox = tagline.getBoundingClientRect();
+        const labelBox = label.getBoundingClientRect();
+        return {
+          opacity: getComputedStyle(copy).opacity,
+          taglineTop: taglineBox.top,
+          transform: getComputedStyle(tagline).transform,
+          badgeTop: badgeBox.top,
+          badgeBottom: badgeBox.bottom,
+          badgeHeight: badgeBox.height,
+          badgeWidth: badgeBox.width,
+          labelHeight: labelBox.height,
+          stageTop: stageBox.top,
+          taglineInStage: taglineBox.top - stageBox.top,
+          stageBottom: stageBox.bottom,
+          stageLeft: stageBox.left,
+          stageRight: stageBox.right,
+          badgeLeft: badgeBox.left,
+          badgeRight: badgeBox.right,
+        };
+      });
+      expect(ended?.opacity, `tagline returns at ${width}`).toBe("1");
+      expect(ended?.transform, `tagline stays unmoved at ${width}`).toBe("none");
+      const duringOffset = (during?.taglineTop || 0) - (during?.stageTop || 0);
+      const endedOffset = ended?.taglineInStage || 0;
+      expect(Math.abs(endedOffset - duringOffset), `tagline holds its place at ${width}`).toBeLessThan(1);
+      if (width <= 640) {
+        expect(ended?.badgeTop || 0, `badge sits under the scene at ${width}`).toBeGreaterThanOrEqual((ended?.stageBottom || 0) - 1);
+        expect(ended?.badgeBottom || 0, `badge stays above the tagline at ${width}`).toBeLessThanOrEqual((ended?.taglineTop || 0) + 1);
+        expect(ended?.badgeHeight || 0, `badge is one line at ${width}`).toBeLessThan(72);
+        expect(ended?.labelHeight || 0, `badge label is one line at ${width}`).toBeLessThan(28);
+        expect(ended?.badgeLeft || 0, `badge stays inside the page at ${width}`).toBeGreaterThanOrEqual((ended?.stageLeft || 0) - 1);
+        expect(ended?.badgeRight || 0, `badge stays inside the page at ${width}`).toBeLessThanOrEqual((ended?.stageRight || 0) + 1);
+      } else {
+        expect(ended?.badgeTop || 0, `badge stays on the scene at ${width}`).toBeGreaterThanOrEqual((ended?.stageTop || 0) - 1);
+        expect(ended?.badgeBottom || 0, `badge stays on the scene at ${width}`).toBeLessThanOrEqual((ended?.stageBottom || 0) + 1);
+        expect(ended?.badgeLeft || 0, `badge stays on the scene at ${width}`).toBeGreaterThanOrEqual((ended?.stageLeft || 0) - 1);
+        expect(ended?.badgeRight || 0, `badge stays on the scene at ${width}`).toBeLessThanOrEqual((ended?.stageRight || 0) + 1);
+      }
+      await page.getByRole("button", { name: "Replay" }).click();
+      await expect(page.locator(".town-square")).toHaveAttribute("data-assemble", "scan");
+      await expect(page.locator(".town-assemble-readout")).toHaveText("Scanning...");
+      await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-town-motion", "live");
+    }
+    expect(unexpected(errors, false)).toEqual([]);
   });
 });
 

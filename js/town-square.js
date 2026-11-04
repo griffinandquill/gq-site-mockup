@@ -16,6 +16,23 @@
 
   var reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var reduced = reducedQuery.matches;
+  var section = stage.closest(".town-square");
+  var sceneApi = null;
+  var hud = null;
+
+  if (section && reduced) section.setAttribute("data-assemble", "static");
+  if (section && !reduced && window.TownAssemble) {
+    section.classList.add("is-assembling");
+    section.setAttribute("data-assemble", "scan");
+    hud = window.TownAssemble.attach(section, {
+      onSkip: function () {
+        if (sceneApi && sceneApi.skipIntro) sceneApi.skipIntro();
+      },
+      onReplay: function () {
+        if (sceneApi && sceneApi.replayIntro) sceneApi.replayIntro();
+      }
+    });
+  }
   var onScreen = false;
   var raf = 0;
   var elapsed = 0;
@@ -296,10 +313,38 @@
     }
   }
 
+  var SCENE_W = 384;
+  var SCENE_H = 216;
+  var fitN = 1;
+
+  function fitCanvas() {
+    var stageW = stage.clientWidth;
+    var stageH = stage.clientHeight;
+    if (!stageW || !stageH) return null;
+    // Nearest whole multiple of the 384×216 picture. Step down if that size
+    // overflows the stage on both axes, then letterbox whatever is left over.
+    var cover = Math.max(stageW / SCENE_W, stageH / SCENE_H);
+    var n = Math.round(cover);
+    if (n < 1) n = 1;
+    while (n > 1 && SCENE_W * n > stageW && SCENE_H * n > stageH) n -= 1;
+    var cssW = SCENE_W * n;
+    var cssH = SCENE_H * n;
+    var left = Math.round((stageW - cssW) / 2);
+    var top = Math.round(stageH - cssH);
+    fitN = n;
+    canvas.style.width = cssW + "px";
+    canvas.style.height = cssH + "px";
+    canvas.style.left = left + "px";
+    canvas.style.top = top + "px";
+    canvas.setAttribute("data-town-scale", String(n));
+    return { n: n, cssW: cssW, cssH: cssH };
+  }
+
   function present() {
-    var cssW = stage.clientWidth;
-    var cssH = stage.clientHeight;
-    if (!cssW || !cssH) return false;
+    var fit = fitCanvas();
+    if (!fit) return false;
+    var cssW = fit.cssW;
+    var cssH = fit.cssH;
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var bw = Math.max(1, Math.round(cssW * dpr));
     var bh = Math.max(1, Math.round(cssH * dpr));
@@ -378,7 +423,10 @@
     window.requestAnimationFrame(function () { paint(reduced ? 0 : elapsed); });
   }
   canvas.setAttribute("data-art-used", "greybox");
-  window.addEventListener("resize", function () { paint(reduced ? 0 : elapsed); });
+  window.addEventListener("resize", function () {
+    fitCanvas();
+    if (!retired && !handingOff) paint(reduced ? 0 : elapsed);
+  });
   document.addEventListener("visibilitychange", function () {
     if (retired || handingOff) return;
     if (document.hidden) stop();
@@ -387,6 +435,18 @@
   if (reducedQuery.addEventListener) {
     reducedQuery.addEventListener("change", function () {
       reduced = reducedQuery.matches;
+      if (reduced && hud) {
+        hud.sync({
+          phase: "off",
+          placed: 0,
+          total: 0,
+          box: null,
+          scan: -1,
+          ui: false,
+          done: true,
+          mark: "off"
+        });
+      }
       if (retired || handingOff) return;
       if (reduced) {
         stop();
@@ -414,13 +474,17 @@
     }
     handingOff = true;
     stop();
+    fitCanvas();
     var heroFrames = 0;
     window.QuillhavenHero.startScene({
       canvas: canvas,
       atlasBase: "img/quillhaven/hero/",
       testMode: false,
-      getScale: function () { return 1; },
+      getScale: function () { return fitN; },
       isReduced: function () { return reducedQuery.matches; },
+      onAssemble: function (state) {
+        if (hud) hud.sync(state);
+      },
       onFrame: function (_world, paused, frameReduced) {
         heroFrames += 1;
         canvas.setAttribute("data-town-frame", String(heroFrames));
@@ -428,10 +492,17 @@
         canvas.setAttribute("data-art", "atlases");
         canvas.setAttribute("data-art-used", "atlases");
       }
-    }).then(function () {
+    }).then(function (api) {
+      sceneApi = api;
       retired = true;
       handingOff = false;
     }).catch(function () {
+      if (hud) hud.destroy();
+      hud = null;
+      if (section) {
+        section.classList.remove("is-assembling", "is-ui");
+        section.setAttribute("data-assemble", "static");
+      }
       useGreybox();
     });
   }

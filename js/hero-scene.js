@@ -1,4 +1,4 @@
-/* Quillhaven hero scene, site/quillhaven-hero at 14c6dd6. Loads img/quillhaven/hero/ hero-*.png, hero-*.json, and manifest.json. Reduced motion draws hero-still.png. A manifest source of "missing" keeps the greybox. */
+/* Quillhaven hero scene, site/quillhaven-hero at 14c6dd6. Loads img/quillhaven/hero/ hero-*.png, hero-*.json, and manifest.json. Reduced motion draws hero-still.png. A manifest source of "missing" keeps the greybox. With motion, the first pass assembles the plaza before the walk loop. */
 var QuillhavenHero = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -805,6 +805,281 @@ var QuillhavenHero = (() => {
     }
     return sawBubble;
   }
+  var INTRO_SCAN = 1.2;
+  var INTRO_GROUND = 2.2;
+  var INTRO_BUILDINGS = 2;
+  var INTRO_PROPS = 2.15;
+  var INTRO_FOLK = 2.55;
+  var INTRO_UI = 0.85;
+  function isBuildingFrame(frame) {
+    return frame === "academy" || frame === "house_red_a" || frame === "house_red_b" || frame === "house_red_c";
+  }
+  function clamp01(value) {
+    if (value < 0) return 0;
+    if (value > 1) return 1;
+    return value;
+  }
+  function shownCount(t, start, dur, count, rushEnd) {
+    if (count <= 0 || t <= start) return 0;
+    if (t >= start + dur) return count;
+    const u = (t - start) / dur;
+    const shaped = rushEnd ? Math.pow(u, 1.7) : u;
+    return Math.min(count, Math.ceil(shaped * count));
+  }
+  function dropPixels(t, start, dur, index, count) {
+    if (count <= 0) return 0;
+    const slot = dur / count;
+    const age = t - (start + index * slot);
+    const span = Math.min(0.22, slot);
+    if (age >= span) return 0;
+    if (age <= 0) return 6;
+    const u = age / span;
+    const eased = u * u * (3 - 2 * u);
+    return Math.round((1 - eased) * 6);
+  }
+  function folkPose(actor, index, phaseT) {
+    const begin = index * 0.15;
+    const dur = 1.55;
+    if (phaseT < begin) return null;
+    const u = clamp01((phaseT - begin) / dur);
+    const eased = u * u * (3 - 2 * u);
+    const fromX = index % 2 === 0 ? -32 : STAGE_W + 32;
+    const arrived = u >= 1;
+    return {
+      x: arrived ? actor.x : Math.round(fromX + (actor.x - fromX) * eased),
+      y: actor.y,
+      facing: arrived ? actor.facing : fromX < actor.x ? "right" : "left",
+      mode: arrived ? "idle" : "walk",
+      animTime: arrived ? 0 : phaseT,
+      arrived
+    };
+  }
+  function drawPosedActor(ctx, atlases, actor, pose) {
+    const prevX = actor.x;
+    const prevY = actor.y;
+    const prevFacing = actor.facing;
+    const prevMode = actor.mode;
+    const prevAnim = actor.animTime;
+    actor.x = pose.x;
+    actor.y = pose.y;
+    actor.facing = pose.facing;
+    actor.mode = pose.mode;
+    actor.animTime = pose.animTime;
+    try {
+      const frame = actorRect(atlases.actors, actor, false);
+      softShadow(ctx, Math.round(actor.x), Math.round(actor.y) - 1, frame.w);
+      blit(ctx, atlases.actorImage, frame, Math.round(actor.x - frame.w / 2), Math.round(actor.y - frame.h));
+    } finally {
+      actor.x = prevX;
+      actor.y = prevY;
+      actor.facing = prevFacing;
+      actor.mode = prevMode;
+      actor.animTime = prevAnim;
+    }
+  }
+  function createAssemble(atlases, world, plaza) {
+    const grid = world.grid;
+    const buildings = plaza.props.filter((prop) => isBuildingFrame(prop.frame)).sort((a, b) => a.y - b.y);
+    const propPieces = [];
+    for (const prop of plaza.props) {
+      if (!isBuildingFrame(prop.frame)) propPieces.push({ kind: "prop", prop, y: prop.y });
+    }
+    for (const flyer of plaza.flyers) propPieces.push({ kind: "flyer", flyer, y: flyer.y });
+    propPieces.sort((a, b) => b.y - a.y);
+    const tileOrder = [];
+    for (let y = grid.length - 1; y >= 0; y -= 1) {
+      const row = grid[y];
+      if (!row) continue;
+      for (let x = 0; x < row.length; x += 1) tileOrder.push({ x, y });
+    }
+    const total = tileOrder.length + buildings.length + propPieces.length + world.actors.length + 1;
+    const groundAt = INTRO_SCAN;
+    const buildAt = groundAt + INTRO_GROUND;
+    const propsAt = buildAt + INTRO_BUILDINGS;
+    const folkAt = propsAt + INTRO_PROPS;
+    const uiAt = folkAt + INTRO_FOLK;
+    const totalTime = uiAt + INTRO_UI;
+    const hud = {
+      phase: "scan",
+      placed: 0,
+      total,
+      box: null,
+      scan: -1,
+      ui: false,
+      done: false,
+      mark: ""
+    };
+    const boxRect = { x: 0, y: 0, w: 0, h: 0 };
+    function setBox(x, y, w, h, mark) {
+      boxRect.x = x - 2;
+      boxRect.y = y - 2;
+      boxRect.w = w + 4;
+      boxRect.h = h + 4;
+      hud.box = boxRect;
+      hud.mark = mark;
+    }
+    function reset() {
+      world.time = 0;
+      world.chatClock = 0;
+      world.lastChatSeconds = 0;
+      world.rng = mulberry32(plaza.chatSeed);
+      for (let index = 0; index < world.actors.length; index += 1) {
+        const spec = plaza.actors[index];
+        const actor = world.actors[index];
+        if (!spec || !actor) continue;
+        const feet = feetOf(spec.home[0], spec.home[1]);
+        actor.x = feet.x;
+        actor.y = feet.y;
+        actor.mode = "idle";
+        actor.facing = spec.facing;
+        actor.path = [];
+        actor.idleLeft = spec.idle;
+        actor.chatLeft = 0;
+        actor.chatElapsed = 0;
+        actor.chatCooldown = 0;
+        actor.chatWith = null;
+        actor.emote = null;
+        actor.animTime = 0;
+        actor.blocked = 0;
+        actor.rng = mulberry32(hashSeed(spec.id));
+      }
+    }
+    function render(ctx, t) {
+      let phase = "scan";
+      if (t >= folkAt) phase = "folk";
+      else if (t >= propsAt) phase = "props";
+      else if (t >= buildAt) phase = "buildings";
+      else if (t >= groundAt) phase = "ground";
+      const tilesShown = shownCount(t, groundAt, INTRO_GROUND, tileOrder.length, true);
+      const buildingsShown = shownCount(t, buildAt, INTRO_BUILDINGS, buildings.length, false);
+      const propsShown = shownCount(t, propsAt, INTRO_PROPS, propPieces.length, false);
+      const poses = new Array(world.actors.length);
+      let folkArrived = 0;
+      let activeFolk = -1;
+      if (phase === "folk") {
+        const phaseT = t - folkAt;
+        for (let index = 0; index < world.actors.length; index += 1) {
+          const pose = folkPose(world.actors[index], index, phaseT);
+          poses[index] = pose;
+          if (!pose) continue;
+          if (pose.arrived) folkArrived += 1;
+          activeFolk = index;
+        }
+      }
+      hud.phase = phase;
+      hud.placed = tilesShown + buildingsShown + propsShown + folkArrived;
+      hud.total = total;
+      hud.box = null;
+      hud.scan = phase === "scan" ? (() => {
+        const raw = clamp01(t / INTRO_SCAN);
+        return raw * raw * (3 - 2 * raw);
+      })() : -1;
+      hud.ui = false;
+      hud.done = false;
+      hud.mark = phase;
+      ctx.imageSmoothingEnabled = false;
+      ctx.fillStyle = "#8fb8d8";
+      ctx.fillRect(0, 0, STAGE_W, STAGE_H);
+      for (let index = 0; index < tilesShown; index += 1) {
+        const cell = tileOrder[index];
+        if (!cell) continue;
+        const name = tileName(grid, cell.x, cell.y);
+        const frame = atlases.ground.frames[name] || atlases.ground.frames.grass;
+        if (!frame) continue;
+        blit(ctx, atlases.groundImage, frame, cell.x * TILE, SKY + cell.y * TILE);
+      }
+      const items = [];
+      for (let index = 0; index < buildingsShown; index += 1) {
+        const prop = buildings[index];
+        const drop = dropPixels(t, buildAt, INTRO_BUILDINGS, index, buildings.length);
+        items.push({
+          y: prop.y,
+          z: 0,
+          paint: () => {
+            ctx.save();
+            ctx.translate(0, drop);
+            paintProp(ctx, atlases, prop, 0);
+            ctx.restore();
+          }
+        });
+      }
+      for (let index = 0; index < propsShown; index += 1) {
+        const piece = propPieces[index];
+        if (!piece) continue;
+        const drop = dropPixels(t, propsAt, INTRO_PROPS, index, propPieces.length);
+        if (piece.kind === "prop") {
+          const prop = piece.prop;
+          items.push({
+            y: prop.y,
+            z: 0,
+            paint: () => {
+              ctx.save();
+              ctx.translate(0, drop);
+              paintProp(ctx, atlases, prop, 0);
+              ctx.restore();
+            }
+          });
+        } else {
+          const flyer = piece.flyer;
+          items.push({
+            y: flyer.y,
+            z: 0,
+            paint: () => {
+              ctx.save();
+              ctx.translate(0, drop);
+              paintFlyer(ctx, atlases, flyer, 0);
+              ctx.restore();
+            }
+          });
+        }
+      }
+      for (let index = 0; index < poses.length; index += 1) {
+        const pose = poses[index];
+        const actor = world.actors[index];
+        if (!pose || !actor) continue;
+        items.push({
+          y: pose.y,
+          z: 1,
+          paint: () => drawPosedActor(ctx, atlases, actor, pose)
+        });
+      }
+      items.sort((a, b) => a.y - b.y || a.z - b.z);
+      for (const item of items) item.paint();
+      if (phase === "ground" && tilesShown > 0) {
+        const latest = tileOrder[tilesShown - 1];
+        if (latest) setBox(0, SKY + latest.y * TILE, (latest.x + 1) * TILE, TILE, `ground:${latest.y}`);
+      } else if (phase === "buildings" && buildingsShown > 0) {
+        const index = buildingsShown - 1;
+        const prop = buildings[index];
+        const frame = prop ? propFrame(atlases, prop, 0) : null;
+        if (prop && frame) {
+          const drop = dropPixels(t, buildAt, INTRO_BUILDINGS, index, buildings.length);
+          setBox(prop.x, prop.y - frame.h + drop, frame.w, frame.h, `building:${index}`);
+        }
+      } else if (phase === "props" && propsShown > 0) {
+        const index = propsShown - 1;
+        const piece = propPieces[index];
+        const drop = dropPixels(t, propsAt, INTRO_PROPS, index, propPieces.length);
+        if (piece && piece.kind === "prop") {
+          const frame = propFrame(atlases, piece.prop, 0);
+          if (frame) setBox(piece.prop.x, piece.prop.y - frame.h + drop, frame.w, frame.h, `prop:${index}`);
+        } else if (piece && piece.flyer) {
+          const offset = flyerOffset(piece.flyer.kind, 0, piece.flyer.phase, piece.flyer.span, piece.flyer.speed);
+          const frame = atlases.props.frames[`${piece.flyer.kind}_${offset.frame}`];
+          if (frame) setBox(piece.flyer.x + offset.x, piece.flyer.y + offset.y + drop, frame.w, frame.h, `prop:${index}`);
+        }
+      } else if (phase === "folk" && activeFolk >= 0) {
+        const pose = poses[activeFolk];
+        const actor = world.actors[activeFolk];
+        const frameSize = atlases.actors.frame;
+        const fw = frameSize && frameSize[0] ? frameSize[0] : 32;
+        const fh = frameSize && frameSize[1] ? frameSize[1] : 32;
+        if (pose && actor) setBox(Math.round(pose.x - fw / 2), Math.round(pose.y - fh), fw, fh, `folk:${activeFolk}`);
+      }
+      return hud;
+    }
+    return { total, uiAt, totalTime, reset, render };
+  }
   async function startScene(options) {
     const atlases = await loadAtlases(options.atlasBase || "img/quillhaven/hero/");
     options.canvas.width = STAGE_W;
@@ -817,12 +1092,39 @@ var QuillhavenHero = (() => {
     const ctx = context;
     ctx.imageSmoothingEnabled = false;
     const still = () => options.isReduced();
+    const assemble = createAssemble(atlases, world, plaza);
+    let introOn = !still();
+    let introT = 0;
     let paused = document.hidden || document.visibilityState === "hidden";
     let onScreen = true;
     let raf = 0;
     let last = performance.now();
     let frames = 0;
     let sawBubble = false;
+    const chrome = {
+      phase: "done",
+      placed: assemble.total,
+      total: assemble.total,
+      box: null,
+      scan: -1,
+      ui: false,
+      done: true,
+      mark: "done"
+    };
+    function emit(state) {
+      if (typeof options.onAssemble === "function") options.onAssemble(state);
+    }
+    function emitChrome(phase) {
+      chrome.phase = phase;
+      chrome.placed = assemble.total;
+      chrome.total = assemble.total;
+      chrome.box = null;
+      chrome.scan = -1;
+      chrome.ui = phase === "ui";
+      chrome.done = phase === "done" || phase === "off";
+      chrome.mark = phase;
+      emit(chrome);
+    }
     const frameTimes = [];
     const snapshot = () => {
       var _a;
@@ -892,11 +1194,64 @@ var QuillhavenHero = (() => {
       frames += 1;
       publish(now);
     }
+    function paintIntro(now) {
+      const state = assemble.render(ctx, introT);
+      frames += 1;
+      publish(now);
+      emit(state);
+    }
+    function finishIntro() {
+      if (still()) {
+        introOn = false;
+        emitChrome("off");
+        return;
+      }
+      if (!introOn && introT >= assemble.totalTime) return;
+      introOn = false;
+      introT = assemble.totalTime;
+      paint(performance.now());
+      emitChrome("done");
+      if (!paused && !still()) {
+        last = performance.now();
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(loop);
+      }
+    }
+    function replayIntro() {
+      if (still()) return;
+      assemble.reset();
+      sawBubble = false;
+      introOn = true;
+      introT = 0;
+      cancelAnimationFrame(raf);
+      last = performance.now();
+      paintIntro(performance.now());
+      if (!paused) raf = requestAnimationFrame(loop);
+    }
     function loop(now) {
       if (paused || still()) return;
       raf = requestAnimationFrame(loop);
       const dt = Math.min(0.05, Math.max(0, (now - last) / 1e3));
       last = now;
+      if (introOn) {
+        introT += dt;
+        if (introT < assemble.uiAt) {
+          paintIntro(now);
+          return;
+        }
+        if (introT >= assemble.totalTime) {
+          introOn = false;
+          introT = assemble.totalTime;
+          tick(world, dt);
+          paint(now);
+          emitChrome("done");
+          return;
+        }
+        tick(world, dt);
+        paint(now);
+        emitChrome("ui");
+        return;
+      }
       tick(world, dt);
       paint(now);
     }
@@ -912,13 +1267,16 @@ var QuillhavenHero = (() => {
         raf = requestAnimationFrame(loop);
       }
     }
-    paint(performance.now());
+    if (introOn) paintIntro(performance.now());
+    else paint(performance.now());
     if (!still() && !paused) raf = requestAnimationFrame(loop);
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     media.addEventListener("change", () => {
       if (still()) {
+        introOn = false;
         cancelAnimationFrame(raf);
         paint(performance.now());
+        emitChrome("off");
         return;
       }
       if (!paused) {
@@ -953,7 +1311,9 @@ var QuillhavenHero = (() => {
         const hint = document.querySelector("#hint");
         if (hint instanceof HTMLElement) hint.hidden = true;
         paint(performance.now());
-      }
+      },
+      skipIntro: finishIntro,
+      replayIntro
     };
   }
   return __toCommonJS(entry_exports);
