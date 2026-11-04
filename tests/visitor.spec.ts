@@ -460,6 +460,9 @@ test("town square banner keeps the tagline and play control readable", async ({ 
     await expect(page.locator("footer")).toContainText("Romi");
     await expect(page.locator("footer")).toContainText("Franuka");
     await expect(page.locator("footer")).toContainText("MutterPixel");
+    await expect(page.locator(".town-square")).toHaveAttribute("data-assemble", "static");
+    await expect(page.getByRole("button", { name: "Skip" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Replay" })).toHaveCount(0);
     const layout = await page.evaluate(() => {
       const stage = document.querySelector(".town-square-stage");
       const copy = document.querySelector(".town-square-copy");
@@ -512,6 +515,73 @@ test.describe("town square walks when motion is allowed", () => {
       const frame = Number(canvas ? canvas.getAttribute("data-town-frame") : "0");
       return frame > Number(start);
     }, first || "0", { timeout: 10_000 });
+  });
+});
+
+test.describe("town square assembles in", () => {
+  test.use({ reducedMotion: "no-preference" });
+
+  test("skip ends on the badge and replay starts the sweep again", async ({ page }) => {
+    const errors = collectErrors(page);
+    for (const width of [1366, 481, 375]) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto("/worlds.html");
+      const skip = page.getByRole("button", { name: "Skip" });
+      await expect(skip).toBeVisible({ timeout: 10_000 });
+      await expect(page.locator(".town-assemble-readout")).toBeVisible();
+      await expect(page.getByRole("button", { name: "Replay" })).toBeHidden();
+      await expect(page.locator(".town-square")).toHaveAttribute("data-assemble", /scan|ground|buildings|props|folk|ui/);
+      await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-art", "atlases");
+      const during = await page.evaluate(() => {
+        const copy = document.querySelector(".town-square-copy");
+        const skipBtn = document.querySelector(".town-assemble-skip");
+        const stage = document.querySelector(".town-square-stage");
+        if (!copy || !skipBtn || !stage) return null;
+        const skipBox = skipBtn.getBoundingClientRect();
+        const stageBox = stage.getBoundingClientRect();
+        return {
+          opacity: getComputedStyle(copy).opacity,
+          skipInside:
+            skipBox.top >= stageBox.top - 1 &&
+            skipBox.left >= stageBox.left - 1 &&
+            skipBox.right <= stageBox.right + 1 &&
+            skipBox.bottom <= stageBox.bottom + 1,
+        };
+      });
+      expect(during, `intro chrome at ${width}`).not.toBeNull();
+      expect(during?.opacity, `tagline waits at ${width}`).toBe("0");
+      expect(during?.skipInside, `skip stays on the scene at ${width}`).toBe(true);
+      await skip.click();
+      await expect(page.locator(".town-square")).toHaveAttribute("data-assemble", "done");
+      const badge = page.locator(".town-assemble-badge");
+      await expect(badge).toBeVisible();
+      await expect(badge).toContainText("Quillhaven, built tile by tile");
+      await expect(page.getByRole("button", { name: "Replay" })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Skip" })).toBeHidden();
+      const ended = await page.evaluate(() => {
+        const copy = document.querySelector(".town-square-copy");
+        const badgeEl = document.querySelector(".town-assemble-badge");
+        const stage = document.querySelector(".town-square-stage");
+        if (!copy || !badgeEl || !stage) return null;
+        const badgeBox = badgeEl.getBoundingClientRect();
+        const stageBox = stage.getBoundingClientRect();
+        return {
+          opacity: getComputedStyle(copy).opacity,
+          badgeInside:
+            badgeBox.top >= stageBox.top - 1 &&
+            badgeBox.left >= stageBox.left - 1 &&
+            badgeBox.right <= stageBox.right + 1 &&
+            badgeBox.bottom <= stageBox.bottom + 1,
+        };
+      });
+      expect(ended?.opacity, `tagline returns at ${width}`).toBe("1");
+      expect(ended?.badgeInside, `badge stays on the scene at ${width}`).toBe(true);
+      await page.getByRole("button", { name: "Replay" }).click();
+      await expect(page.locator(".town-square")).toHaveAttribute("data-assemble", "scan");
+      await expect(page.locator(".town-assemble-readout")).toHaveText("Scanning...");
+      await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-town-motion", "live");
+    }
+    expect(unexpected(errors, false)).toEqual([]);
   });
 });
 

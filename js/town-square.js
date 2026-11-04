@@ -16,6 +16,22 @@
 
   var reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var reduced = reducedQuery.matches;
+  var section = stage.closest(".town-square");
+  var sceneApi = null;
+  var hud = null;
+
+  if (section && reduced) section.setAttribute("data-assemble", "static");
+  if (section && !reduced && window.TownAssemble) {
+    section.classList.add("is-assembling");
+    hud = window.TownAssemble.attach(section, {
+      onSkip: function () {
+        if (sceneApi && sceneApi.skipIntro) sceneApi.skipIntro();
+      },
+      onReplay: function () {
+        if (sceneApi && sceneApi.replayIntro) sceneApi.replayIntro();
+      }
+    });
+  }
   var onScreen = false;
   var raf = 0;
   var elapsed = 0;
@@ -387,6 +403,18 @@
   if (reducedQuery.addEventListener) {
     reducedQuery.addEventListener("change", function () {
       reduced = reducedQuery.matches;
+      if (reduced && hud) {
+        hud.sync({
+          phase: "off",
+          placed: 0,
+          total: 0,
+          box: null,
+          scan: -1,
+          ui: false,
+          done: true,
+          mark: "off"
+        });
+      }
       if (retired || handingOff) return;
       if (reduced) {
         stop();
@@ -421,6 +449,9 @@
       testMode: false,
       getScale: function () { return 1; },
       isReduced: function () { return reducedQuery.matches; },
+      onAssemble: function (state) {
+        if (hud) hud.sync(state);
+      },
       onFrame: function (_world, paused, frameReduced) {
         heroFrames += 1;
         canvas.setAttribute("data-town-frame", String(heroFrames));
@@ -428,10 +459,17 @@
         canvas.setAttribute("data-art", "atlases");
         canvas.setAttribute("data-art-used", "atlases");
       }
-    }).then(function () {
+    }).then(function (api) {
+      sceneApi = api;
       retired = true;
       handingOff = false;
     }).catch(function () {
+      if (hud) hud.destroy();
+      hud = null;
+      if (section) {
+        section.classList.remove("is-assembling", "is-ui");
+        section.setAttribute("data-assemble", "static");
+      }
       useGreybox();
     });
   }
