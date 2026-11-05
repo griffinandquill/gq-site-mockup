@@ -1096,40 +1096,36 @@ async function forceVisited(page: Page, selector: string) {
   });
 }
 
-test("every quillhaven demo link opens play.griffinandquill.com in a new tab", async ({ page }) => {
-  await page.route("https://play.griffinandquill.com/**", (route) => route.abort());
-  for (const width of [1280, 768, 390, 375]) {
+test("quillhaven states the December 2 demo and keeps the town scene in frame", async ({ page }) => {
+  for (const width of [1366, 768, 481, 375]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto(`/worlds.html?view=${width}#play`);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("PROVE IT!");
+    await expect(page.getByText("December 2, 2026").first()).toBeVisible();
+    await expect(page.getByText("TypeScript and Phaser 4").first()).toBeVisible();
+    await expect(page.getByText("demo is live")).toHaveCount(0);
+    await expect(page.getByText("Gryff is the mascot").first()).toBeVisible();
     const stage = page.locator("[data-play-stage]");
     await expect(stage).toBeVisible();
     await expect(stage.locator("iframe")).toHaveCount(0);
     const layout = await stage.evaluate((el) => {
       const stageBox = el.getBoundingClientRect();
-      const button = el.querySelector(".play-poster .btn");
-      if (!button) throw new Error("missing play button");
-      const btn = button.getBoundingClientRect();
       const npcs = Array.from(el.querySelectorAll(".play-panorama .qh-npc")).map((node) => {
         const box = node.getBoundingClientRect();
         return { top: box.top, right: box.right, bottom: box.bottom, left: box.left, width: box.width, height: box.height };
       });
       return {
         stage: { top: stageBox.top, right: stageBox.right, bottom: stageBox.bottom, left: stageBox.left, height: stageBox.height },
-        btn: { top: btn.top, right: btn.right, bottom: btn.bottom, left: btn.left },
         npcs,
       };
     });
-    expect(layout.npcs, `poster cast at ${width}`).toHaveLength(7);
-    expect(layout.btn.top - layout.stage.top, `play button top at ${width}`).toBeLessThan(layout.stage.height * 0.22);
-    expect(layout.btn.bottom, `play button stays high at ${width}`).toBeLessThan(layout.stage.top + layout.stage.height * 0.45);
+    expect(layout.npcs, `town cast at ${width}`).toHaveLength(7);
     for (const npc of layout.npcs) {
-      expect(npc.height, `poster sprite height at ${width}`).toBeGreaterThan(10);
-      expect(npc.top, `poster sprite top at ${width}`).toBeGreaterThanOrEqual(layout.stage.top - 1);
-      expect(npc.bottom, `poster sprite bottom at ${width}`).toBeLessThanOrEqual(layout.stage.bottom + 1);
-      expect(npc.left, `poster sprite left at ${width}`).toBeGreaterThanOrEqual(layout.stage.left - 1);
-      expect(npc.right, `poster sprite right at ${width}`).toBeLessThanOrEqual(layout.stage.right + 1);
-      const overlaps = npc.left < layout.btn.right && npc.right > layout.btn.left && npc.top < layout.btn.bottom && npc.bottom > layout.btn.top;
-      expect(overlaps, `play button covers a character at ${width}`).toBe(false);
+      expect(npc.height, `town sprite height at ${width}`).toBeGreaterThan(10);
+      expect(npc.top, `town sprite top at ${width}`).toBeGreaterThanOrEqual(layout.stage.top - 1);
+      expect(npc.bottom, `town sprite bottom at ${width}`).toBeLessThanOrEqual(layout.stage.bottom + 1);
+      expect(npc.left, `town sprite left at ${width}`).toBeGreaterThanOrEqual(layout.stage.left - 1);
+      expect(npc.right, `town sprite right at ${width}`).toBeLessThanOrEqual(layout.stage.right + 1);
     }
     const ratio = await stage.evaluate((el) => {
       const box = el.getBoundingClientRect();
@@ -1140,18 +1136,37 @@ test("every quillhaven demo link opens play.griffinandquill.com in a new tab", a
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
     expect(overflow, `horizontal overflow at ${width}`).toBeLessThanOrEqual(1);
-    for (const link of [
-      page.getByRole("link", { name: "Open full screen" }),
-      stage.locator("[data-play-load]"),
-      page.locator("main a", { hasText: "Play the demo" }).first(),
-    ]) {
-      await expect(link).toHaveAttribute("href", "https://play.griffinandquill.com");
-      await expect(link).toHaveAttribute("target", "_blank");
-      await expect(link).toHaveAttribute("rel", /noopener/);
-    }
-    await expect(page.getByText("It plays best on a computer or tablet with a keyboard.")).toBeVisible();
-    await expect(stage.locator("iframe")).toHaveCount(0);
   }
+});
+
+test("plaza doors open Quillhaven, Forge, and the Command Center", async ({ page }) => {
+  for (const width of [1366, 768, 481, 375]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/index.html");
+    const doors = page.locator(".plaza-doors");
+    const academy = doors.getByRole("link", { name: "Academy Quillhaven" });
+    const forge = doors.getByRole("link", { name: "Forge stall Forge" });
+    const hall = doors.getByRole("link", { name: "Town Hall Command Center" });
+    await expect(academy).toBeVisible();
+    await expect(forge).toBeVisible();
+    await expect(hall).toBeVisible();
+    await expect(academy).toHaveAttribute("href", "worlds.html");
+    await expect(forge).toHaveAttribute("href", "forge.html");
+    await expect(hall).toHaveAttribute("href", "command.html");
+    await academy.focus();
+    await expect(page.locator("#gryff-words")).toContainText("Academy");
+    await forge.focus();
+    await expect(page.locator("#gryff-words")).toContainText("Forge");
+    await hall.focus();
+    await expect(page.locator("#gryff-words")).toContainText("Town Hall");
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, `home overflow at ${width}`).toBeLessThanOrEqual(1);
+  }
+  await page.locator(".plaza-doors").getByRole("link", { name: "Academy Quillhaven" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/worlds\.html$/);
 });
 
 test("visited current nav item keeps its label on the desktop bar", async ({ page }) => {
@@ -1188,7 +1203,7 @@ test("a bad path returns the 404 page", async ({ page }) => {
   const errors = collectErrors(page);
   const response = await page.goto("/not-a-page");
   expect(response?.status()).toBe(404);
-  await expect(page).toHaveTitle("Griffin & Quill | Where learning becomes an adventure");
+  await expect(page).toHaveTitle("Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("This page is not on the site.");
   await expect(page.locator(".mockup-bar")).toHaveCount(0);
   await expect(page.locator('meta[name="robots"]')).toHaveCount(0);

@@ -4,7 +4,7 @@ Team rules for the Griffin & Quill site. They do not replace the README or `.cur
 
 ## Kid-safety first
 
-Public copy says Quillhaven collects only what teachers need, never sells it, and has no ads or trackers. Do not add accounts, names, chat, analytics, cookies, or stored student data to this site in order to ship a feature.
+Public copy says only adults create accounts, students get system-generated usernames with no personal information, and written answers stay in the adult’s account and never go to AI. Quillhaven does not sell personal information and has no ads or trackers. Do not add accounts, names, chat, analytics, cookies, or stored student data to this marketing site in order to ship a feature.
 
 The privacy and terms pages are drafts pending attorney review. The privacy page says an attorney still has to review them before any game is offered to children, including children under 13. This rule does not close that review.
 
@@ -30,11 +30,11 @@ Fixes to the same build are replies on that build. After two fix rounds, stop an
 
 The final Griffin & Quill logo (Option 4: navy, cream gryphon, gold quill) is in the site. Use the repo's logo and icon files; do not redraw or recolor them. Quillhaven's pixel-art logo is still coming, so keep its slot on the Quillhaven page.
 
-The mascot gryphon is Tahne, founder of Quillhaven. Other characters: Winston Wolf, Merlin (wizard portal keeper), Professor Bramble (highland cow librarian), and the student kids Brittany, Ruth and Rudy. Character and building sprites come from the Quillhaven Pixel Assets in Drive; render them with `image-rendering: pixelated` at integer scales, and align sprites by their opaque bottom edge, not their canvas.
+Gryff is the company mascot. Tahne is a quest-giving character in Quillhaven, not the founding gryphon. Other characters: Winston Wolf, Merlin (wizard portal keeper), Professor Bramble (highland cow librarian), and the student kids Brittany, Ruth and Rudy. Character and building sprites come from the Quillhaven Pixel Assets in Drive; render them with `image-rendering: pixelated` at integer scales, and align sprites by their opaque bottom edge, not their canvas. Use packed `hero-*` sheets only. Do not add raw pack files or their file names.
 
 AI art that Griffin & Quill will ship needs a hand-edited pass first. Do not invent testimonials, stats, or reviews.
 
-Company line: "Where learning becomes an adventure." Use "Write your own legend. Learn it. Live it. PROVE IT!" only for Quillhaven, not as the company tagline. "An Edtech Company" is a descriptor only.
+Company line: "Write your own legend. Learn it. Live it. PROVE IT!" "An Edtech Company" is a descriptor only. Do not name a school, district, or town in public copy. Do not mention patents.
 
 ## Stack
 
