@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Quillhaven is Griffin &amp; Quill’s fantasy town, where knowledge is power and every street holds a new adventure.">
+  <meta name="description" content="Quillhaven is gamified academic skill practice. The public demo is December 2, 2026. The game is being rebuilt in TypeScript and Phaser 4.">
   <meta name="theme-color" content="#1F2A44">
   <title>Quillhaven | Griffin &amp; Quill</title>
   <meta property="og:title" content="Quillhaven | Griffin &amp; Quill">
-  <meta property="og:description" content="Quillhaven is Griffin &amp; Quill’s fantasy town, where knowledge is power and every street holds a new adventure.">
+  <meta property="og:description" content="Quillhaven is gamified academic skill practice. The public demo is December 2, 2026. The game is being rebuilt in TypeScript and Phaser 4.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.griffinandquill.com/worlds.html">
   <link rel="canonical" href="https://www.griffinandquill.com/worlds.html">
@@ -47,6 +47,8 @@
             <li><a href="tutoring.html">Tutoring</a></li>
             <li><a href="store.html">Store</a></li>
             <li><a href="worlds.html" aria-current="page">Quillhaven</a></li>
+            <li><a href="forge.html">Forge</a></li>
+            <li><a href="command.html">Command Center</a></li>
             <li><a href="schools.html">Schools</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="faq.html">FAQ</a></li>
@@ -76,23 +78,23 @@
     <div class="container page-hero">
       <p class="eyebrow">Quillhaven</p>
       <div>
-          <h1>Quillhaven</h1>
-          <p class="town-banner">Where knowledge is power and every street holds a new adventure.</p>
-          <p class="lede">A cozy pixel fantasy town from Griffin &amp; Quill. You walk in, you learn something that matters on that street, and you prove you can carry it back out.</p>
+          <h1>Write your own legend. Learn it. Live it. <span class="tagline-mark">PROVE IT!</span></h1>
+          <p class="lede">Quillhaven is gamified academic skill practice. The public demo is December 2, 2026. The game is being rebuilt in TypeScript and Phaser 4. This is not a finished release.</p>
+          <p>One login and one subscription also covers <a href="forge.html">Quillhaven Forge</a> and the <a href="command.html">Command Center</a>. Gryff is the mascot. Tahne gives quests in town.</p>
           <div class="cluster">
-            <a class="btn btn-primary" href="https://play.griffinandquill.com" target="_blank" rel="noopener">Play the demo</a>
-            <a class="btn btn-secondary" href="schools.html">Schools and districts</a>
+            <a class="btn btn-primary" href="#waitlist">Join the waitlist</a>
+            <a class="btn btn-secondary" href="index.html">Back to the plaza</a>
         </div>
       </div>
     </div>
 
     <section class="section" id="play" aria-labelledby="play-title">
       <div class="container">
-        <h2 id="play-title">Play the demo</h2>
+        <h2 id="play-title">The town, while the game is rebuilt</h2>
         <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">The Quillhaven demo is live. The game stays unloaded until you press play. Questions about the demo: <a href="mailto:support@griffinandquill.com">support@griffinandquill.com</a>.</p>
+        <p class="section-intro">This dusk picture shows the town while the rebuild continues. The public demo is December 2, 2026, in TypeScript and Phaser 4. Questions: <a href="mailto:support@griffinandquill.com">support@griffinandquill.com</a>.</p>
         <div class="play-stage" data-play-stage>
-          <a class="play-poster" data-play-load href="https://play.griffinandquill.com" target="_blank" rel="noopener" aria-label="Play the demo (opens full screen in a new tab)">
+          <div class="play-poster town-diorama">
             <span class="play-fit" aria-hidden="true">
               <span class="qh-panorama play-panorama" data-cast>
                 <img class="qh-layer" src="img/quillhaven/sky.png" width="1280" height="512" alt="">
@@ -125,11 +127,8 @@
                 </div>
               </span>
             </span>
-            <span class="btn btn-primary">Play the demo</span>
-          </a>
+          </div>
         </div>
-        <p class="play-open"><a href="https://play.griffinandquill.com" target="_blank" rel="noopener">Open full screen</a></p>
-        <p class="note">It plays best on a computer or tablet with a keyboard.</p>
       </div>
     </section>
 
@@ -160,12 +159,17 @@
       <div class="container">
         <h2 id="tahne-title">The town</h2>
         <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">Tahne founded the town. Merlin keeps the Academy portals. Professor Bramble keeps the Library. Winston Wolf keeps the Map Room.</p>
+        <p class="section-intro">Gryff is the mascot. Tahne is a quest-giving neighbor, not the founding gryphon. Merlin keeps the Academy portals. Professor Bramble keeps the Library. Winston Wolf keeps the Map Room.</p>
         <div class="card-grid cols-4">
           <article class="card">
-            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-tahne" src="img/characters/tahne.png" width="128" height="128" alt="Tahne, the gryphon who founded Quillhaven"><span class="sprite-ground"></span></div>
+            <div class="sprite-stand"><img class="logo logo-hero" src="assets/logo-icon.svg" width="160" height="127" alt="Gryff, the Griffin and Quill mascot, a cream gryphon with a gold quill"></div>
+            <h3>Gryff</h3>
+            <p>Gryff is the Griffin &amp; Quill mascot. On the home plaza, Gryff points to the Academy, the Forge stall, and Town Hall.</p>
+          </article>
+          <article class="card">
+            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-tahne" src="img/characters/tahne.png" width="128" height="128" alt="Tahne, a quest-giving gryphon in Quillhaven"><span class="sprite-ground"></span></div>
             <h3>Tahne</h3>
-            <p>Tahne is the gryphon who founded Quillhaven. He is wise, brave, and encouraging: a guide and a guardian of knowledge, not a monster. He holds a quill, and he greets new heroes in the town plaza.</p>
+            <p>Tahne gives quests in town. Tahne is wise, brave, and encouraging, and holds a quill.</p>
           </article>
           <article class="card">
             <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-merlin" src="img/characters/merlin.png" width="128" height="128" alt="Merlin, the portal keeper at Quillhaven Academy"><span class="sprite-ground"></span></div>
@@ -190,9 +194,9 @@
       <div class="container">
         <h2 id="academy-title">Quillhaven Academy</h2>
         <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">Quillhaven Academy sits at the heart of town. Four subject portals each open a hub world. The games live inside the hub.</p>
+        <p class="section-intro">Quillhaven Academy sits at the heart of town. Four subject portals each open a hub. The public demo on December 2, 2026 starts with U.S. History. The game is being rebuilt in TypeScript and Phaser 4.</p>
         <div class="card-grid cols-4">
-          <article class="card"><p class="stamp">In development</p><h3>History &amp; Social Studies</h3><p>The first Quillhaven demo is in development, with U.S. History as its first content pack.</p></article>
+          <article class="card"><p class="stamp">December 2, 2026</p><h3>History &amp; Social Studies</h3><p>U.S. History is the first content pack for the December 2, 2026 demo.</p></article>
           <article class="card"><p class="stamp">Coming soon</p><h3>Science</h3><p>This hub is not open yet.</p></article>
           <article class="card"><p class="stamp">Coming soon</p><h3>Math</h3><p>This hub is not open yet.</p></article>
           <article class="card"><p class="stamp">Coming soon</p><h3>English/ELA</h3><p>This hub is not open yet.</p></article>
@@ -226,12 +230,12 @@
       <div class="container">
         <h2 id="prove-title">Play and prove</h2>
         <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">A game lives inside its subject hub. The first Quillhaven demo is in development, with U.S. History as its first content pack.</p>
+        <p class="section-intro">A game lives inside its subject hub. The December 2, 2026 demo is the public date. The rebuild is TypeScript and Phaser 4.</p>
         <div class="grid-3">
           <article class="card">
             <p class="stamp">History &amp; Social Studies</p>
             <h3>Mending the Charter</h3>
-            <p>In development as the first Quillhaven demo, with U.S. History as its first content pack.</p>
+            <p>U.S. History is the first content pack planned for the December 2, 2026 demo.</p>
           </article>
         </div>
       </div>
@@ -241,7 +245,7 @@
       <div class="container">
         <div class="callout">
           <h2 id="school-note-title">A note for schools</h2>
-          <p>Quillhaven is not licensed yet. If you are a school or a district, tell us what you would need. We will not sell a license from this page.</p>
+          <p>Quillhaven, Forge, and the Command Center are not licensed yet. A future school subscription would cover all three. We will not sell a license from this page.</p>
           <p><a class="btn btn-on-dark" href="schools.html">Schools and districts</a></p>
         </div>
       </div>
@@ -251,7 +255,7 @@
       <div class="container">
         <div class="form-card form-wrap">
           <h2 id="wait-title">A note when there is more</h2>
-          <p>The demo is already on this page. Leave an adult email if you want a note when there is more of Quillhaven to try. Use a parent, teacher, or school address, not a child’s.</p>
+          <p>The public demo is December 2, 2026. Leave an adult email if you want a note when it is ready. Use a parent, teacher, or school address, not a child’s.</p>
           <form data-form="hello" method="POST" action="#">
             <p class="thanks" data-thanks tabindex="-1" hidden>Thanks. Your note is on its way.</p>
             <p class="form-error" data-form-error tabindex="-1" hidden>That note did not send. Write to <a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a>.</p>
@@ -287,7 +291,7 @@
           <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark-name">Griffin &amp; Quill</span>
         </a>
-        <p>Griffin &amp; Quill LLC is a South Carolina edtech company that teaches, grows, and maintains students’ academic skills across all subjects. Where learning becomes an adventure.</p>
+        <p>Griffin &amp; Quill LLC is a South Carolina edtech company. One login and one subscription covers Quillhaven, Quillhaven Forge, and the Command Center. Tutoring and the Teachers Pay Teachers store sit beside that subscription. Write your own legend. Learn it. Live it. PROVE IT!</p>
         <p><a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a></p>
       </div>
       <div>
@@ -297,7 +301,9 @@
               <li><a href="tutoring.html">Tutoring</a></li>
               <li><a href="store.html">Store</a></li>
               <li><a href="worlds.html" aria-current="page">Quillhaven</a></li>
-              <li><a href="schools.html">Schools</a></li>
+              <li><a href="forge.html">Forge</a></li>
+            <li><a href="command.html">Command Center</a></li>
+            <li><a href="schools.html">Schools</a></li>
         </ul>
       </div>
       <div>

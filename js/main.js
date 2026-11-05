@@ -150,7 +150,7 @@
     var slot = document.querySelector(".tagline-type");
     if (!slot || reduceMotion) return;
     document.documentElement.classList.add("motion");
-    var full = "Where learning becomes an adventure.";
+    var full = "Write your own legend. Learn it. Live it. PROVE IT!";
     var i = 0;
     function tick() {
       i += 1;

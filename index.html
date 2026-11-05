@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Griffin &amp; Quill teaches, grows, and maintains students’ academic skills across subjects. Where learning becomes an adventure.">
+  <meta name="description" content="Griffin &amp; Quill. Write your own legend. Learn it. Live it. PROVE IT! One subscription covers Quillhaven, Quillhaven Forge, and the Command Center.">
   <meta name="theme-color" content="#1F2A44">
-  <title>Griffin &amp; Quill | Where learning becomes an adventure</title>
-  <meta property="og:title" content="Griffin &amp; Quill | Where learning becomes an adventure">
-  <meta property="og:description" content="Griffin &amp; Quill teaches, grows, and maintains students’ academic skills across subjects. Where learning becomes an adventure.">
+  <title>Griffin &amp; Quill | Write your own legend. Learn it. Live it. PROVE IT!</title>
+  <meta property="og:title" content="Griffin &amp; Quill | Write your own legend. Learn it. Live it. PROVE IT!">
+  <meta property="og:description" content="Griffin &amp; Quill. Write your own legend. Learn it. Live it. PROVE IT! One subscription covers Quillhaven, Quillhaven Forge, and the Command Center.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.griffinandquill.com/">
   <link rel="canonical" href="https://www.griffinandquill.com/">
@@ -47,6 +47,8 @@
             <li><a href="tutoring.html">Tutoring</a></li>
             <li><a href="store.html">Store</a></li>
             <li><a href="worlds.html">Quillhaven</a></li>
+            <li><a href="forge.html">Forge</a></li>
+            <li><a href="command.html">Command Center</a></li>
             <li><a href="schools.html">Schools</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="faq.html">FAQ</a></li>
@@ -61,52 +63,59 @@
       <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. A form on this page needs JavaScript to send, or you can email the address in the footer.</p>
     </noscript>
 
-    <div class="cover">
-      <div class="container cover-frame">
-        <div class="hero-grid">
-          <div>
-            <img class="logo logo-hero" src="assets/logo-hero.svg" alt="Griffin and Quill logo" width="400" height="318">
-          </div>
-          <div>
-            <p class="eyebrow">Griffin &amp; Quill LLC · An Edtech Company</p>
-            <h1>
-              <span class="tagline-static">
-                <span class="h1-lead">Where learning becomes an adventure.</span>
-              </span>
-              <span class="tagline-type" aria-hidden="true"></span>
-            </h1>
-            <p class="lede">Griffin &amp; Quill teaches, grows and maintains students’ academic skills across all subjects. Families and homeschool co-ops can start with tutoring, the store, or Quillhaven.</p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="tutoring.html#book">Book tutoring</a>
-              <a class="btn btn-secondary" href="store.html">Visit the store</a>
-              <a class="btn btn-secondary" href="worlds.html">Explore Quillhaven</a>
-            </div>
-          </div>
-        </div>
+    <section class="living-plaza" data-plaza aria-labelledby="home-title">
+      <div class="living-plaza-stage">
+        <canvas class="town-square-canvas" width="384" height="216" aria-hidden="true" data-art="greybox"></canvas>
+        <nav class="plaza-doors" aria-label="Plaza buildings">
+          <a class="plaza-door door-academy" href="worlds.html" data-gryff="The Academy is Quillhaven, gamified practice for academic skills. The public demo is December 2, 2026. The game is being rebuilt in TypeScript and Phaser 4.">
+            <span class="plaza-door-kicker">Academy</span>
+            <span class="plaza-door-name">Quillhaven</span>
+          </a>
+          <a class="plaza-door door-forge" href="forge.html" data-gryff="The stall is Quillhaven Forge, a simulation maker. You pick a topic and a skill, and an adult approves the result. The first version is planned for spring 2027.">
+            <span class="plaza-door-kicker">Forge stall</span>
+            <span class="plaza-door-name">Forge</span>
+          </a>
+          <a class="plaza-door door-hall" href="command.html" data-gryff="Town Hall is the Command Center, a teacher and parent data hub. It is coming soon, under the same subscription. This page does not collect student data.">
+            <span class="plaza-door-kicker">Town Hall</span>
+            <span class="plaza-door-name">Command Center</span>
+          </a>
+        </nav>
       </div>
-    </div>
+      <div class="living-plaza-copy">
+        <img class="logo logo-hero" src="assets/logo-hero.svg" alt="Gryff, the Griffin and Quill mascot, a cream gryphon with a gold quill" width="400" height="318">
+        <p class="eyebrow">Gryff · the mascot</p>
+        <h1 id="home-title">Write your own legend. Learn it. Live it. <span class="town-square-prove">PROVE IT!</span></h1>
+        <p class="gryff-line" id="gryff-line"><span class="visually-hidden">Gryff says: </span><span id="gryff-words">Choose a building. The Academy is Quillhaven, the stall is the Forge, and Town Hall is the Command Center. One login and one subscription covers all three.</span></p>
+      </div>
+      <div class="living-plaza-actions">
+        <a class="btn btn-primary" href="tutoring.html#book">Book tutoring</a>
+        <a class="btn btn-secondary" href="store.html">Visit the store</a>
+      </div>
+    </section>
 
     <section class="section" aria-labelledby="do-title">
       <div class="container">
         <h2 id="do-title">What we do</h2>
         <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">Three ways to start. You do not have to use all of them. Each one asks the student to learn the idea and then prove it.</p>
+        <p class="section-intro">One login and one subscription covers three products. Tutoring and the Teachers Pay Teachers store sit beside that subscription.</p>
         <div class="grid-3">
           <article class="card">
-            <h3>Tutoring</h3>
-            <p>One-to-one online tutoring at a flat $50 per hour. Sessions teach, grow, and maintain the academic skills a student needs in the courses they are taking. Weekday evenings and weekend afternoons.</p>
-            <p><a class="btn btn-secondary" href="tutoring.html">See tutoring</a></p>
-          </article>
-          <article class="card">
-            <h3>Store</h3>
-            <p>Units and simulations for homeschool families, co-ops, and teachers. Griffin &amp; Quill is a Teachers Pay Teachers Exclusive Seller, so checkout happens on TPT.</p>
-            <p><a class="btn btn-secondary" href="store.html">Visit the store</a></p>
-          </article>
-          <article class="card">
-            <p class="stamp">Demo</p>
+            <p class="stamp">Demo December 2, 2026</p>
             <h3>Quillhaven</h3>
-            <p>A subject-neutral dungeon crawler RPG that teaches, trains and tests academic skills. Go on dungeon runs to learn and practice, unlock pages of the Great Book, and face each page’s Chapter Guardian to earn a medal. Write your own legend. Learn it. Live it. PROVE IT! The first demo is in development.</p>
-            <p><a class="btn btn-secondary" href="https://play.griffinandquill.com" target="_blank" rel="noopener">Play the demo</a></p>
+            <p>Gamified academic skill practice. The public demo is December 2, 2026. The game is being rebuilt in TypeScript and Phaser 4.</p>
+            <p><a class="btn btn-secondary" href="worlds.html">Enter Quillhaven</a></p>
+          </article>
+          <article class="card">
+            <p class="stamp">Spring 2027</p>
+            <h3>Quillhaven Forge</h3>
+            <p>A simulation maker for any subject. Pick a topic and a skill. An adult approves the result. Quests are one thing it can make.</p>
+            <p><a class="btn btn-secondary" href="forge.html">See the Forge</a></p>
+          </article>
+          <article class="card">
+            <p class="stamp">Coming soon</p>
+            <h3>Command Center</h3>
+            <p>A teacher and parent data hub, included in the same subscription. It is not open yet. This site does not collect student data.</p>
+            <p><a class="btn btn-secondary" href="command.html">See the sample</a></p>
           </article>
         </div>
       </div>
@@ -116,7 +125,7 @@
       <div class="container">
         <h2 id="how-title">How it works</h2>
         <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">The same habit shows up in a tutoring session, a lesson, and a run through Quillhaven: learn it, practice it, then prove it.</p>
+        <p class="section-intro">The same habit shows up in a tutoring session, a lesson, and a run through Quillhaven: learn it, practice it, then prove it. Forge and the Command Center use that habit too.</p>
         <ol class="steps grid-3">
           <li class="card">
             <p class="step-num" aria-hidden="true">1</p>
@@ -148,7 +157,7 @@
           <article class="card"><h3>Homeschoolers</h3><p>Lessons you can teach at the table, plus tutoring when a course needs another voice.</p></article>
           <article class="card"><h3>Parents</h3><p>A tutor and a plan for the academic skills behind the courses your child is already taking.</p></article>
           <article class="card"><h3>Teachers</h3><p>Units and simulations in the store, built by a teacher who is in a classroom too. Checkout is on Teachers Pay Teachers.</p></article>
-          <article class="card"><h3>Schools</h3><p>School and district licenses for Quillhaven and Griffin &amp; Quill units, and workshops for teachers. <a href="schools.html">Read the schools page</a>.</p></article>
+          <article class="card"><h3>Schools</h3><p>Future licenses would cover Quillhaven, Forge, and the Command Center under the same subscription. They are not for sale yet. <a href="schools.html">Read the schools page</a>.</p></article>
         </div>
       </div>
     </section>
@@ -157,8 +166,8 @@
       <div class="container">
         <h2 id="cred-title">Built by a South Carolina teacher</h2>
         <div class="rule" aria-hidden="true"><span></span></div>
-        <p>Ryan Mayer is a South Carolina licensed, ESOL-licensed teacher in the Beaufort County School District. He previously taught with the New York City Department of Education, with more than seven years in the classroom.</p>
-        <p>Griffin &amp; Quill LLC is his South Carolina company. It teaches, grows, and maintains students’ academic skills across all subjects through tutoring, the store, and Quillhaven, around one habit: learn it, then prove it.</p>
+        <p>Ryan Mayer is a South Carolina licensed, ESOL-licensed teacher with more than seven years in the classroom and a Master’s in History Education. He teaches U.S. History, Government, Economics, and AP Human Geography.</p>
+        <p>Griffin &amp; Quill LLC is his South Carolina company. One login and one subscription covers Quillhaven, Quillhaven Forge, and the Command Center. Tutoring and the store sit beside that. The habit is the same: learn it, then prove it.</p>
         <p>The work is meant to sit beside the standards he teaches. When a card names a standard, that standard is marked as a sample until the real one is confirmed.</p>
       </div>
     </section>
@@ -167,7 +176,7 @@
       <div class="container">
         <div class="form-card form-wrap">
           <h2 id="news-title">Notes from the studio</h2>
-          <p>A short note when tutoring spots, new store units, or the Quillhaven demo are ready. This list is for adults. Students should ask a parent.</p>
+          <p>A short note when tutoring spots, new store units, or the December 2, 2026 Quillhaven demo are ready. This list is for adults. Students should ask a parent.</p>
           <form data-form="hello" method="POST" action="#">
             <p class="thanks" data-thanks tabindex="-1" hidden>Thanks. Your note is on its way.</p>
             <p class="form-error" data-form-error tabindex="-1" hidden>That note did not send. Write to <a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a>.</p>
@@ -203,7 +212,7 @@
           <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark-name">Griffin &amp; Quill</span>
         </a>
-        <p>Griffin &amp; Quill LLC is a South Carolina edtech company that teaches, grows, and maintains students’ academic skills across all subjects. Where learning becomes an adventure.</p>
+        <p>Griffin &amp; Quill LLC is a South Carolina edtech company. One login and one subscription covers Quillhaven, Quillhaven Forge, and the Command Center. Tutoring and the Teachers Pay Teachers store sit beside that subscription. Write your own legend. Learn it. Live it. PROVE IT!</p>
         <p><a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a></p>
       </div>
       <div>
@@ -213,7 +222,9 @@
               <li><a href="tutoring.html">Tutoring</a></li>
               <li><a href="store.html">Store</a></li>
               <li><a href="worlds.html">Quillhaven</a></li>
-              <li><a href="schools.html">Schools</a></li>
+              <li><a href="forge.html">Forge</a></li>
+            <li><a href="command.html">Command Center</a></li>
+            <li><a href="schools.html">Schools</a></li>
         </ul>
       </div>
       <div>
@@ -234,10 +245,13 @@
       </div>
     </div>
     <div class="container">
-      <p class="fineprint">© 2026 Griffin &amp; Quill LLC.</p>
+      <p class="fineprint">Town square art: townsfolk, houses, stalls, and plaza props by Gif, Noiracide, and Romi. Emotes by Franuka / @franuka_art. Academy by MutterPixel Studio. © 2026 Griffin &amp; Quill LLC.</p>
     </div>
   </footer>
   <script src="js/form-config.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/hero-scene.js"></script>
+  <script src="js/town-square.js"></script>
+  <script src="js/plaza.js"></script>
 </body>
 </html>

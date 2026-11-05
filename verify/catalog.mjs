@@ -8,12 +8,12 @@ export const copy = {
 export const pages = [
   {
     file: "index.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
+    title: "Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!",
     nav: "Home",
   },
   {
     file: "tutoring.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
+    title: "Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!",
     nav: "Tutoring",
   },
   {
@@ -33,38 +33,48 @@ export const pages = [
     nav: "Quillhaven",
   },
   {
+    file: "forge.html",
+    title: "Quillhaven Forge | Griffin & Quill",
+    nav: "Forge",
+  },
+  {
+    file: "command.html",
+    title: "Command Center | Griffin & Quill",
+    nav: "Command Center",
+  },
+  {
     file: "schools.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
+    title: "Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!",
     nav: "Schools",
   },
   {
     file: "about.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
+    title: "Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!",
     nav: "About",
   },
   {
     file: "faq.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
+    title: "Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!",
     nav: "FAQ",
   },
   {
     file: "contact.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
+    title: "Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!",
     nav: "Contact",
   },
   {
     file: "privacy.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
+    title: "Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!",
     nav: null,
   },
   {
     file: "terms.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
+    title: "Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!",
     nav: null,
   },
   {
     file: "404.html",
-    title: "Griffin & Quill | Where learning becomes an adventure",
+    title: "Griffin & Quill | Write your own legend. Learn it. Live it. PROVE IT!",
     nav: null,
   },
 ];
