@@ -28,13 +28,15 @@ Fixes to the same build are replies on that build. After two fix rounds, stop an
 
 ## AI art and brand
 
-The final Griffin & Quill logo (Option 4: navy, cream gryphon, gold quill) is in the site. Use the repo's logo and icon files; do not redraw or recolor them. Quillhaven's pixel-art logo is still coming, so keep its slot on the Quillhaven page.
+Design direction is Concept B, the scholar's worktable: a cinematic, warm, lamplit academy/library mood across the whole site, with modern readable type and plain navigation. Do not revive the Living Plaza Hub (PR #48) or pixel-art town navigation. The website is not a game client; the Quillhaven town is being rebuilt in Tiled for the game, not here.
 
-The mascot gryphon is Tahne, founder of Quillhaven. Other characters: Winston Wolf, Merlin (wizard portal keeper), Professor Bramble (highland cow librarian), and the student kids Brittany, Ruth and Rudy. Character and building sprites come from the Quillhaven Pixel Assets in Drive; render them with `image-rendering: pixelated` at integer scales, and align sprites by their opaque bottom edge, not their canvas.
+No gryphon on visitor-facing surfaces until Gryff's design is settled: no gryphon logo, mascot, character art, favicon, app icon, manifest icon or social preview image. Use the text wordmark and the monogram/star-chart icons already in the repo. Do not reintroduce `assets/logo-icon.svg`, `assets/logo-hero.svg` or the old sprite folders into the deployed tree; originals live in git history and the brand files in Drive. Do not show an empty "Quillhaven mark" placeholder; add the mark when real art exists.
 
-AI art that Griffin & Quill will ship needs a hand-edited pass first. Do not invent testimonials, stats, or reviews.
+Never feed licensed game pack art into AI, and never ship raw pack files or pack vendor filenames in public assets. No fake product screenshots and no AI-generated logos. AI mood art needs Ryan's approval and a hand-edited pass before it ships. Text, buttons, nav and chart controls are real HTML, never baked into an image. Do not invent testimonials, stats, or reviews.
 
-Company line: "Where learning becomes an adventure." Use "Write your own legend. Learn it. Live it. PROVE IT!" only for Quillhaven, not as the company tagline. "An Edtech Company" is a descriptor only.
+Company line: "Where learning becomes an adventure." The tagline "Write your own legend. Learn it. Live it. PROVE IT!" is used exactly as written on the home hero and the Quillhaven page. "An Edtech Company" is a descriptor only.
+
+The home chart is a fixed local sample that practises one named skill. It sends nothing, stores nothing, and is not Quillhaven Forge or live AI.
 
 ## Stack
 
