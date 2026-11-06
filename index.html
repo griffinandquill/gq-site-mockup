@@ -83,15 +83,18 @@
           <img class="worktable-art" src="assets/worktable.jpg" alt="" width="1152" height="864">
           <div class="chart-sheet" id="story-chart">
             <div class="chart-stage" id="chart-stage">
-              <svg id="chart-svg" class="chart-svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+              <svg id="chart-svg" class="chart-svg" viewBox="0 0 600 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">
                 <g id="chart-web"></g>
                 <g id="chart-routes"></g>
                 <g id="chart-nodes"></g>
               </svg>
-              <div class="chart-choices" id="chart-choices" role="group" aria-labelledby="chart-label"></div>
+              <div class="chart-choices" id="chart-choices" role="group" aria-labelledby="chart-label chart-skill"></div>
             </div>
-            <p class="chart-kicker" id="chart-label">Sample interaction</p>
-            <p class="chart-story" id="chart-story" aria-live="polite">A lamp burns over an unfinished chart. Two paths leave the first star. Pick one.</p>
+            <div class="chart-meta">
+              <p class="chart-kicker" id="chart-label">Sample interaction</p>
+              <p class="chart-skill" id="chart-skill">Skill: using map evidence to make an inference</p>
+            </div>
+            <p class="chart-story" id="chart-story" aria-live="polite">Your chart shows a river between you and the old tower. The key says a dashed line marks a ford, where the water runs shallow. Trust the chart now, or climb the tower to check it first?</p>
             <button type="button" class="btn btn-reset" id="chart-reset">Reset the chart</button>
           </div>
         </div>

@@ -3194,3 +3194,110 @@ body.page-library main .lib-form .form-error a { color: var(--cream); }
 
   .lib-actions .btn { width: 100%; }
 }
+
+/* ---------------------------------------------------------------
+   Home chart: denser Concept B constellation.
+   Faint full map, gold walked route, choices sitting on stars.
+   --------------------------------------------------------------- */
+
+.chart-web-line {
+  stroke: rgba(243, 215, 138, 0.22);
+  stroke-width: 0.8;
+}
+
+.chart-web-star { fill: rgba(246, 226, 168, 0.55); }
+.chart-web-star.is-bright { fill: #f6e2a8; filter: drop-shadow(0 0 2px rgba(255, 210, 120, 0.8)); }
+
+.chart-route { stroke-width: 2.2; }
+
+.chart-route.is-faint {
+  stroke: rgba(243, 215, 138, 0.28);
+  stroke-width: 1.4;
+  stroke-dasharray: 0.012 0.012;
+  stroke-dashoffset: 0;
+}
+
+.chart-route.is-open {
+  stroke: rgba(255, 226, 160, 0.7);
+  stroke-width: 1.8;
+  stroke-dasharray: 0.03 0.02;
+  stroke-dashoffset: 0;
+}
+
+.chart-route.is-chosen {
+  stroke: #ffe7a8;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 4px rgba(255, 196, 80, 0.95));
+}
+
+.chart-node.is-dim { fill: rgba(255, 231, 168, 0.4); stroke: none; }
+.chart-node.is-target { fill: #ffe7a8; stroke: #fff4d2; stroke-width: 1; }
+.chart-node.is-reached { fill: #ffe7a8; filter: drop-shadow(0 0 5px rgba(255, 200, 90, 0.95)); }
+.chart-node.is-here { fill: #fff4d2; }
+
+.chart-ring {
+  fill: none;
+  stroke: rgba(255, 226, 160, 0.75);
+  stroke-width: 1.2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: chart-ring 2.4s ease-in-out infinite;
+}
+
+@keyframes chart-ring {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.35); opacity: 0.35; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-ring { animation: none; }
+}
+
+.chart-choice {
+  transform: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+}
+
+.chart-choice::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  height: 9px;
+  background: #e7c56a;
+  opacity: 0.8;
+}
+
+.chart-choice[data-side="above"]::after { top: 100%; }
+.chart-choice[data-side="below"]::after { bottom: 100%; }
+
+.chart-choice:focus-visible {
+  outline: 3px solid #f6f1e4;
+  outline-offset: 2px;
+}
+
+.chart-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+}
+
+.chart-meta .chart-kicker { align-self: auto; }
+
+.chart-skill {
+  margin: 0;
+  padding: 0.15rem 0.5rem;
+  background: rgba(20, 17, 14, 0.92);
+  color: #f0d48a;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.chart-route-star { fill: rgba(246, 226, 168, 0.4); }
+.chart-route-star.is-open { fill: rgba(255, 231, 168, 0.75); }
+.chart-route-star.is-lit { fill: #fff4d2; filter: drop-shadow(0 0 4px rgba(255, 200, 90, 1)); }
+
+@media (min-width: 1001px) {
+  .chart-story { min-height: calc(1.45em * 3 + 1.2rem); }
+}

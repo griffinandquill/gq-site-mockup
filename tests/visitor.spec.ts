@@ -515,33 +515,34 @@ test("the header uses the wordmark and the home chart is a sample", async ({ pag
   await expect(page.getByText("Tahne")).toHaveCount(0);
   const story = page.locator("#chart-story");
   await expect(page.getByText("Sample interaction")).toBeVisible();
-  await expect(story).toContainText("Two paths leave the first star");
-  await page.getByRole("button", { name: "Choose: cross the river" }).click();
-  await expect(story).toContainText("You cross the river at the ford");
+  await expect(story).toContainText("The key says a dashed line marks a ford");
+  await expect(page.locator("#chart-skill")).toHaveText("Skill: using map evidence to make an inference");
+  await page.getByRole("button", { name: "Choose: cross at the ford" }).click();
+  await expect(story).toContainText("so the key was right");
   await expect(page.locator(".chart-route.is-chosen")).toHaveCount(1);
-  await page.getByRole("button", { name: "Choose: follow the rope" }).click();
-  await expect(story).toContainText("The ferry rope holds");
+  await page.getByRole("button", { name: "Choose: take the close-lined trail" }).click();
+  await expect(story).toContainText("Inference checked: close lines, steep slope.");
   await expect(page.locator(".chart-route.is-chosen")).toHaveCount(2);
   await page.getByRole("button", { name: "Reset the chart" }).click();
-  await expect(story).toContainText("Two paths leave the first star");
-  await expect(page.getByRole("button", { name: "Choose: climb the tower" })).toBeVisible();
-  await page.getByRole("button", { name: "Choose: climb the tower" }).focus();
+  await expect(story).toContainText("The key says a dashed line marks a ford");
+  await expect(page.getByRole("button", { name: "Choose: climb the tower first" })).toBeVisible();
+  await page.getByRole("button", { name: "Choose: climb the tower first" }).focus();
   await page.keyboard.press("Enter");
-  await expect(story).toContainText("You climb the tower");
+  await expect(story).toContainText("From the top you compare the chart to the land");
   await page.keyboard.press("ArrowRight");
   await page.keyboard.press("Enter");
-  await expect(story).toContainText("You climb down");
+  await expect(story).toContainText("the inference held");
 });
 
 test("every chart choice stays inside the stage", async ({ page }) => {
   const routes = [
-    { clicks: [] as string[], names: ["Choose: cross the river", "Choose: climb the tower"] },
-    { clicks: ["Choose: cross the river"], names: ["Choose: follow the rope", "Choose: take the high road"] },
-    { clicks: ["Choose: cross the river", "Choose: follow the rope"], names: [] },
-    { clicks: ["Choose: cross the river", "Choose: take the high road"], names: [] },
-    { clicks: ["Choose: climb the tower"], names: ["Choose: mark the ford", "Choose: climb down"] },
-    { clicks: ["Choose: climb the tower", "Choose: mark the ford"], names: [] },
-    { clicks: ["Choose: climb the tower", "Choose: climb down"], names: [] },
+    { clicks: [] as string[], names: ["Choose: cross at the ford", "Choose: climb the tower first"] },
+    { clicks: ["Choose: cross at the ford"], names: ["Choose: take the close-lined trail", "Choose: take the wide-lined trail"] },
+    { clicks: ["Choose: cross at the ford", "Choose: take the close-lined trail"], names: [] },
+    { clicks: ["Choose: cross at the ford", "Choose: take the wide-lined trail"], names: [] },
+    { clicks: ["Choose: climb the tower first"], names: ["Choose: note the clue on the chart", "Choose: climb down and cross"] },
+    { clicks: ["Choose: climb the tower first", "Choose: note the clue on the chart"], names: [] },
+    { clicks: ["Choose: climb the tower first", "Choose: climb down and cross"], names: [] },
   ];
   for (const width of [1366, 768, 481, 375]) {
     await page.setViewportSize({ width, height: width === 1366 ? 768 : 900 });
@@ -602,14 +603,14 @@ test.describe("sample chart on a touch screen", () => {
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
     expect(overflow, `home overflow at ${width}`).toBeLessThanOrEqual(1);
-    const choice = page.getByRole("button", { name: "Choose: climb the tower" });
+    const choice = page.getByRole("button", { name: "Choose: climb the tower first" });
     await choice.scrollIntoViewIfNeeded();
     const box = await choice.boundingBox();
     if (!box) throw new Error(`missing choice at ${width}`);
     expect(box.width, `choice width at ${width}`).toBeGreaterThanOrEqual(44);
     expect(box.height, `choice height at ${width}`).toBeGreaterThanOrEqual(40);
     await choice.tap();
-    await expect(page.locator("#chart-story")).toContainText("You climb the tower");
+    await expect(page.locator("#chart-story")).toContainText("From the top you compare the chart to the land");
     await page.goto(`/worlds.html?width=${width}`);
     const worldsOverflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -698,4 +699,49 @@ test("the quillhaven page leads with value, uses status chips, and has no empty 
   const bg = await page.locator("main").evaluate((node) => getComputedStyle(node).backgroundColor);
   const [r, g, b] = (bg.match(/\d+/g) || []).map(Number);
   expect(r + g + b, "quillhaven main is a dark section").toBeLessThan(120);
+});
+
+test("the chart shows the whole faint map, anchors choices on stars, and stays local", async ({ page }) => {
+  const requests: string[] = [];
+  page.on("request", (request) => requests.push(request.url()));
+  for (const width of [1366, 768, 481, 375]) {
+    await page.setViewportSize({ width, height: width === 1366 ? 768 : 900 });
+    await page.goto(`/index.html?anchor=${width}`);
+    await page.waitForLoadState("load");
+    requests.length = 0;
+    for (const step of [[], ["Choose: cross at the ford"], ["Choose: climb the tower first"]]) {
+      await page.getByRole("button", { name: "Reset the chart" }).click();
+      for (const name of step) await page.getByRole("button", { name, exact: true }).click();
+      await expect(page.locator(".chart-route")).toHaveCount(6);
+      await expect(page.locator(".chart-route.is-chosen")).toHaveCount(step.length);
+      expect(await page.locator(".chart-web-star").count()).toBeGreaterThanOrEqual(40);
+      const fit = await page.evaluate(() =>
+        Array.from(document.querySelectorAll<HTMLElement>(".chart-choice")).map((button) => {
+          const star = document.querySelector(`.chart-node[data-node="${button.dataset.node}"]`);
+          const b = button.getBoundingClientRect();
+          const s = star ? star.getBoundingClientRect() : null;
+          return {
+            name: button.textContent,
+            box: { left: b.left, right: b.right, top: b.top, bottom: b.bottom },
+            star: s ? { x: s.left + s.width / 2, y: s.top + s.height / 2 } : null,
+          };
+        }),
+      );
+      for (const item of fit) {
+        expect(item.star, `${width} ${item.name} has a star`).not.toBeNull();
+        if (!item.star) continue;
+        const dx = Math.max(item.box.left - item.star.x, 0, item.star.x - item.box.right);
+        const dy = Math.max(item.box.top - item.star.y, 0, item.star.y - item.box.bottom);
+        expect(Math.hypot(dx, dy), `${width} ${item.name} sits by its star`).toBeLessThanOrEqual(48);
+      }
+      if (fit.length === 2) {
+        const [a, b] = fit.map((item) => item.box);
+        const overlap = a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+        expect(overlap, `${width} choices overlap after ${step.join(" > ") || "start"}`).toBe(false);
+      }
+    }
+    expect(requests, `chart use makes no requests at ${width}`).toEqual([]);
+  }
+  const stored = await page.evaluate(() => ({ cookie: document.cookie, local: localStorage.length, session: sessionStorage.length }));
+  expect(stored).toEqual({ cookie: "", local: 0, session: 0 });
 });

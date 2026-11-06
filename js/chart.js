@@ -1,4 +1,5 @@
 (function () {
+  // Fixed local sample. No network, no cookies, no storage. Not Forge, not live AI.
   var sheet = document.getElementById("story-chart");
   var svg = document.getElementById("chart-svg");
   var web = document.getElementById("chart-web");
@@ -13,97 +14,76 @@
   var SVG_NS = "http://www.w3.org/2000/svg";
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Story stars, as fractions of the stage (x across, y down).
   var points = {
-    origin: { x: 18, y: 64 },
-    river: { x: 40, y: 34 },
-    tower: { x: 70, y: 70 },
-    rope: { x: 62, y: 16 },
-    highroad: { x: 84, y: 28 },
-    mark: { x: 86, y: 50 },
-    descend: { x: 84, y: 84 }
+    origin: { x: 0.14, y: 0.62 },
+    tower: { x: 0.37, y: 0.26 },
+    ford: { x: 0.41, y: 0.8 },
+    mark: { x: 0.64, y: 0.1 },
+    descend: { x: 0.88, y: 0.36 },
+    steep: { x: 0.66, y: 0.6 },
+    gentle: { x: 0.9, y: 0.86 }
   };
+
+  // Every route on the chart. All are drawn faintly so the whole map is visible.
+  var edges = [
+    ["origin", "tower"],
+    ["origin", "ford"],
+    ["tower", "mark"],
+    ["tower", "descend"],
+    ["ford", "steep"],
+    ["ford", "gentle"]
+  ];
 
   var states = {
     start: {
-      text: "A lamp burns over an unfinished chart. Two paths leave the first star. Pick one.",
-      chosen: [],
-      open: [
-        ["origin", "river"],
-        ["origin", "tower"]
-      ],
-      visible: ["origin", "river", "tower"],
+      text: "Your chart shows a river between you and the old tower. The key says a dashed line marks a ford, where the water runs shallow. Trust the chart now, or climb the tower to check it first?",
+      path: ["origin"],
       choices: [
-        { id: "river", label: "Choose: cross the river" },
-        { id: "tower", label: "Choose: climb the tower" }
+        { id: "ford", label: "Choose: cross at the ford" },
+        { id: "tower", label: "Choose: climb the tower first" }
       ]
     },
-    river: {
-      text: "You cross the river at the ford. The chart marks the near bank as behind you, and the current runs west. Follow the ferry rope, or take the high road.",
-      chosen: [["origin", "river"]],
-      open: [
-        ["river", "rope"],
-        ["river", "highroad"]
-      ],
-      visible: ["origin", "river", "rope", "highroad"],
+    ford: {
+      text: "You wade in where the chart draws the dashed line. The water reaches your knees, not your chest, so the key was right. Past the bank the trail splits. One trail crosses contour lines packed close together. The other crosses lines spaced wide apart.",
+      path: ["origin", "ford"],
       choices: [
-        { id: "rope", label: "Choose: follow the rope" },
-        { id: "highroad", label: "Choose: take the high road" }
+        { id: "steep", label: "Choose: take the close-lined trail" },
+        { id: "gentle", label: "Choose: take the wide-lined trail" }
       ]
+    },
+    steep: {
+      text: "Contour lines packed close together mean steep ground, and the trail climbs hard. You reach the ridge fast and out of breath. Inference checked: close lines, steep slope.",
+      path: ["origin", "ford", "steep"],
+      choices: []
+    },
+    gentle: {
+      text: "Contour lines spaced wide apart mean gentle ground. The trail is longer but easy on your legs. Inference checked: wide lines, gentle slope.",
+      path: ["origin", "ford", "gentle"],
+      choices: []
     },
     tower: {
-      text: "You climb the tower. From the top the river is one gold line, and the ford is the bend that points west. Mark that bend on the chart, or climb down and cross it yourself.",
-      chosen: [["origin", "tower"]],
-      open: [
-        ["tower", "mark"],
-        ["tower", "descend"]
-      ],
-      visible: ["origin", "tower", "mark", "descend"],
+      text: "From the top you compare the chart to the land. Where the chart draws the dashed line, the river below is pale and rippled. That is a second clue that the water is shallow. Note what you saw, or climb down and test it.",
+      path: ["origin", "tower"],
       choices: [
-        { id: "mark", label: "Choose: mark the ford" },
-        { id: "descend", label: "Choose: climb down" }
+        { id: "mark", label: "Choose: note the clue on the chart" },
+        { id: "descend", label: "Choose: climb down and cross" }
       ]
     },
-    rope: {
-      text: "The ferry rope holds. You reach the far landing with the chart still dry. The low path is now the one the chart remembers.",
-      chosen: [
-        ["origin", "river"],
-        ["river", "rope"]
-      ],
-      open: [],
-      visible: ["origin", "river", "rope"],
-      choices: []
-    },
-    highroad: {
-      text: "The high road is longer, and you can see the ford you did not take. The chart keeps the ridge. The river stays a line you only looked down on.",
-      chosen: [
-        ["origin", "river"],
-        ["river", "highroad"]
-      ],
-      open: [],
-      visible: ["origin", "river", "highroad"],
-      choices: []
-    },
     mark: {
-      text: "You mark the ford from above. The chart shows the crossing, and your boots are still dry. You have not crossed it yet.",
-      chosen: [
-        ["origin", "tower"],
-        ["tower", "mark"]
-      ],
-      open: [],
-      visible: ["origin", "tower", "mark"],
+      text: "You ink a note beside the dashed line: pale, rippled water, seen from the tower. The next reader gets your evidence too. You have not crossed yet.",
+      path: ["origin", "tower", "mark"],
       choices: []
     },
     descend: {
-      text: "You climb down and cross the ford you saw from the tower. The chart now holds both the high view and the cold water.",
-      chosen: [
-        ["origin", "tower"],
-        ["tower", "descend"]
-      ],
-      open: [],
-      visible: ["origin", "tower", "descend"],
+      text: "You cross where the chart and the ripples agree. The water stays at your knees. Two clues pointed the same way, and the inference held.",
+      path: ["origin", "tower", "descend"],
       choices: []
     }
   };
+
+  var current = "start";
+  var size = { w: 0, h: 0 };
 
   function random(seed) {
     var value = seed >>> 0;
@@ -115,85 +95,141 @@
     };
   }
 
+  function px(id) {
+    var point = points[id];
+    return { x: point.x * size.w, y: point.y * size.h };
+  }
+
+  function control(a, b) {
+    var bend = 0.18;
+    return { x: (a.x + b.x) / 2 - (b.y - a.y) * bend, y: (a.y + b.y) / 2 + (b.x - a.x) * bend };
+  }
+
   function curve(fromId, toId) {
-    var from = points[fromId];
-    var to = points[toId];
-    var mx = (from.x + to.x) / 2;
-    var my = (from.y + to.y) / 2;
-    var bend = (to.x - from.x) * 0.18;
-    return "M " + from.x + " " + from.y + " Q " + (mx - (to.y - from.y) * 0.22) + " " + (my + bend) + " " + to.x + " " + to.y;
+    var a = px(fromId);
+    var b = px(toId);
+    var c = control(a, b);
+    return "M " + a.x.toFixed(1) + " " + a.y.toFixed(1) +
+      " Q " + c.x.toFixed(1) + " " + c.y.toFixed(1) +
+      " " + b.x.toFixed(1) + " " + b.y.toFixed(1);
   }
 
-  function addPath(d, className) {
-    var path = document.createElementNS(SVG_NS, "path");
-    path.setAttribute("d", d);
-    path.setAttribute("pathLength", "1");
-    path.setAttribute("fill", "none");
-    path.setAttribute("class", className);
-    return path;
+  // Points part way along a route, so each route reads as a string of stars.
+  function along(fromId, toId, t) {
+    var a = px(fromId);
+    var b = px(toId);
+    var c = control(a, b);
+    var u = 1 - t;
+    return { x: u * u * a.x + 2 * u * t * c.x + t * t * b.x, y: u * u * a.y + 2 * u * t * c.y + t * t * b.y };
   }
 
+  function make(tag, attrs) {
+    var el = document.createElementNS(SVG_NS, tag);
+    Object.keys(attrs).forEach(function (key) { el.setAttribute(key, attrs[key]); });
+    return el;
+  }
+
+  function edgeKey(a, b) { return a + ">" + b; }
+
+  // Background constellation: seeded stars joined to their nearest neighbour.
   function paintWeb() {
+    web.textContent = "";
     var roll = random(20261106);
+    var count = Math.round(Math.min(90, Math.max(40, (size.w * size.h) / 3200)));
     var stars = [];
     var i;
-    for (i = 0; i < 36; i += 1) {
-      stars.push({ x: 8 + roll() * 84, y: 8 + roll() * 84, r: roll() > 0.82 ? 0.9 : 0.45 });
+    for (i = 0; i < count; i += 1) {
+      stars.push({ x: (0.02 + roll() * 0.96) * size.w, y: (0.03 + roll() * 0.94) * size.h, big: roll() > 0.85 });
     }
+    var reach = Math.max(size.w, size.h) * 0.16;
     stars.forEach(function (star, index) {
-      var dot = document.createElementNS(SVG_NS, "circle");
-      dot.setAttribute("cx", star.x.toFixed(2));
-      dot.setAttribute("cy", star.y.toFixed(2));
-      dot.setAttribute("r", String(star.r));
-      dot.setAttribute("class", "chart-web-star");
-      web.appendChild(dot);
-      if (index === 0) return;
-      var previous = stars[index - 1];
-      if (Math.hypot(star.x - previous.x, star.y - previous.y) > 28) return;
-      web.appendChild(addPath(
-        "M " + previous.x.toFixed(2) + " " + previous.y.toFixed(2) + " L " + star.x.toFixed(2) + " " + star.y.toFixed(2),
-        "chart-web-line"
-      ));
+      var best = null;
+      var bestDist = Infinity;
+      for (var j = 0; j < index; j += 1) {
+        var d = Math.hypot(star.x - stars[j].x, star.y - stars[j].y);
+        if (d < bestDist) { bestDist = d; best = stars[j]; }
+      }
+      if (best && bestDist < reach) {
+        web.appendChild(make("line", {
+          x1: star.x.toFixed(1), y1: star.y.toFixed(1), x2: best.x.toFixed(1), y2: best.y.toFixed(1),
+          "class": "chart-web-line"
+        }));
+      }
     });
+    stars.forEach(function (star) {
+      web.appendChild(make("circle", {
+        cx: star.x.toFixed(1), cy: star.y.toFixed(1), r: star.big ? "1.6" : "0.9",
+        "class": "chart-web-star" + (star.big ? " is-bright" : "")
+      }));
+    });
+  }
+
+  function paintRoutes(state, animate) {
+    routes.textContent = "";
+    nodes.textContent = "";
+    var chosen = {};
+    for (var i = 1; i < state.path.length; i += 1) chosen[edgeKey(state.path[i - 1], state.path[i])] = true;
+    var here = state.path[state.path.length - 1];
+    var open = {};
+    state.choices.forEach(function (choice) { open[edgeKey(here, choice.id)] = true; });
+
+    edges.forEach(function (edge) {
+      var key = edgeKey(edge[0], edge[1]);
+      var cls = "chart-route " + (chosen[key] ? "is-chosen" : open[key] ? "is-open" : "is-faint");
+      var path = make("path", { d: curve(edge[0], edge[1]), pathLength: "1", fill: "none", "class": cls });
+      routes.appendChild(path);
+      [0.25, 0.5, 0.75].forEach(function (t, n) {
+        var p = along(edge[0], edge[1], t);
+        routes.appendChild(make("circle", {
+          cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: n === 1 ? "2.2" : "1.6",
+          "class": "chart-route-star" + (chosen[key] ? " is-lit" : open[key] ? " is-open" : "")
+        }));
+      });
+      if (!chosen[key] || reduceMotion || !animate) {
+        path.classList.add("is-drawn");
+        return;
+      }
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () { path.classList.add("is-drawn"); });
+      });
+    });
+
+    var reached = {};
+    state.path.forEach(function (id) { reached[id] = true; });
+    var targets = {};
+    state.choices.forEach(function (choice) { targets[choice.id] = true; });
+
+    Object.keys(points).forEach(function (id) {
+      var p = px(id);
+      var cls = "chart-node" + (reached[id] ? " is-reached" : targets[id] ? " is-target" : " is-dim");
+      if (id === here) cls += " is-here";
+      if (targets[id]) {
+        nodes.appendChild(make("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: "9", "class": "chart-ring" }));
+      }
+      nodes.appendChild(make("circle", {
+        cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: id === "origin" || id === here ? "5" : "4",
+        "class": cls, "data-node": id
+      }));
+    });
+  }
+
+  function measure() {
+    var box = stage.getBoundingClientRect();
+    size.w = Math.max(1, Math.round(box.width));
+    size.h = Math.max(1, Math.round(box.height));
+    svg.setAttribute("viewBox", "0 0 " + size.w + " " + size.h);
   }
 
   function paint(stateId, moveFocus) {
     var state = states[stateId];
     if (!state) return;
+    current = stateId;
     sheet.setAttribute("data-chart-state", stateId);
     story.textContent = state.text;
-    routes.textContent = "";
-    nodes.textContent = "";
+    measure();
+    paintRoutes(state, true);
+
     choices.textContent = "";
-
-    function drawGroup(pairs, className) {
-      pairs.forEach(function (pair) {
-        var path = addPath(curve(pair[0], pair[1]), "chart-route " + className);
-        routes.appendChild(path);
-        if (reduceMotion) {
-          path.classList.add("is-drawn");
-          return;
-        }
-        window.requestAnimationFrame(function () {
-          path.classList.add("is-drawn");
-        });
-      });
-    }
-
-    drawGroup(state.chosen, "is-chosen");
-    drawGroup(state.open, "is-open");
-
-    state.visible.forEach(function (id) {
-      var point = points[id];
-      var dot = document.createElementNS(SVG_NS, "circle");
-      dot.setAttribute("cx", String(point.x));
-      dot.setAttribute("cy", String(point.y));
-      dot.setAttribute("r", id === "origin" ? "1.7" : "1.35");
-      dot.setAttribute("class", "chart-node");
-      dot.setAttribute("data-node", id);
-      nodes.appendChild(dot);
-    });
-
     state.choices.forEach(function (choice) {
       var button = document.createElement("button");
       button.type = "button";
@@ -212,48 +248,65 @@
     focusTarget.focus();
   }
 
+  function clamp(value, min, max) {
+    if (max < min) return (min + max) / 2;
+    return Math.min(max, Math.max(min, value));
+  }
+
+  // Place each choice next to its target star, then keep it inside both the
+  // stage and the viewport. Each edge is clamped on its own.
   function placeButtons() {
     var stageBox = stage.getBoundingClientRect();
     if (!stageBox.width || !stageBox.height) return;
     var pad = 8;
+    var gap = 14;
     var viewWidth = document.documentElement.clientWidth;
+    // Usable box in stage coordinates.
+    var minX = Math.max(0, -stageBox.left) + pad;
+    var maxX = Math.min(stageBox.width, viewWidth - stageBox.left) - pad;
+    var minY = pad;
+    var maxY = stageBox.height - pad;
+    var placed = [];
+
     Array.prototype.forEach.call(choices.querySelectorAll(".chart-choice"), function (button) {
-      var dot = nodes.querySelector('[data-node="' + button.dataset.node + '"]');
-      if (!dot) return;
+      var id = button.dataset.node;
+      if (!points[id]) return;
       button.style.maxWidth = "";
-      var room = Math.max(44, Math.floor(stageBox.width - pad * 2));
-      if (button.getBoundingClientRect().width > room) button.style.maxWidth = room + "px";
-      var buttonBox = button.getBoundingClientRect();
-      var halfW = buttonBox.width / 2;
-      var halfH = buttonBox.height / 2;
-      var dotBox = dot.getBoundingClientRect();
-      var left = dotBox.left + dotBox.width / 2 - stageBox.left;
-      var top = dotBox.top + dotBox.height / 2 - stageBox.top;
-      var minLeft = pad + halfW;
-      var maxLeft = stageBox.width - pad - halfW;
-      var minTop = pad + halfH;
-      var maxTop = stageBox.height - pad - halfH;
-      left = maxLeft < minLeft ? stageBox.width / 2 : Math.min(maxLeft, Math.max(minLeft, left));
-      top = maxTop < minTop ? stageBox.height / 2 : Math.min(maxTop, Math.max(minTop, top));
-      var minCenter = pad + halfW - stageBox.left;
-      var maxCenter = viewWidth - pad - halfW - stageBox.left;
-      if (maxCenter >= minCenter) left = Math.min(maxCenter, Math.max(minCenter, left));
+      var room = Math.max(44, Math.floor(maxX - minX));
+      if (button.offsetWidth > room) button.style.maxWidth = room + "px";
+      var w = button.offsetWidth;
+      var h = button.offsetHeight;
+      var star = px(id);
+      // Sit above the star in the lower half, below it in the upper half.
+      var below = points[id].y < 0.5;
+      var cx = star.x;
+      var cy = below ? star.y + gap + h / 2 : star.y - gap - h / 2;
+
+      var left = clamp(cx - w / 2, minX, maxX - w);
+      var top = clamp(cy - h / 2, minY, maxY - h);
+
+      // Keep two choices from covering each other.
+      placed.forEach(function (other) {
+        var overlapX = left < other.left + other.w + 6 && left + w + 6 > other.left;
+        var overlapY = top < other.top + other.h + 6 && top + h + 6 > other.top;
+        if (!overlapX || !overlapY) return;
+        var down = other.top + other.h + 6;
+        var up = other.top - h - 6;
+        top = down + h <= maxY ? down : clamp(up, minY, maxY - h);
+      });
+
       button.style.left = left + "px";
       button.style.top = top + "px";
-      var painted = button.getBoundingClientRect();
-      var rightLimit = Math.min(stageBox.right, viewWidth) - pad;
-      var leftLimit = Math.max(stageBox.left, pad);
-      var dx = 0;
-      var dy = 0;
-      if (painted.right > rightLimit) dx -= painted.right - rightLimit;
-      if (painted.left + dx < leftLimit) dx += leftLimit - painted.left;
-      if (painted.bottom > stageBox.bottom - pad) dy -= painted.bottom - (stageBox.bottom - pad);
-      if (painted.top + dy < stageBox.top + pad) dy += stageBox.top + pad - painted.top;
-      if (dx || dy) {
-        button.style.left = (left + dx) + "px";
-        button.style.top = (top + dy) + "px";
-      }
+      button.dataset.side = below ? "below" : "above";
+      placed.push({ left: left, top: top, w: w, h: h });
     });
+  }
+
+  function redraw() {
+    measure();
+    paintWeb();
+    paintRoutes(states[current], false);
+    placeButtons();
   }
 
   choices.addEventListener("keydown", function (event) {
@@ -272,10 +325,22 @@
     paint("start", true);
   });
 
-  window.addEventListener("resize", placeButtons);
-  window.addEventListener("load", placeButtons);
-  if (window.ResizeObserver) new ResizeObserver(placeButtons).observe(stage);
+  var pending = 0;
+  function schedule() {
+    if (pending) return;
+    pending = window.requestAnimationFrame(function () {
+      pending = 0;
+      var box = stage.getBoundingClientRect();
+      if (Math.round(box.width) !== size.w || Math.round(box.height) !== size.h) redraw();
+      else placeButtons();
+    });
+  }
+
+  window.addEventListener("resize", schedule);
+  window.addEventListener("load", schedule);
+  if (window.ResizeObserver) new ResizeObserver(schedule).observe(stage);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeButtons);
+  measure();
   paintWeb();
   paint("start", false);
 })();
