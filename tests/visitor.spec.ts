@@ -79,6 +79,26 @@ test("stage copies site bytes and leaves the checker out", () => {
   expect(fs.existsSync(path.join(ROOT, "_site", "README.md"))).toBe(false);
 });
 
+test("visitor icons use the text monogram", () => {
+  const svg = fs.readFileSync(path.join(ROOT, "favicon.svg"), "utf8");
+  expect(svg).toContain("G&amp;Q");
+  expect(svg).not.toContain("Layer_1");
+  expect(svg.toLowerCase()).not.toContain("gryphon");
+  const manifest = fs.readFileSync(path.join(ROOT, "assets/icons/site.webmanifest"), "utf8");
+  expect(manifest).toContain("/assets/icons/favicon-32.png");
+  expect(manifest).toContain("/assets/icons/apple-touch-icon-180.png");
+  expect(manifest).not.toContain("logo-icon");
+  expect(manifest).not.toContain("tahne");
+  for (const rel of ["assets/og.png", "assets/icons/favicon-32.png", "assets/icons/apple-touch-icon-180.png"]) {
+    const png = fs.readFileSync(path.join(ROOT, rel));
+    expect(png.subarray(0, 8).toString("hex"), rel).toBe("89504e470d0a1a0a");
+    const width = png.readUInt32BE(16);
+    const height = png.readUInt32BE(20);
+    expect(width, rel).toBeGreaterThan(0);
+    expect(height, rel).toBeGreaterThan(0);
+  }
+});
+
 test("robots.txt allows crawling and names the sitemap", async ({ request }) => {
   const response = await request.get("/robots.txt");
   expect(response.status()).toBe(200);
@@ -511,6 +531,64 @@ test("the header uses the wordmark and the home chart is a sample", async ({ pag
   await page.keyboard.press("ArrowRight");
   await page.keyboard.press("Enter");
   await expect(story).toContainText("You climb down");
+});
+
+test("every chart choice stays inside the stage", async ({ page }) => {
+  const routes = [
+    { clicks: [] as string[], names: ["Choose: cross the river", "Choose: climb the tower"] },
+    { clicks: ["Choose: cross the river"], names: ["Choose: follow the rope", "Choose: take the high road"] },
+    { clicks: ["Choose: cross the river", "Choose: follow the rope"], names: [] },
+    { clicks: ["Choose: cross the river", "Choose: take the high road"], names: [] },
+    { clicks: ["Choose: climb the tower"], names: ["Choose: mark the ford", "Choose: climb down"] },
+    { clicks: ["Choose: climb the tower", "Choose: mark the ford"], names: [] },
+    { clicks: ["Choose: climb the tower", "Choose: climb down"], names: [] },
+  ];
+  for (const width of [1366, 768, 481, 375]) {
+    await page.setViewportSize({ width, height: width === 1366 ? 768 : 900 });
+    for (const route of routes) {
+      const label = `${width} ${route.clicks.join(" > ") || "start"}`;
+      await page.goto(`/index.html?chart=${encodeURIComponent(label)}`);
+      for (const name of route.clicks) {
+        await page.getByRole("button", { name, exact: true }).click();
+      }
+      await expect(page.locator(".chart-choice"), label).toHaveCount(route.names.length);
+      const fit = await page.evaluate(() => {
+        const stage = document.getElementById("chart-stage");
+        if (!stage) return null;
+        const stageBox = stage.getBoundingClientRect();
+        const view = document.documentElement.clientWidth;
+        return {
+          overflow: document.documentElement.scrollWidth - view,
+          view,
+          buttons: Array.from(document.querySelectorAll(".chart-choice")).map((button) => {
+            const box = button.getBoundingClientRect();
+            return {
+              name: (button.textContent || "").trim(),
+              left: box.left,
+              right: box.right,
+              top: box.top,
+              bottom: box.bottom,
+              stageLeft: stageBox.left,
+              stageRight: stageBox.right,
+              stageTop: stageBox.top,
+              stageBottom: stageBox.bottom,
+            };
+          }),
+        };
+      });
+      if (!fit) throw new Error(`missing chart at ${label}`);
+      expect(fit.overflow, `${label} overflow`).toBeLessThanOrEqual(1);
+      expect(fit.buttons.map((button) => button.name), label).toEqual(route.names);
+      for (const button of fit.buttons) {
+        expect(button.left, `${label} ${button.name} left`).toBeGreaterThanOrEqual(button.stageLeft - 0.5);
+        expect(button.right, `${label} ${button.name} right`).toBeLessThanOrEqual(button.stageRight + 0.5);
+        expect(button.top, `${label} ${button.name} top`).toBeGreaterThanOrEqual(button.stageTop - 0.5);
+        expect(button.bottom, `${label} ${button.name} bottom`).toBeLessThanOrEqual(button.stageBottom + 0.5);
+        expect(button.right, `${label} ${button.name} viewport`).toBeLessThanOrEqual(fit.view + 0.5);
+        expect(button.left, `${label} ${button.name} viewport left`).toBeGreaterThanOrEqual(-0.5);
+      }
+    }
+  }
 });
 
 test.describe("sample chart on a touch screen", () => {

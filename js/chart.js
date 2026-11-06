@@ -215,15 +215,44 @@
   function placeButtons() {
     var stageBox = stage.getBoundingClientRect();
     if (!stageBox.width || !stageBox.height) return;
+    var pad = 8;
+    var viewWidth = document.documentElement.clientWidth;
     Array.prototype.forEach.call(choices.querySelectorAll(".chart-choice"), function (button) {
-      var dot = svg.querySelector('[data-node="' + button.dataset.node + '"]');
+      var dot = nodes.querySelector('[data-node="' + button.dataset.node + '"]');
       if (!dot) return;
-      var box = dot.getBoundingClientRect();
-      var left = box.left + box.width / 2 - stageBox.left;
-      var top = box.top + box.height / 2 - stageBox.top;
-      var maxLeft = stageBox.width - 8;
-      button.style.left = Math.max(8, Math.min(maxLeft, left)) + "px";
-      button.style.top = Math.max(8, Math.min(stageBox.height - 8, top)) + "px";
+      button.style.maxWidth = "";
+      var room = Math.max(44, Math.floor(stageBox.width - pad * 2));
+      if (button.getBoundingClientRect().width > room) button.style.maxWidth = room + "px";
+      var buttonBox = button.getBoundingClientRect();
+      var halfW = buttonBox.width / 2;
+      var halfH = buttonBox.height / 2;
+      var dotBox = dot.getBoundingClientRect();
+      var left = dotBox.left + dotBox.width / 2 - stageBox.left;
+      var top = dotBox.top + dotBox.height / 2 - stageBox.top;
+      var minLeft = pad + halfW;
+      var maxLeft = stageBox.width - pad - halfW;
+      var minTop = pad + halfH;
+      var maxTop = stageBox.height - pad - halfH;
+      left = maxLeft < minLeft ? stageBox.width / 2 : Math.min(maxLeft, Math.max(minLeft, left));
+      top = maxTop < minTop ? stageBox.height / 2 : Math.min(maxTop, Math.max(minTop, top));
+      var minCenter = pad + halfW - stageBox.left;
+      var maxCenter = viewWidth - pad - halfW - stageBox.left;
+      if (maxCenter >= minCenter) left = Math.min(maxCenter, Math.max(minCenter, left));
+      button.style.left = left + "px";
+      button.style.top = top + "px";
+      var painted = button.getBoundingClientRect();
+      var rightLimit = Math.min(stageBox.right, viewWidth) - pad;
+      var leftLimit = Math.max(stageBox.left, pad);
+      var dx = 0;
+      var dy = 0;
+      if (painted.right > rightLimit) dx -= painted.right - rightLimit;
+      if (painted.left + dx < leftLimit) dx += leftLimit - painted.left;
+      if (painted.bottom > stageBox.bottom - pad) dy -= painted.bottom - (stageBox.bottom - pad);
+      if (painted.top + dy < stageBox.top + pad) dy += stageBox.top + pad - painted.top;
+      if (dx || dy) {
+        button.style.left = (left + dx) + "px";
+        button.style.top = (top + dy) + "px";
+      }
     });
   }
 
@@ -245,6 +274,7 @@
 
   window.addEventListener("resize", placeButtons);
   window.addEventListener("load", placeButtons);
+  if (window.ResizeObserver) new ResizeObserver(placeButtons).observe(stage);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeButtons);
   paintWeb();
   paint("start", false);
