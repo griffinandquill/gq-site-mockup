@@ -43,7 +43,7 @@ A passing run prints green tests and writes `verify-results/report/index.html`. 
 
 The local checker is not `python3 -m http.server`. Python does not serve `404.html` for a bad path. `npm run verify` starts its own server on port 4173 and stops it when the run finishes. Leave `BASE_URL` unset for that local server. Set `BASE_URL` only when you mean the live origin.
 
-Merriweather and Lato are self-hosted in `fonts/`. Offline, the pages fall back to Georgia and Arial. There is no third-party font request.
+Merriweather and Lato are self-hosted in `fonts/`. `fonts/OFL.txt` is the SIL Open Font License 1.1 text with the copyright lines from those files, and `fonts/NOTICE.txt` lists each file's name-table version. Offline, the pages fall back to Georgia and Arial. There is no third-party font request.
 
 ## Pages
 
@@ -78,7 +78,7 @@ JavaScript opens the mobile menu, sends a form when FormSubmit accepts it, revea
 - **Motion.** Scroll reveal runs only when the visitor has not asked for reduced motion. The sample chart draws its new path with a short stroke transition, and that transition is skipped under reduced motion. There is no autoplay audio and no forced intro.
 - **Forms.** `js/form-config.js` holds the FormSubmit endpoint and the three inboxes. Contact, both newsletters, and the Quillhaven note go to `hello@`. The families and co-ops inquiry goes to `partners@`. The tutoring booking form on `tutoring.html#book` goes only to `tutoring@griffinandquill.com`. Each form has a honeypot named `_honey`. The thank-you note appears only when FormSubmit returns success. A failed send shows the mailto for that inbox. The visitor check intercepts `formsubmit.co` and does not send a real message. The first real submission to each inbox asks FormSubmit to email a confirmation link. Ryan opens `hello@`, `tutoring@`, and `partners@` and confirms those three messages. Until then, a real submit shows “That note did not send.”
 - **Search engines.** Pages do not send `noindex`. `robots.txt` allows crawling and names `https://www.griffinandquill.com/sitemap.xml`.
-- **Fonts.** Merriweather and Lato ship with the site. A later pass can still change the type if Ryan wants a different pair.
+- **Fonts.** The pages load the four WOFF2 files in `fonts/`. Lato Regular and Lato Bold are version 1.104, copyright 2010-2011, tyPoland Lukasz Dziedzic, reserved name "Lato". The Merriweather files are Merriweather Light 18pt Regular version 2.100 and Italic version 2.101, copyright 2024, The Merriweather Project Authors (https://github.com/EbenSorkin/Merriweather4), reserved name "Merriweather". Those strings are the name tables of the shipped files. The license is `fonts/OFL.txt`.
 
 ## Brand
 

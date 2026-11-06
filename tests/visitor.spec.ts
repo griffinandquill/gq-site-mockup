@@ -79,6 +79,25 @@ test("stage copies site bytes and leaves the checker out", () => {
   expect(fs.existsSync(path.join(ROOT, "_site", "README.md"))).toBe(false);
 });
 
+test("font notices name the shipped files and the pack sprite builder is gone", () => {
+  expect(fs.existsSync(path.join(ROOT, "tools/build-scene-sprites.py"))).toBe(false);
+  expect(fs.existsSync(path.join(ROOT, "tools/build-kid-sprites.py"))).toBe(false);
+  const ofl = fs.readFileSync(path.join(ROOT, "fonts/OFL.txt"), "utf8");
+  expect(ofl).toContain('Copyright (c) 2010-2011 by tyPoland Lukasz Dziedzic with Reserved Font Name "Lato".');
+  expect(ofl).toContain(
+    'Copyright 2024 The Merriweather Project Authors (https://github.com/EbenSorkin/Merriweather4) with Reserved Font Name "Merriweather".',
+  );
+  expect(ofl).toContain("SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007");
+  const notice = fs.readFileSync(path.join(ROOT, "fonts/NOTICE.txt"), "utf8");
+  expect(notice).toContain("fonts/lato-400.woff2");
+  expect(notice).toContain("fonts/lato-700.woff2");
+  expect(notice).toContain("Version 1.104; Western+Polish opensource");
+  expect(notice).toContain("fonts/merriweather-400.woff2");
+  expect(notice).toContain("Version 2.100");
+  expect(notice).toContain("fonts/merriweather-400-italic.woff2");
+  expect(notice).toContain("Version 2.101");
+});
+
 test("visitor icons use the text monogram", () => {
   const svg = fs.readFileSync(path.join(ROOT, "favicon.svg"), "utf8");
   expect(svg).toContain("G&amp;Q");
