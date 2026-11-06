@@ -25,16 +25,14 @@
   <link rel="stylesheet" href="css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
 </head>
-<body id="top">
+<body id="top" class="page-about page-library">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="header-bar">
       <div class="container header-inner">
         <a class="brand" href="index.html">
-          <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark">
             <span class="wordmark-name">Griffin &amp; Quill</span>
-            <span class="wordmark-meta">An Edtech Company</span>
           </span>
         </a>
         <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
@@ -42,15 +40,15 @@
           <span class="nav-toggle-label">Menu</span>
         </button>
         <nav id="site-nav" aria-label="Primary">
-          <ul class="nav-list">
+                    <ul class="nav-list">
             <li><a href="index.html">Home</a></li>
+            <li><a href="worlds.html">Quillhaven</a></li>
+            <li><a href="worlds.html#forge">Forge</a></li>
+            <li><a href="worlds.html#command-center">Command Center</a></li>
             <li><a href="tutoring.html">Tutoring</a></li>
             <li><a href="store.html">Store</a></li>
-            <li><a href="worlds.html">Quillhaven</a></li>
-            <li><a href="schools.html">Schools</a></li>
             <li><a href="about.html" aria-current="page">About</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="contact.html" class="nav-contact">Contact</a></li>
           </ul>
         </nav>
       </div>
@@ -61,95 +59,132 @@
       <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. A form on this page needs JavaScript to send, or you can email the address in the footer.</p>
     </noscript>
 
-    <div class="container page-hero">
-      <p class="eyebrow">About</p>
-      <h1>Where learning becomes an adventure.</h1>
-      <p class="lede">Griffin &amp; Quill teaches, grows, and maintains students’ academic skills across all subjects.</p>
-    </div>
-
-    <section class="section" aria-labelledby="vision-title">
-      <div class="container prose">
-        <h2 id="vision-title">Vision</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p>One adventure where every academic skill is a chapter to master, every challenge ends with proof of learning, and every student carries those skills into every subject.</p>
+    <section class="lib-hero lib-hero-plain" aria-labelledby="about-title">
+      <div class="container lib-hero-inner">
+        <p class="eyebrow">About</p>
+        <h1 id="about-title">Where learning becomes an adventure.</h1>
+        <p class="lib-lede">Griffin &amp; Quill teaches, grows, and maintains students’ academic skills across all subjects.</p>
+        <div class="lib-actions">
+          <a class="btn btn-gold" href="#journal">Read the founder’s journal</a>
+          <a class="btn btn-ghost" href="contact.html">Write to the studio</a>
+        </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="mission-title">
-      <div class="container prose">
-        <h2 id="mission-title">Mission</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p>Griffin &amp; Quill teaches, grows and maintains students’ academic skills across all subjects through tutoring, the store, and Quillhaven, each built by a practicing teacher around one habit: learn it, then prove it.</p>
-        <p>Quillhaven, the company’s learning game, uses its own line: Write your own legend. Learn it. Live it. PROVE IT!</p>
+    <section class="lib-section" aria-label="Vision and mission">
+      <div class="container lib-panels">
+        <article class="lib-panel" aria-labelledby="vision-title">
+          <p class="chip">Where we are going</p>
+          <h2 id="vision-title">Vision</h2>
+          <p>One adventure where every academic skill is a chapter to master, every challenge ends with proof of learning, and every student carries those skills into every subject.</p>
+        </article>
+        <article class="lib-panel" aria-labelledby="mission-title">
+          <p class="chip">How we get there</p>
+          <h2 id="mission-title">Mission</h2>
+          <p>Griffin &amp; Quill teaches, grows and maintains students’ academic skills across all subjects through tutoring, the store, and Quillhaven, each built by a practicing teacher around one habit: learn it, then prove it.</p>
+          <p>Quillhaven, the company’s learning game, uses its own line: Write your own legend. Learn it. Live it. PROVE IT!</p>
+        </article>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="founder-title">
+    <section class="lib-section lib-section-deep" aria-labelledby="founder-title">
+      <div class="container founder">
+        <div>
+          <h2 id="founder-title">Founder</h2>
+          <p class="lib-intro">Ryan Mayer is a South Carolina licensed, ESOL-licensed teacher. He teaches U.S. History, Government, Economics, and AP Human Geography, previously taught in New York, and holds a Master’s in History Education, with more than seven years in the classroom.</p>
+          <p>He founded Griffin &amp; Quill LLC.</p>
+          <p><a href="contact.html">Write to the studio</a></p>
+        </div>
+        <ul class="founder-facts" aria-label="Founder at a glance">
+          <li><span class="founder-fact-label">Licensed</span>South Carolina teacher, ESOL-licensed</li>
+          <li><span class="founder-fact-label">Degree</span>Master’s in History Education</li>
+          <li><span class="founder-fact-label">Classroom</span>More than seven years; previously taught in New York</li>
+          <li><span class="founder-fact-label">Teaches</span>U.S. History, Government, Economics, AP Human Geography</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="lib-section" id="journal" aria-labelledby="so-far-title">
       <div class="container">
-        <h2 id="founder-title">Founder</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p>Ryan Mayer is a South Carolina licensed, ESOL-licensed teacher in the Beaufort County School District, where he teaches U.S. History, Government, Economics, and AP Human Geography. He previously taught with the New York City Department of Education and holds a Master’s in History Education, with more than seven years in the classroom.</p>
-        <p>He founded Griffin &amp; Quill LLC.</p>
-        <p><a href="contact.html">Write to the studio</a></p>
+        <h2 id="so-far-title">So far: the founder’s journal</h2>
+        <p class="lib-intro">Milestones Ryan has shared. These are not awards, press, or outcome numbers.</p>
+        <div class="journal" id="journal-book">
+          <ol class="journal-pages" id="journal-pages">
+            <li class="journal-page"><p class="journal-entry">Entry 1</p><p class="journal-text">Griffin &amp; Quill LLC is formed.</p></li>
+            <li class="journal-page"><p class="journal-entry">Entry 2</p><p class="journal-text">Tutoring launched.</p></li>
+            <li class="journal-page"><p class="journal-entry">Entry 3 · October 12, 2026</p><p class="journal-text">A Tools Competition Phase I entry was submitted on October 12, 2026.</p></li>
+            <li class="journal-page"><p class="journal-entry">Entry 4</p><p class="journal-text">An early playable prototype is in progress.</p></li>
+            <li class="journal-page"><p class="journal-entry">Entry 5</p><p class="journal-text">Connecting with South Carolina startup and innovation programs.</p></li>
+          </ol>
+          <div class="journal-controls" hidden>
+            <button type="button" class="btn btn-ghost" id="journal-prev">Previous page</button>
+            <p class="journal-count" id="journal-count" aria-live="polite"></p>
+            <button type="button" class="btn btn-ghost" id="journal-next">Next page</button>
+          </div>
+        </div>
+        <p class="lib-small">Press and partnership inquiries: <a href="mailto:partners@griffinandquill.com">partners@griffinandquill.com</a>.</p>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="values-title">
+    <section class="lib-section lib-section-deep" aria-labelledby="values-title">
       <div class="container">
         <h2 id="values-title">Values</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <div class="grid-3">
-          <article class="card">
-            <h3>Mastery over memorization</h3>
-            <p>We build skills students can use on anything new, not facts they repeat once and forget.</p>
-          </article>
-          <article class="card">
-            <h3>Practice, then prove it</h3>
-            <p>Every lesson, session and run moves from guided practice to a clear demonstration of the skill.</p>
-          </article>
-          <article class="card">
-            <h3>Durable retention</h3>
-            <p>Skills are revisited, reinforced and rewarded over time so they last beyond the unit or the test.</p>
-          </article>
-          <article class="card">
-            <h3>Play with purpose</h3>
-            <p>Every game mechanic, reward and challenge exists to serve learning, never to distract from it.</p>
-          </article>
-          <article class="card">
-            <h3>Teacher-built rigor</h3>
-            <p>A practicing teacher designs every product to be demanding, accurate, original and trustworthy for families and schools.</p>
-          </article>
+        <p class="lib-intro">Open a value to see where it already shows up on this site.</p>
+        <div class="values">
+          <details class="value">
+            <summary><span class="value-name">Mastery over memorization</span></summary>
+            <div class="value-body">
+              <p>We build skills students can use on anything new, not facts they repeat once and forget.</p>
+              <p class="value-seen"><span>Where you can see it:</span> the sample on the home page asks you to use map evidence, not recall a fact. <a href="index.html#story-chart">Try the sample</a></p>
+            </div>
+          </details>
+          <details class="value">
+            <summary><span class="value-name">Practice, then prove it</span></summary>
+            <div class="value-body">
+              <p>Every lesson, session and run moves from guided practice to a clear demonstration of the skill.</p>
+              <p class="value-seen"><span>Where you can see it:</span> tutoring moves from a skills check to a written plan to sessions with one goal each. <a href="tutoring.html#planner">Plan a first session</a></p>
+            </div>
+          </details>
+          <details class="value">
+            <summary><span class="value-name">Durable retention</span></summary>
+            <div class="value-body">
+              <p>Skills are revisited, reinforced and rewarded over time so they last beyond the unit or the test.</p>
+              <p class="value-seen"><span>Where you can see it:</span> each tutoring session ends with a note you can reread later. <a href="tutoring.html">See tutoring</a></p>
+            </div>
+          </details>
+          <details class="value">
+            <summary><span class="value-name">Play with purpose</span></summary>
+            <div class="value-body">
+              <p>Every game mechanic, reward and challenge exists to serve learning, never to distract from it.</p>
+              <p class="value-seen"><span>Where you can see it:</span> in Quillhaven, a student uses the skill to make choices in the story, then proves it on something new. The demo is planned. <a href="worlds.html">Read about Quillhaven</a></p>
+            </div>
+          </details>
+          <details class="value">
+            <summary><span class="value-name">Teacher-built rigor</span></summary>
+            <div class="value-body">
+              <p>A practicing teacher designs every product to be demanding, accurate, original and trustworthy for families and co-ops.</p>
+              <p class="value-seen"><span>Where you can see it:</span> every store unit includes a DBQ and a unit test. <a href="store.html#shelf">Browse the shelf</a></p>
+            </div>
+          </details>
         </div>
-        <h3>Accessibility</h3>
-        <p>Clear language, keyboard use, and readable type on this site. Quillhaven will need captions and a way to play without a mouse. We are building toward WCAG AA. The games are not built yet, so this is not a finished audit.</p>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="so-far-title">
-      <div class="container">
-        <h2 id="so-far-title">So far</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">Milestones Ryan has shared. These are not awards, press, or outcome numbers.</p>
-        <ul class="plain-list">
-          <li>Griffin &amp; Quill LLC is formed.</li>
-          <li>Tutoring launched.</li>
-          <li>A Tools Competition Phase I entry was submitted on October 12, 2026.</li>
-          <li>An early playable prototype is in progress.</li>
-          <li>Connecting with South Carolina startup and innovation programs.</li>
-        </ul>
-        <p>Press and partnership inquiries: <a href="mailto:partners@griffinandquill.com">partners@griffinandquill.com</a>.</p>
+    <section class="lib-section" aria-labelledby="access-title">
+      <div class="container lib-privacy">
+        <div>
+          <h2 id="access-title">Accessibility</h2>
+        </div>
+        <p class="lib-intro">Clear language, keyboard use, and readable type on this site. Quillhaven will need captions and a way to play without a mouse. We are building toward WCAG AA. The games are not built yet, so this is not a finished audit.</p>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="art-title">
-      <div class="container">
-        <h2 id="art-title">The mark</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">The griffin-and-quill mark is the company logo: a white gryphon and a gold quill on navy. The header and footer use that file. The home hero uses the same mark with the navy field removed.</p>
-        <div class="art-slot">
-          <img class="logo logo-hero" src="assets/logo-icon.svg" alt="Griffin and Quill logo" width="400" height="318">
-          <p>Griffin and Quill logo.</p>
+    <section class="lib-section lib-section-deep" aria-labelledby="art-title">
+      <div class="container lib-privacy">
+        <div>
+          <h2 id="art-title">The wordmark</h2>
         </div>
+        <p class="lib-intro">This preview uses the words Griffin &amp; Quill. The illustrated mark and any character art stay off the pages until that art is finished.</p>
       </div>
     </section>
   </main>
@@ -157,20 +192,19 @@
     <div class="container footer-grid">
       <div>
         <a class="footer-brand" href="index.html">
-          <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark-name">Griffin &amp; Quill</span>
         </a>
-        <p>Griffin &amp; Quill LLC is a South Carolina edtech company that teaches, grows, and maintains students’ academic skills across all subjects. Where learning becomes an adventure.</p>
+        <p>Griffin &amp; Quill LLC is a South Carolina edtech company. Where learning becomes an adventure.</p>
         <p><a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a></p>
       </div>
       <div>
         <p class="footer-label" id="foot-learn">Learn</p>
-        <ul class="footer-links" aria-labelledby="foot-learn">
-              <li><a href="index.html">Home</a></li>
-              <li><a href="tutoring.html">Tutoring</a></li>
-              <li><a href="store.html">Store</a></li>
-              <li><a href="worlds.html">Quillhaven</a></li>
-              <li><a href="schools.html">Schools</a></li>
+                <ul class="footer-links" aria-labelledby="foot-learn">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="worlds.html">Quillhaven</a></li>
+          <li><a href="tutoring.html">Tutoring</a></li>
+          <li><a href="store.html">Store</a></li>
+          <li><a href="schools.html">Families</a></li>
         </ul>
       </div>
       <div>
@@ -196,5 +230,6 @@
   </footer>
   <script src="js/form-config.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/about.js"></script>
 </body>
 </html>

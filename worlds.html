@@ -3,18 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Quillhaven is Griffin &amp; Quill’s fantasy town, where knowledge is power and every street holds a new adventure.">
+  <meta name="description" content="Quillhaven is Griffin &amp; Quill’s learning game for academic skills: learn a skill, use it in a short quest, then prove it. A demo is planned for December 2, 2026.">
   <meta name="theme-color" content="#1F2A44">
   <title>Quillhaven | Griffin &amp; Quill</title>
   <meta property="og:title" content="Quillhaven | Griffin &amp; Quill">
-  <meta property="og:description" content="Quillhaven is Griffin &amp; Quill’s fantasy town, where knowledge is power and every street holds a new adventure.">
+  <meta property="og:description" content="Quillhaven is Griffin &amp; Quill’s learning game for academic skills: learn a skill, use it in a short quest, then prove it. A demo is planned for December 2, 2026.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.griffinandquill.com/worlds.html">
   <link rel="canonical" href="https://www.griffinandquill.com/worlds.html">
   <meta property="og:image" content="https://www.griffinandquill.com/assets/og.png">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- Placeholder icons. Replace the files in /assets/icons/ with the final set. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
@@ -25,16 +24,14 @@
   <link rel="stylesheet" href="css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
 </head>
-<body id="top" class="page-quillhaven">
+<body id="top" class="page-quillhaven page-library">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="header-bar">
       <div class="container header-inner">
         <a class="brand" href="index.html">
-          <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark">
             <span class="wordmark-name">Griffin &amp; Quill</span>
-            <span class="wordmark-meta">An Edtech Company</span>
           </span>
         </a>
         <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
@@ -44,13 +41,13 @@
         <nav id="site-nav" aria-label="Primary">
           <ul class="nav-list">
             <li><a href="index.html">Home</a></li>
+            <li><a href="worlds.html" aria-current="page">Quillhaven</a></li>
+            <li><a href="worlds.html#forge">Forge</a></li>
+            <li><a href="worlds.html#command-center">Command Center</a></li>
             <li><a href="tutoring.html">Tutoring</a></li>
             <li><a href="store.html">Store</a></li>
-            <li><a href="worlds.html" aria-current="page">Quillhaven</a></li>
-            <li><a href="schools.html">Schools</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="contact.html" class="nav-contact">Contact</a></li>
           </ul>
         </nav>
       </div>
@@ -61,197 +58,103 @@
       <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. A form on this page needs JavaScript to send, or you can email the address in the footer.</p>
     </noscript>
 
-    <section class="town-square" aria-labelledby="town-square-tagline">
-      <div class="town-square-stage">
-        <canvas class="town-square-canvas" width="480" height="220" aria-hidden="true" data-art="greybox"></canvas>
-        <!-- Empty on purpose. The pixel-art town logo is still coming. -->
-        <div class="town-square-logo-hold" aria-hidden="true"></div>
-      </div>
-      <div class="town-square-copy">
-        <p class="town-square-tagline" id="town-square-tagline">Write your own legend. Learn it. Live it. <span class="town-square-prove">PROVE IT!</span></p>
-        <a class="btn btn-primary" href="https://game-hub-7qg.pages.dev" target="_blank" rel="noopener">Play</a>
+    <section class="lib-hero" aria-labelledby="qh-title">
+      <img class="lib-hero-art" src="assets/worktable.jpg" alt="" width="1152" height="864">
+      <div class="container lib-hero-inner">
+        <p class="eyebrow">Quillhaven</p>
+        <h1 id="qh-title">Write your own legend.</h1>
+        <p class="legend-tag">Learn it. Live it. <strong>PROVE IT!</strong></p>
+        <p class="lib-lede">Quillhaven is a learning game for academic skills. A student learns one skill, uses it inside a short quest, and then proves it on something new.</p>
+        <p class="lib-status"><span class="chip">Planned</span> A demo is planned for December 2, 2026.</p>
+        <div class="lib-actions">
+          <a class="btn btn-gold" href="#waitlist">Join the demo waitlist</a>
+          <a class="btn btn-ghost" href="index.html#story-chart">Try the sample on the home page</a>
+        </div>
       </div>
     </section>
 
-    <div class="container page-hero">
-      <p class="eyebrow">Quillhaven</p>
-      <div>
-          <h1>Quillhaven</h1>
-          <p class="town-banner">Where knowledge is power and every street holds a new adventure.</p>
-          <p class="lede">A cozy pixel fantasy town from Griffin &amp; Quill. You walk in, you learn something that matters on that street, and you prove you can carry it back out.</p>
-          <div class="cluster">
-            <a class="btn btn-primary" href="https://play.griffinandquill.com" target="_blank" rel="noopener">Play the demo</a>
-            <a class="btn btn-secondary" href="schools.html">Schools and districts</a>
-        </div>
-      </div>
-    </div>
-
-    <section class="section" id="play" aria-labelledby="play-title">
+    <section class="lib-section" aria-labelledby="practice-title">
       <div class="container">
-        <h2 id="play-title">Play the demo</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">The Quillhaven demo is live. The game stays unloaded until you press play. Questions about the demo: <a href="mailto:support@griffinandquill.com">support@griffinandquill.com</a>.</p>
-        <div class="play-stage" data-play-stage>
-          <a class="play-poster" data-play-load href="https://play.griffinandquill.com" target="_blank" rel="noopener" aria-label="Play the demo (opens full screen in a new tab)">
-            <span class="play-fit" aria-hidden="true">
-              <span class="qh-panorama play-panorama" data-cast>
-                <img class="qh-layer" src="img/quillhaven/sky.png" width="1280" height="512" alt="">
-                <img class="qh-layer" src="img/quillhaven/far.png" width="1280" height="512" alt="">
-                <img class="qh-layer" src="img/quillhaven/town.png" width="1280" height="512" alt="">
-                <div class="qh-stage">
-                  <span class="qh-lamp lamp-a"></span>
-                  <span class="qh-lamp lamp-b"></span>
-                  <span class="qh-lamp lamp-c"></span>
-                  <span class="qh-lamp lamp-d"></span>
-                  <span class="qh-lamp lamp-e"></span>
-                  <span class="qh-lamp lamp-f"></span>
-                  <span class="qh-window window-academy-l"></span>
-                  <span class="qh-window window-academy-r"></span>
-                  <span class="qh-window window-printers"></span>
-                  <span class="qh-fly fly-a"></span>
-                  <span class="qh-fly fly-b"></span>
-                  <span class="qh-fly fly-c"></span>
-                  <span class="qh-fly fly-d"></span>
-                  <span class="qh-fly fly-e"></span>
-                  <div class="qh-cast">
-                    <span class="qh-actor" data-who="bramble" style="--x:100"><span class="qh-npc qh-breathe" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
-                    <span class="qh-actor" data-who="brittany" style="--x:168"><span class="qh-npc" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
-                    <span class="qh-actor" data-who="ruth" style="--x:236"><span class="qh-npc" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
-                    <span class="qh-actor" data-who="winston" style="--x:304"><span class="qh-npc qh-breathe" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
-                    <span class="qh-actor" data-who="merlin" style="--x:372"><span class="qh-npc qh-breathe" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
-                    <span class="qh-actor" data-who="tahne" style="--x:456"><span class="qh-npc qh-breathe" data-sprite><span class="qh-emote" data-kind="bubble"></span></span></span>
-                    <span class="qh-actor" data-who="rudy" style="--x:540"><span class="qh-npc" data-sprite><span class="qh-emote" data-kind="wave"></span></span></span>
-                  </div>
-                </div>
-              </span>
-            </span>
-            <span class="btn btn-primary">Play the demo</span>
-          </a>
-        </div>
-        <p class="play-open"><a href="https://play.griffinandquill.com" target="_blank" rel="noopener">Open full screen</a></p>
-        <p class="note">It plays best on a computer or tablet with a keyboard.</p>
+        <h2 id="practice-title">How a quest works</h2>
+        <p class="lib-intro">Every quest follows the same three steps, so a student always knows what the skill is and when they have shown it.</p>
+        <ol class="lib-steps">
+          <li class="lib-card">
+            <span class="lib-step-num" aria-hidden="true">1</span>
+            <h3>Learn it</h3>
+            <p>The quest names one academic skill in plain language: the real idea a student needs in a real subject.</p>
+          </li>
+          <li class="lib-card">
+            <span class="lib-step-num" aria-hidden="true">2</span>
+            <h3>Live it</h3>
+            <p>The student uses that skill to make choices in a short story, and the story answers back.</p>
+          </li>
+          <li class="lib-card">
+            <span class="lib-step-num" aria-hidden="true">3</span>
+            <h3>Prove it</h3>
+            <p>The student shows the skill again on something new. That check is the point of the legend.</p>
+          </li>
+        </ol>
       </div>
     </section>
 
-    <section class="section" id="town-map" aria-labelledby="map-title">
+    <section class="lib-section lib-section-deep" aria-labelledby="family-title">
       <div class="container">
-        <h2 id="map-title">Town map</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">The town leads to the Academy, the Library, and the Map Room. The pictures are the town map, not the demo.</p>
-        <ul class="plain-list">
-          <li>Academy: Merlin keeps the four subject portals.</li>
-          <li>Library: Professor Bramble keeps the books.</li>
-          <li>Map Room: Winston Wolf keeps the maps.</li>
+        <h2 id="family-title">Two tools for the adults</h2>
+        <p class="lib-intro">Quillhaven is planned alongside two tools for parents and teachers. Neither one is open yet.</p>
+        <div class="lib-panels">
+          <article class="lib-panel" id="forge" aria-labelledby="forge-title">
+            <p class="chip">Planned · MVP spring 2027</p>
+            <h3 id="forge-title">Quillhaven Forge</h3>
+            <p>Build skill practice for any topic. An adult picks a topic and an academic skill, Forge fills a fixed template, and the adult approves what a student will see before the student sees it.</p>
+          </article>
+          <article class="lib-panel" id="command-center" aria-labelledby="command-title">
+            <p class="chip">Planned</p>
+            <h3 id="command-title">Command Center</h3>
+            <p>See student progress in one place. A teacher or parent would check how practice is going across Quillhaven and Forge.</p>
+          </article>
+        </div>
+        <p class="lib-small">The three are planned as one system with one adult login later. This site does not offer that login or sell a subscription. The current game rebuild is TypeScript and Phaser 4.</p>
+      </div>
+    </section>
+
+    <section class="lib-section" aria-labelledby="privacy-title">
+      <div class="container lib-privacy">
+        <div>
+          <h2 id="privacy-title">Privacy, by design</h2>
+          <p class="lib-intro">How accounts are planned to work when they exist. None of this storage is on this website, and this site does not collect student work.</p>
+        </div>
+        <ul class="lib-checks">
+          <li>Adult accounts only.</li>
+          <li>Students get a system-made username with no personal information.</li>
+          <li>Written answers stay with the adult account and can be deleted.</li>
+          <li>Written answers are never sent to an AI.</li>
         </ul>
-        <div class="town-map">
-          <div class="plot" style="--i:1"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-128 foot-academy" src="img/buildings/academy.png" width="256" height="256" alt="Quillhaven Academy, where Merlin keeps the four subject portals"><span class="plot-ground"></span></div><p>Academy</p><p>Merlin</p></div>
-          <div class="plot" style="--i:8"><div class="plot-stage"><div class="bramble-frame" role="img" aria-label="Professor Bramble, librarian of Quillhaven"></div><span class="plot-ground"></span></div><p>Library</p><p>Professor Bramble</p></div>
-          <div class="plot" style="--i:2"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-128 foot-town-hall" src="img/buildings/town-hall.png" width="256" height="256" alt="Quillhaven Town Hall"><span class="plot-ground"></span></div><p>Town Hall</p></div>
-          <div class="plot" style="--i:3"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-96 foot-map-room" src="img/buildings/map-room-tower.png" width="192" height="192" alt="Quillhaven Map Room, where Winston Wolf keeps the maps"><span class="plot-ground"></span></div><p>Map Room</p><p>Winston Wolf</p></div>
-          <div class="plot" style="--i:4"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-96 foot-printers" src="img/buildings/printers-shop.png" width="192" height="192" alt="Quillhaven Printer’s Shop"><span class="plot-ground"></span></div><p>Printer’s Shop</p></div>
-          <div class="plot" style="--i:5"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-96 foot-science" src="img/buildings/science-lab.png" width="192" height="192" alt="Quillhaven Science Lab"><span class="plot-ground"></span></div><p>Science Lab</p></div>
-          <div class="plot" style="--i:6"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-64 foot-cottage" src="img/buildings/cottage.png" width="128" height="128" alt="Quillhaven Cottage"><span class="plot-ground"></span></div><p>Cottage</p></div>
-          <div class="plot" style="--i:7"><div class="plot-stage"><img class="pixel-sprite sprite-bldg-64 foot-market" src="img/buildings/market-stall.png" width="128" height="128" alt="Quillhaven Market Stall"><span class="plot-ground"></span></div><p>Market Stall</p></div>
-        </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="tahne-title">
+    <section class="lib-section lib-section-deep" aria-labelledby="beside-title">
       <div class="container">
-        <h2 id="tahne-title">The town</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">Tahne founded the town. Merlin keeps the Academy portals. Professor Bramble keeps the Library. Winston Wolf keeps the Map Room.</p>
-        <div class="card-grid cols-4">
-          <article class="card">
-            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-tahne" src="img/characters/tahne.png" width="128" height="128" alt="Tahne, the gryphon who founded Quillhaven"><span class="sprite-ground"></span></div>
-            <h3>Tahne</h3>
-            <p>Tahne is the gryphon who founded Quillhaven. He is wise, brave, and encouraging: a guide and a guardian of knowledge, not a monster. He holds a quill, and he greets new heroes in the town plaza.</p>
+        <h2 id="beside-title">Open today</h2>
+        <div class="lib-panels">
+          <article class="lib-panel">
+            <h3>Tutoring</h3>
+            <p>One-to-one tutoring is $40 per hour online and $50 per hour in person. This site does not take payment.</p>
+            <p class="lib-panel-action"><a class="btn btn-ghost" href="tutoring.html#book">Book tutoring</a></p>
           </article>
-          <article class="card">
-            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-merlin" src="img/characters/merlin.png" width="128" height="128" alt="Merlin, the portal keeper at Quillhaven Academy"><span class="sprite-ground"></span></div>
-            <h3>Merlin</h3>
-            <p>Merlin is the wizard who keeps the Academy portals. Each portal opens a subject hub. He does not hand you the answer. He hands you the way in.</p>
-          </article>
-          <article class="card">
-            <div class="sprite-stand"><img class="pixel-sprite sprite-adult sprite-bob foot-winston" src="img/characters/winston.png" width="128" height="128" alt="Winston Wolf, who keeps the Quillhaven Map Room"><span class="sprite-ground"></span></div>
-            <h3>Winston Wolf</h3>
-            <p>Winston Wolf keeps the Map Room. He asks whether you can still prove what you learned that day.</p>
-          </article>
-          <article class="card">
-            <div class="sprite-stand"><div class="bramble-frame" role="img" aria-label="Professor Bramble, the highland cow librarian"></div><span class="sprite-ground"></span></div>
-            <h3>Professor Bramble</h3>
-            <p>Professor Bramble keeps the Library. He is the highland cow librarian.</p>
+          <article class="lib-panel">
+            <h3>Classroom resources</h3>
+            <p>Paid curriculum is sold on Teachers Pay Teachers. The store lists the units and links to that checkout.</p>
+            <p class="lib-panel-action"><a class="btn btn-ghost" href="store.html">Visit the store</a></p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="academy-title">
+    <section class="lib-section lib-section-glow" id="waitlist" aria-labelledby="wait-title">
       <div class="container">
-        <h2 id="academy-title">Quillhaven Academy</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">Quillhaven Academy sits at the heart of town. Four subject portals each open a hub world. The games live inside the hub.</p>
-        <div class="card-grid cols-4">
-          <article class="card"><p class="stamp">In development</p><h3>History &amp; Social Studies</h3><p>The first Quillhaven demo is in development, with U.S. History as its first content pack.</p></article>
-          <article class="card"><p class="stamp">Coming soon</p><h3>Science</h3><p>This hub is not open yet.</p></article>
-          <article class="card"><p class="stamp">Coming soon</p><h3>Math</h3><p>This hub is not open yet.</p></article>
-          <article class="card"><p class="stamp">Coming soon</p><h3>English/ELA</h3><p>This hub is not open yet.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="heroes-title">
-      <div class="container">
-        <h2 id="heroes-title">Student heroes</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">Brittany, Ruth, and Rudy are the student heroes who explore Quillhaven, step through the portals, and go on learning quests. The idea is that every kid who plays gets to write their own legend.</p>
-        <div class="grid-3">
-          <article class="card">
-            <div class="sprite-stand"><img class="pixel-sprite sprite-kid sprite-bob foot-brittany" src="img/characters/brittany.png" width="96" height="96" alt="Brittany, a student hero of Quillhaven"><span class="sprite-ground"></span></div>
-            <h3>Brittany</h3>
-          </article>
-          <article class="card">
-            <div class="sprite-stand"><img class="pixel-sprite sprite-kid sprite-bob foot-ruth" src="img/characters/ruth.png" width="96" height="96" alt="Ruth, a student hero of Quillhaven"><span class="sprite-ground"></span></div>
-            <h3>Ruth</h3>
-          </article>
-          <article class="card">
-            <div class="sprite-stand"><img class="pixel-sprite sprite-kid sprite-bob foot-rudy" src="img/characters/rudy.png" width="96" height="96" alt="Rudy, a student hero of Quillhaven"><span class="sprite-ground"></span></div>
-            <h3>Rudy</h3>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="prove-title">
-      <div class="container">
-        <h2 id="prove-title">Play and prove</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">A game lives inside its subject hub. The first Quillhaven demo is in development, with U.S. History as its first content pack.</p>
-        <div class="grid-3">
-          <article class="card">
-            <p class="stamp">History &amp; Social Studies</p>
-            <h3>Mending the Charter</h3>
-            <p>In development as the first Quillhaven demo, with U.S. History as its first content pack.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="school-note-title">
-      <div class="container">
-        <div class="callout">
-          <h2 id="school-note-title">A note for schools</h2>
-          <p>Quillhaven is not licensed yet. If you are a school or a district, tell us what you would need. We will not sell a license from this page.</p>
-          <p><a class="btn btn-on-dark" href="schools.html">Schools and districts</a></p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="waitlist" aria-labelledby="wait-title">
-      <div class="container">
-        <div class="form-card form-wrap">
-          <h2 id="wait-title">A note when there is more</h2>
-          <p>The demo is already on this page. Leave an adult email if you want a note when there is more of Quillhaven to try. Use a parent, teacher, or school address, not a child’s.</p>
+        <div class="form-card form-wrap lib-form">
+          <h2 id="wait-title">Get a note when the demo opens</h2>
+          <p>Leave an adult email and we will write once when the December 2, 2026 demo is ready to try. Use a parent or teacher address, not a child’s.</p>
           <form data-form="hello" method="POST" action="#">
             <p class="thanks" data-thanks tabindex="-1" hidden>Thanks. Your note is on its way.</p>
             <p class="form-error" data-form-error tabindex="-1" hidden>That note did not send. Write to <a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a>.</p>
@@ -269,11 +172,11 @@
                 <option>Parent or guardian</option>
                 <option>Teacher</option>
                 <option>Homeschooler</option>
-                <option>School or district</option>
+                <option>Co-op organizer</option>
                 <option>Lifelong learner</option>
               </select>
             </div>
-            <button class="btn btn-primary" type="submit">Join the waitlist</button>
+            <button class="btn btn-gold" type="submit">Join the waitlist</button>
             <p class="note">Do not include a child’s name. This note goes to hello@griffinandquill.com.</p>
           </form>
         </div>
@@ -284,28 +187,27 @@
     <div class="container footer-grid">
       <div>
         <a class="footer-brand" href="index.html">
-          <img class="logo" src="assets/logo-icon.svg" alt="" width="160" height="127">
           <span class="wordmark-name">Griffin &amp; Quill</span>
         </a>
-        <p>Griffin &amp; Quill LLC is a South Carolina edtech company that teaches, grows, and maintains students’ academic skills across all subjects. Where learning becomes an adventure.</p>
+        <p>Griffin &amp; Quill LLC is a South Carolina edtech company. Where learning becomes an adventure.</p>
         <p><a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a></p>
       </div>
       <div>
         <p class="footer-label" id="foot-learn">Learn</p>
         <ul class="footer-links" aria-labelledby="foot-learn">
-              <li><a href="index.html">Home</a></li>
-              <li><a href="tutoring.html">Tutoring</a></li>
-              <li><a href="store.html">Store</a></li>
-              <li><a href="worlds.html" aria-current="page">Quillhaven</a></li>
-              <li><a href="schools.html">Schools</a></li>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="worlds.html" aria-current="page">Quillhaven</a></li>
+          <li><a href="tutoring.html">Tutoring</a></li>
+          <li><a href="store.html">Store</a></li>
+          <li><a href="schools.html">Families</a></li>
         </ul>
       </div>
       <div>
         <p class="footer-label" id="foot-visit">Visit</p>
         <ul class="footer-links" aria-labelledby="foot-visit">
-              <li><a href="about.html">About</a></li>
-              <li><a href="faq.html">FAQ</a></li>
-              <li><a href="contact.html">Contact</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -318,12 +220,10 @@
       </div>
     </div>
     <div class="container">
-      <p class="fineprint">Town square art: townsfolk, houses, stalls, and plaza props by Gif, Noiracide, and Romi. Emotes by Franuka / @franuka_art. Academy by MutterPixel Studio. © 2026 Griffin &amp; Quill LLC.</p>
+      <p class="fineprint">The desk picture is original atmosphere made for this preview. © 2026 Griffin &amp; Quill LLC.</p>
     </div>
   </footer>
   <script src="js/form-config.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/hero-scene.js"></script>
-  <script src="js/town-square.js"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@ Five forms post to FormSubmit. A valid submit stays on the page and shows `Thank
 
 - Home, section `Notes from the studio`, button `Join the list`. Inbox `hello@griffinandquill.com`.
 - Quillhaven (`worlds.html`), section `Waitlist`, button `Join the waitlist`. Inbox `hello@griffinandquill.com`.
-- Schools, section `Inquiry form`, button `Send inquiry`. Inbox `partners@griffinandquill.com`.
+- Families (`schools.html`), section `Inquiry form`, button `Send inquiry`. Inbox `partners@griffinandquill.com`.
 - Contact, section `Message`, button `Send message`. Inbox `hello@griffinandquill.com`.
 - Tutoring (`tutoring.html`), section `Book with us` (`#book`), button `Book with us`. Inbox `tutoring@griffinandquill.com`. The printed flyer QR code opens this section. Wyzant is a text link under the form, not a button in the hero or above the form.
 

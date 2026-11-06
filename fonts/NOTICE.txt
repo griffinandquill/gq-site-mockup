@@ -1,0 +1,67 @@
+Font files shipped with this site
+==================================
+
+These lines were read from the name tables of the WOFF2 files in this
+folder. The font binaries were not edited when this notice was added.
+The license text is fonts/OFL.txt.
+
+fonts/lato-400.woff2
+  Family: Lato
+  Subfamily: Regular
+  Full name: Lato Regular
+  Version: Version 1.104; Western+Polish opensource
+  Unique ID: tyPolandLukaszDziedzic: Lato Regular: 2011
+  Copyright: Copyright (c) 2010-2011 by tyPoland Lukasz Dziedzic with Reserved Font Name "Lato". Licensed under the SIL Open Font License, Version 1.1.
+  License URL: http://scripts.sil.org/OFL
+  Glyphs in this file: 224
+  OS/2 usWeightClass: 400
+  OS/2 fsType: 0
+
+fonts/lato-700.woff2
+  Family: Lato
+  Subfamily: Bold
+  Full name: Lato Bold
+  Version: Version 1.104; Western+Polish opensource
+  Unique ID: tyPolandLukaszDziedzic: Lato Bold: 2011
+  Copyright: Copyright (c) 2010-2011 by tyPoland Lukasz Dziedzic with Reserved Font Name "Lato". Licensed under the SIL Open Font License, Version 1.1.
+  License URL: http://scripts.sil.org/OFL
+  Glyphs in this file: 224
+  OS/2 usWeightClass: 700
+  OS/2 fsType: 0
+
+fonts/merriweather-400.woff2
+  Typographic family: Merriweather Light 18pt
+  Subfamily: Regular
+  Full name: Merriweather Light 18pt Regular
+  Version: Version 2.100
+  Unique ID: 2.100;STC;MerriweatherLight18pt-Regular
+  Copyright: Copyright 2024 The Merriweather Project Authors (https://github.com/EbenSorkin/Merriweather4) with Reserved Font Name "Merriweather".
+  License URL: https://openfontlicense.org
+  Glyphs in this file: 290
+  OS/2 usWeightClass: 300
+  OS/2 fsType: 0
+  This file includes an fvar table. The pages request it through the CSS
+  family name "Merriweather". That CSS name is not written into the font.
+
+fonts/merriweather-400-italic.woff2
+  Typographic family: Merriweather Light 18pt
+  Subfamily: Italic
+  Full name: Merriweather Light 18pt Italic
+  Version: Version 2.101
+  Unique ID: 2.101;STC;MerriweatherLight18pt-Italic
+  Copyright: Copyright 2024 The Merriweather Project Authors (https://github.com/EbenSorkin/Merriweather4) with Reserved Font Name "Merriweather".
+  License URL: https://openfontlicense.org
+  Glyphs in this file: 295
+  OS/2 usWeightClass: 400
+  OS/2 fsType: 0
+
+The Merriweather project OFL.txt on
+https://github.com/EbenSorkin/Merriweather4 opens with a 2020 copyright
+line for the same project URL and the same reserved name. The name
+tables in these two WOFF2 files say 2024. fonts/OFL.txt uses the 2024
+line from these files.
+
+The Google Fonts METADATA for the Lato family currently uses a 2011-2015
+copyright line. The name tables in these two Lato files say 2010-2011
+and version 1.104, and each file contains 224 glyphs. This notice does
+not describe them as that later full family.

@@ -35,7 +35,7 @@ export const pages = [
   {
     file: "schools.html",
     title: "Griffin & Quill | Where learning becomes an adventure",
-    nav: "Schools",
+    nav: null,
   },
   {
     file: "about.html",
@@ -45,7 +45,7 @@ export const pages = [
   {
     file: "faq.html",
     title: "Griffin & Quill | Where learning becomes an adventure",
-    nav: "FAQ",
+    nav: null,
   },
   {
     file: "contact.html",
@@ -106,11 +106,11 @@ export const forms = [
       { kind: "fill", label: "Work email (required)", value: "qa@example.com" },
       {
         kind: "fill",
-        label: "School, district, or organization (required)",
-        value: "Example District",
+        label: "Organization (required)",
+        value: "Example Co-op",
       },
       { kind: "select", label: "Role (required)", value: "Teacher" },
-      { kind: "radio", label: "Site license" },
+      { kind: "radio", label: "A co-op question" },
       {
         kind: "fill",
         label: "Message (required)",

@@ -59,12 +59,15 @@ test("stage copies site bytes and leaves the checker out", () => {
   const css = fs.readFileSync(path.join(ROOT, "_site", "css", "styles.css"), "utf8");
   const store = fs.readFileSync(path.join(ROOT, "_site", "store.html"), "utf8");
   const legacy = fs.readFileSync(path.join(ROOT, "_site", "resources.html"), "utf8");
+  const home = fs.readFileSync(path.join(ROOT, "_site", "index.html"), "utf8");
   expect(worlds).toContain(`href="css/styles.css?v=${version}"`);
   expect(worlds).toContain(`src="js/main.js?v=${version}"`);
-  expect(worlds).toContain(`src="img/characters/tahne.png?v=${version}"`);
-  expect(worlds).toContain(`src="img/buildings/academy.png?v=${version}"`);
-  expect(worlds).toContain('src="assets/logo-icon.svg"');
-  expect(css).toContain(`bramble-idle.png?v=${version}`);
+  expect(worlds).not.toContain("tahne.png");
+  expect(worlds).not.toContain("hero-scene.js");
+  expect(worlds).not.toContain("town-square.js");
+  expect(home).toContain("assets/worktable.jpg");
+  expect(home).toContain(`src="js/chart.js?v=${version}"`);
+  expect(home).not.toContain("logo-icon.svg");
   expect(store).toContain(`src="js/store.js?v=${version}"`);
   expect(store).toContain(`href="data/store.json?v=${version}"`);
   expect(store).not.toContain("products.js");
@@ -74,6 +77,45 @@ test("stage copies site bytes and leaves the checker out", () => {
   expect(fs.existsSync(path.join(ROOT, "_site", "verify"))).toBe(false);
   expect(fs.existsSync(path.join(ROOT, "_site", "tests"))).toBe(false);
   expect(fs.existsSync(path.join(ROOT, "_site", "README.md"))).toBe(false);
+});
+
+test("font notices name the shipped files and the pack sprite builder is gone", () => {
+  expect(fs.existsSync(path.join(ROOT, "tools/build-scene-sprites.py"))).toBe(false);
+  expect(fs.existsSync(path.join(ROOT, "tools/build-kid-sprites.py"))).toBe(false);
+  const ofl = fs.readFileSync(path.join(ROOT, "fonts/OFL.txt"), "utf8");
+  expect(ofl).toContain('Copyright (c) 2010-2011 by tyPoland Lukasz Dziedzic with Reserved Font Name "Lato".');
+  expect(ofl).toContain(
+    'Copyright 2024 The Merriweather Project Authors (https://github.com/EbenSorkin/Merriweather4) with Reserved Font Name "Merriweather".',
+  );
+  expect(ofl).toContain("SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007");
+  const notice = fs.readFileSync(path.join(ROOT, "fonts/NOTICE.txt"), "utf8");
+  expect(notice).toContain("fonts/lato-400.woff2");
+  expect(notice).toContain("fonts/lato-700.woff2");
+  expect(notice).toContain("Version 1.104; Western+Polish opensource");
+  expect(notice).toContain("fonts/merriweather-400.woff2");
+  expect(notice).toContain("Version 2.100");
+  expect(notice).toContain("fonts/merriweather-400-italic.woff2");
+  expect(notice).toContain("Version 2.101");
+});
+
+test("visitor icons use the text monogram", () => {
+  const svg = fs.readFileSync(path.join(ROOT, "favicon.svg"), "utf8");
+  expect(svg).toContain("G&amp;Q");
+  expect(svg).not.toContain("Layer_1");
+  expect(svg.toLowerCase()).not.toContain("gryphon");
+  const manifest = fs.readFileSync(path.join(ROOT, "assets/icons/site.webmanifest"), "utf8");
+  expect(manifest).toContain("/assets/icons/favicon-32.png");
+  expect(manifest).toContain("/assets/icons/apple-touch-icon-180.png");
+  expect(manifest).not.toContain("logo-icon");
+  expect(manifest).not.toContain("tahne");
+  for (const rel of ["assets/og.png", "assets/icons/favicon-32.png", "assets/icons/apple-touch-icon-180.png"]) {
+    const png = fs.readFileSync(path.join(ROOT, rel));
+    expect(png.subarray(0, 8).toString("hex"), rel).toBe("89504e470d0a1a0a");
+    const width = png.readUInt32BE(16);
+    const height = png.readUInt32BE(20);
+    expect(width, rel).toBeGreaterThan(0);
+    expect(height, rel).toBeGreaterThan(0);
+  }
 });
 
 test("robots.txt allows crawling and names the sitemap", async ({ request }) => {
@@ -178,8 +220,11 @@ for (const entry of pages) {
         await expect(page.getByText("This site does not take payment.").first()).toBeVisible();
       }
       if (entry.file === "worlds.html") {
-        await expect(page.getByText("Library: Professor Bramble keeps the books.")).toBeVisible();
+        await expect(page.getByText("A demo is planned for December 2, 2026.")).toBeVisible();
+        await expect(page.getByText("TypeScript and Phaser 4")).toBeVisible();
         await expect(page.getByText("still reserved")).toHaveCount(0);
+        await expect(page.getByText("Gryff")).toHaveCount(0);
+        await expect(page.getByText("Tahne")).toHaveCount(0);
       }
       const current = page.locator('#site-nav a[aria-current="page"]');
       if (entry.nav) {
@@ -387,639 +432,6 @@ test("the old curriculum address opens the store", async ({ page }) => {
   await expect(page.getByText("The Road to Revolution")).toHaveCount(0);
 });
 
-const sceneNpcs = [
-  { name: "Bramble", who: "bramble", sheet: "bramble-idle.png" },
-  { name: "Merlin", who: "merlin", sheet: "merlin-idle.png" },
-  { name: "Tahne", who: "tahne", sheet: "tahne-idle.png" },
-  { name: "Winston", who: "winston", sheet: "winston-idle.png" },
-  { name: "Brittany", who: "brittany", sheet: "brittany-idle.png" },
-  { name: "Ruth", who: "ruth", sheet: "ruth-idle.png" },
-  { name: "Rudy", who: "rudy", sheet: "rudy-idle.png" },
-] as const;
-
-test("quillhaven npc sprites have size inside the panorama", async ({ page }) => {
-  for (const width of [1280, 375]) {
-    await page.setViewportSize({ width, height: 800 });
-    await page.goto("/worlds.html#play");
-    const scene = page.locator(".play-fit");
-    await expect(scene).toBeVisible();
-    for (const npc of sceneNpcs) {
-      const selector = `[data-who="${npc.who}"] .qh-npc`;
-      const box = await scene.evaluate((el, sel) => {
-        const node = el.querySelector(sel);
-        if (!node) throw new Error(`missing ${sel}`);
-        const sceneBox = el.getBoundingClientRect();
-        const rect = node.getBoundingClientRect();
-        const style = getComputedStyle(node);
-        return {
-          width: rect.width,
-          height: rect.height,
-          left: rect.left,
-          right: rect.right,
-          top: rect.top,
-          bottom: rect.bottom,
-          sceneLeft: sceneBox.left,
-          sceneRight: sceneBox.right,
-          sceneTop: sceneBox.top,
-          sceneBottom: sceneBox.bottom,
-          opacity: style.opacity,
-          backgroundImage: style.backgroundImage,
-        };
-      }, selector);
-      const minSprite = width >= 1000 ? 20 : 6;
-      expect(box.width, `${npc.name} width at ${width}`).toBeGreaterThan(minSprite);
-      expect(box.height, `${npc.name} height at ${width}`).toBeGreaterThan(minSprite);
-      expect(box.opacity, npc.name).toBe("1");
-      expect(box.backgroundImage, npc.name).toContain(npc.sheet);
-      expect(box.left, `${npc.name} left`).toBeGreaterThanOrEqual(box.sceneLeft - 1);
-      expect(box.right, `${npc.name} right`).toBeLessThanOrEqual(box.sceneRight + 1);
-      expect(box.top, `${npc.name} top`).toBeGreaterThanOrEqual(box.sceneTop - 1);
-      expect(box.bottom, `${npc.name} bottom`).toBeLessThanOrEqual(box.sceneBottom + 1);
-      await expect(scene.locator(selector)).toBeVisible();
-    }
-  }
-});
-
-test("town square banner keeps the tagline and play control readable", async ({ page }) => {
-  const playHref = "https://game-hub-7qg.pages.dev";
-  for (const width of [1280, 375]) {
-    await page.setViewportSize({ width, height: 800 });
-    await page.goto("/worlds.html");
-    const banner = page.locator(".town-square");
-    await expect(banner).toBeVisible();
-    await expect(page.locator("#town-square-tagline")).toContainText("Write your own legend. Learn it. Live it.");
-    await expect(page.locator(".town-square-prove")).toHaveText("PROVE IT!");
-    const play = banner.getByRole("link", { name: "Play", exact: true });
-    await expect(play).toHaveAttribute("href", playHref);
-    await expect(play).toHaveAttribute("target", "_blank");
-    await expect(play).toHaveAttribute("rel", /noopener/);
-    await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-art", "atlases");
-    await expect(page.locator(".town-square-canvas")).toHaveAttribute("data-town-motion", "static");
-    await expect(page.locator("footer")).toContainText("Gif");
-    await expect(page.locator("footer")).toContainText("Noiracide");
-    await expect(page.locator("footer")).toContainText("Romi");
-    await expect(page.locator("footer")).toContainText("Franuka");
-    await expect(page.locator("footer")).toContainText("MutterPixel");
-    const layout = await page.evaluate(() => {
-      const stage = document.querySelector(".town-square-stage");
-      const copy = document.querySelector(".town-square-copy");
-      const canvas = document.querySelector(".town-square-canvas");
-      if (!stage || !copy || !canvas) throw new Error("missing town square");
-      const stageBox = stage.getBoundingClientRect();
-      const copyBox = copy.getBoundingClientRect();
-      const pixels = (canvas as HTMLCanvasElement).getContext("2d");
-      if (!pixels) throw new Error("missing canvas context");
-      const sample = pixels.getImageData(8, Math.floor(canvas.height * 0.72), 24, 24).data;
-      let ink = 0;
-      for (let i = 0; i < sample.length; i += 4) {
-        if (sample[i] + sample[i + 1] + sample[i + 2] > 40) ink += 1;
-      }
-      return {
-        stageTop: stageBox.top,
-        stageBottom: stageBox.bottom,
-        stageHeight: stageBox.height,
-        stageWidth: stageBox.width,
-        copyTop: copyBox.top,
-        copyBottom: copyBox.bottom,
-        ink,
-      };
-    });
-    expect(layout.stageWidth, `banner width at ${width}`).toBeGreaterThan(width - 2);
-    expect(layout.ink, `painted pixels at ${width}`).toBeGreaterThan(20);
-    if (width <= 640) {
-      expect(layout.stageHeight, "short phone scene").toBeLessThanOrEqual(180);
-      expect(layout.copyTop, "copy sits below the scene").toBeGreaterThanOrEqual(layout.stageBottom - 1);
-    } else {
-      expect(layout.copyTop, "copy overlays the scene").toBeLessThan(layout.stageBottom);
-      expect(layout.copyBottom, "copy stays above the street").toBeLessThanOrEqual(layout.stageTop + layout.stageHeight * 0.62);
-    }
-  }
-});
-
-test.describe("town square walks when motion is allowed", () => {
-  test.use({ reducedMotion: "no-preference" });
-
-  test("the banner animates after it is on screen and holds still when reduced motion is on", async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto("/worlds.html");
-    await page.waitForFunction(() => {
-      const canvas = document.querySelector(".town-square-canvas");
-      return canvas && canvas.getAttribute("data-town-motion") === "live";
-    }, null, { timeout: 10_000 });
-    const first = await page.locator(".town-square-canvas").getAttribute("data-town-frame");
-    await page.waitForFunction((start) => {
-      const canvas = document.querySelector(".town-square-canvas");
-      const frame = Number(canvas ? canvas.getAttribute("data-town-frame") : "0");
-      return frame > Number(start);
-    }, first || "0", { timeout: 10_000 });
-  });
-});
-
-const castWho = ["bramble", "brittany", "ruth", "winston", "merlin", "tahne", "rudy"];
-
-function realDelay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function showPoster(page: Page) {
-  await page.evaluate(() => {
-    const stage = document.querySelector(".play-stage");
-    if (stage) stage.scrollIntoView({ block: "center", inline: "nearest" });
-  });
-  for (let attempt = 0; attempt < 40; attempt += 1) {
-    const live = await page.evaluate(() => document.querySelector(".play-stage")?.classList.contains("is-live") === true);
-    if (live) return;
-    await realDelay(50);
-  }
-  throw new Error("play poster did not start");
-}
-
-async function waitForCast(page: Page) {
-  for (let attempt = 0; attempt < 80; attempt += 1) {
-    const state = await page.evaluate(() => document.documentElement.dataset.castReady || document.documentElement.dataset.castError || "");
-    if (state === "1") return;
-    if (state) throw new Error(state);
-    await page.clock.fastForward(50);
-  }
-  throw new Error("cast did not start");
-}
-
-async function expectCastInCrop(page: Page, clip: string, root: string, label: string) {
-  const rows = await page.evaluate(({ clip, root }) => {
-    const boxEl = document.querySelector(clip);
-    if (!boxEl) return [];
-    const box = boxEl.getBoundingClientRect();
-    const boxStyle = getComputedStyle(boxEl);
-    const cropLeft = box.left + (parseFloat(boxStyle.borderLeftWidth) || 0);
-    const cropTop = box.top + (parseFloat(boxStyle.borderTopWidth) || 0);
-    return Array.from(document.querySelectorAll(`${root} [data-sprite]`)).map((sprite) => {
-      const actor = sprite.closest("[data-who]");
-      const rect = sprite.getBoundingClientRect();
-      const style = getComputedStyle(sprite);
-      return {
-        who: actor ? actor.getAttribute("data-who") : "",
-        opacity: style.opacity,
-        visibility: style.visibility,
-        display: style.display,
-        image: style.backgroundImage,
-        width: rect.width,
-        height: rect.height,
-        left: rect.left - cropLeft,
-        right: rect.right - cropLeft,
-        top: rect.top - cropTop,
-        bottom: rect.bottom - cropTop,
-        boxW: boxEl.clientWidth,
-        boxH: boxEl.clientHeight,
-      };
-    });
-  }, { clip, root });
-  expect(rows.map((row) => row.who).sort(), label).toEqual([...castWho].sort());
-  for (const row of rows) {
-    expect(row.opacity, `${label} ${row.who}`).toBe("1");
-    expect(row.visibility, `${label} ${row.who}`).toBe("visible");
-    expect(row.display, `${label} ${row.who}`).not.toBe("none");
-    expect(row.image, `${label} ${row.who}`).not.toBe("none");
-    expect(row.width, `${label} ${row.who}`).toBeGreaterThan(4);
-    expect(row.height, `${label} ${row.who}`).toBeGreaterThan(4);
-    expect(row.left, `${label} ${row.who} left`).toBeGreaterThanOrEqual(-1);
-    expect(row.top, `${label} ${row.who} top`).toBeGreaterThanOrEqual(-1);
-    expect(row.right, `${label} ${row.who} right`).toBeLessThanOrEqual(row.boxW + 1);
-    expect(row.bottom, `${label} ${row.who} bottom`).toBeLessThanOrEqual(row.boxH + 1);
-  }
-}
-
-test.describe("quillhaven cast stays on screen", () => {
-  test.use({ reducedMotion: "no-preference" });
-
-  test("all seven characters stay visible and in bounds over several minutes", async ({ page }) => {
-    test.setTimeout(90_000);
-    await page.clock.install();
-
-    async function expectCast(clip: string, root: string, label: string) {
-      await expectCastInCrop(page, clip, root, label);
-    }
-
-    async function heroXs() {
-      return page.evaluate(() => Array.from(document.querySelectorAll(".play-panorama .qh-actor")).map((actor) => {
-        const el = actor as HTMLElement;
-        return el.style.getPropertyValue("--x");
-      }).join(","));
-    }
-
-    const runs = [
-      { width: 1280, height: 720, seconds: 180, poster: true },
-      { width: 1366, height: 768, seconds: 40, poster: false },
-      { width: 1440, height: 900, seconds: 180, poster: true },
-      { width: 1536, height: 864, seconds: 40, poster: false },
-      { width: 1920, height: 1080, seconds: 40, poster: false },
-      { width: 1024, height: 576, seconds: 40, poster: false },
-      { width: 960, height: 540, seconds: 40, poster: true },
-      { width: 853, height: 480, seconds: 180, poster: true },
-      { width: 768, height: 900, seconds: 40, poster: false },
-      { width: 390, height: 844, seconds: 40, poster: true },
-    ];
-    for (const run of runs) {
-      await page.setViewportSize({ width: run.width, height: run.height });
-      await page.goto(`/worlds.html?cast=${run.width}x${run.height}`);
-      await expect(page.locator(".play-stage")).toBeVisible();
-      await waitForCast(page);
-      await showPoster(page);
-      await page.clock.fastForward(400);
-      const step = run.seconds > 40 ? 5 : 10;
-      for (let sec = 0; sec <= run.seconds; sec += step) {
-        if (sec) await page.clock.fastForward(step * 1000);
-        if (sec === 60) await page.clock.fastForward(10 * 60 * 1000);
-        await expectCast(".play-fit", ".play-panorama", `hero ${run.width}x${run.height} t=${sec}`);
-      }
-      if (!run.poster) continue;
-      await page.evaluate(() => {
-        document.documentElement.style.scrollBehavior = "auto";
-        const play = document.querySelector("#play");
-        if (!play) return;
-        const top = play.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo(0, Math.max(0, top - 80));
-      });
-      await page.clock.fastForward(400);
-      for (let sec = 0; sec <= 40; sec += 10) {
-        if (sec) await page.clock.fastForward(10_000);
-        await expectCast(".play-fit", ".play-panorama", `poster ${run.width}px t=${sec}`);
-      }
-    }
-
-    async function resizeTo(width: number, height: number) {
-      await page.setViewportSize({ width, height });
-      // The test clock can hold the browser's own resize event. Dispatch the one the scene listens for.
-      await page.evaluate(() => window.dispatchEvent(new Event("resize")));
-    }
-
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/worlds.html?cast=resize");
-    await waitForCast(page);
-    await showPoster(page);
-    await page.clock.fastForward(400);
-    for (let step = 0; step < 20; step += 1) {
-      const rudy = await page.evaluate(() => {
-        const style = document.querySelector('.play-panorama [data-who="rudy"]')?.getAttribute("style") || "";
-        const match = /--x:\s*([0-9.]+)/.exec(style);
-        return match ? Number(match[1]) : 0;
-      });
-      if (rudy >= 545) break;
-      await page.clock.fastForward(2000);
-    }
-    for (const width of [1440, 1366, 1280, 1100, 1024, 960, 853, 768, 1440, 1920, 1536]) {
-      await resizeTo(width, 800);
-      await expectCast(".play-fit", ".play-panorama", `resized to ${width}`);
-    }
-    await resizeTo(853, 700);
-    await page.goto("/worlds.html?cast=grow");
-    await waitForCast(page);
-    await showPoster(page);
-    await page.clock.fastForward(17_000);
-    await expectCast(".play-fit", ".play-panorama", "opened at 150% zoom");
-    await resizeTo(1440, 900);
-    await expectCast(".play-fit", ".play-panorama", "grown from zoom to laptop");
-
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto("/worlds.html?cast=resume");
-    await waitForCast(page);
-    await showPoster(page);
-    await page.clock.fastForward(400);
-    await page.evaluate(() => {
-      Object.defineProperty(Document.prototype, "hidden", {
-        configurable: true,
-        get() { return (document as Document & { __hide?: boolean }).__hide === true; },
-      });
-      (document as Document & { __hide?: boolean }).__hide = true;
-      document.dispatchEvent(new Event("visibilitychange"));
-    });
-    const whileHidden = await heroXs();
-    await page.clock.fastForward(8000);
-    expect(await heroXs()).toBe(whileHidden);
-    await page.evaluate(() => {
-      (document as Document & { __hide?: boolean }).__hide = false;
-      document.dispatchEvent(new Event("visibilitychange"));
-    });
-    await page.clock.fastForward(4000);
-    expect(await heroXs()).not.toBe(whileHidden);
-    await expectCast(".play-fit", ".play-panorama", "hero after tab show");
-
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    for (let attempt = 0; attempt < 40; attempt += 1) {
-      const paused = await page.evaluate(() => document.querySelector(".play-stage")?.classList.contains("is-live") !== true);
-      if (paused) break;
-      await realDelay(50);
-      if (attempt === 39) throw new Error("play poster stayed on screen");
-    }
-    const whileAway = await heroXs();
-    await page.clock.fastForward(5000);
-    expect(await heroXs()).toBe(whileAway);
-    await showPoster(page);
-    await page.clock.fastForward(4000);
-    expect(await heroXs()).not.toBe(whileAway);
-    await expectCast(".play-fit", ".play-panorama", "hero after scroll back");
-  });
-
-  test("each sprite stays on a drawn frame for a full cast loop", async ({ page }) => {
-    test.setTimeout(180_000);
-    const width = 1440;
-    const height = 900;
-    const seconds = 40;
-    await page.setViewportSize({ width, height });
-    const pageErrors: string[] = [];
-    page.on("pageerror", (error) => pageErrors.push(error.message));
-    await page.goto("/worlds.html?frames=cast");
-    await showPoster(page);
-    await page.waitForFunction(() => {
-      const root = document.documentElement;
-      return root.dataset.castReady === "1" || root.dataset.castError;
-    });
-    const castError = await page.evaluate(() => document.documentElement.dataset.castError || "");
-    expect(castError).toBe("");
-    await page.evaluate(() => {
-      document.querySelectorAll(".qh-lamp, .qh-fly, .qh-cloud, .qh-window").forEach((node) => {
-        (node as HTMLElement).style.animation = "none";
-      });
-    });
-
-    const client = await page.context().newCDPSession(page);
-    const shots: { png: Buffer; stamp: number }[] = [];
-    client.on("Page.screencastFrame", (event) => {
-      const metadata = event.metadata as { timestamp?: number } | undefined;
-      const raw = metadata && typeof metadata.timestamp === "number" ? metadata.timestamp : 0;
-      const stamp = raw > 1e12 ? raw : raw > 1e9 ? raw * 1000 : Date.now();
-      shots.push({ png: Buffer.from(event.data, "base64"), stamp });
-      void client.send("Page.screencastFrameAck", { sessionId: event.sessionId }).catch(() => {});
-    });
-
-    await page.evaluate(() => {
-      document.querySelectorAll(".play-panorama [data-sprite]").forEach((node) => {
-        (node as HTMLElement).style.visibility = "hidden";
-      });
-    });
-    await client.send("Page.startScreencast", { format: "png", everyFrame: true });
-    await expect.poll(() => shots.length, { timeout: 5_000 }).toBeGreaterThan(1);
-    const reference = decodePng(shots[shots.length - 1].png);
-    await client.send("Page.stopScreencast");
-    await page.waitForTimeout(150);
-    shots.length = 0;
-
-    await page.evaluate(() => {
-      document.querySelectorAll(".play-panorama [data-sprite]").forEach((node) => {
-        (node as HTMLElement).style.visibility = "";
-      });
-      const samples: CastFrame[] = [];
-      (window as Window & { __castFrames?: CastFrame[] }).__castFrames = samples;
-      const log = () => {
-        samples.push({
-          t: Date.now(),
-          rows: Array.from(document.querySelectorAll(".play-panorama [data-sprite]")).map((sprite) => {
-            const actor = sprite.closest("[data-who]");
-            const rect = sprite.getBoundingClientRect();
-            const style = getComputedStyle(sprite);
-            const sheet = parseFloat(style.backgroundSize) || 0;
-            const pos = parseFloat(style.backgroundPositionX) || 0;
-            const cell = (parseFloat(style.getPropertyValue("--cell-w")) || 0) * 2;
-            return {
-              who: actor ? actor.getAttribute("data-who") || "" : "",
-              pose: sprite.getAttribute("data-pose") || "",
-              left: rect.left,
-              top: rect.top,
-              width: rect.width,
-              height: rect.height,
-              sheet,
-              pos,
-              cell,
-              image: style.backgroundImage.startsWith('url("data:image/png') ? "strip" : style.backgroundImage.slice(0, 48),
-            };
-          }),
-        });
-        window.requestAnimationFrame(log);
-      };
-      window.requestAnimationFrame(log);
-    });
-    shots.length = 0;
-    const captureStart = Date.now();
-    await client.send("Page.startScreencast", { format: "png", everyFrame: true });
-
-    await page.waitForTimeout(seconds * 1000);
-    await client.send("Page.stopScreencast");
-    await page.waitForTimeout(200);
-    const samples = await page.evaluate(() => {
-      const holder = window as Window & { __castFrames?: CastFrame[] };
-      return holder.__castFrames || [];
-    });
-    const seen = new Map<string, Set<string>>();
-    const styleProblems: string[] = [];
-    for (const sample of samples) {
-      for (const row of sample.rows) {
-        const poses = seen.get(row.who) || new Set<string>();
-        poses.add(row.pose);
-        seen.set(row.who, poses);
-        if (row.image !== "strip") styleProblems.push(`${row.who} sheet ${row.image}`);
-        if (row.width <= 4 || row.height <= 4) styleProblems.push(`${row.who} box ${row.width}x${row.height}`);
-        if (!(row.cell > 0)) styleProblems.push(`${row.who} cell`);
-        if (row.pos > 0.5 || -row.pos >= row.sheet - row.cell + 1) styleProblems.push(`${row.who} pos ${row.pos}`);
-      }
-    }
-    expect(styleProblems.slice(0, 8)).toEqual([]);
-    expect(samples.length, "animation samples").toBeGreaterThan(seconds * 20);
-
-    let frames = 0;
-    let worstGap = 0;
-    let worst = { who: "", diff: Number.POSITIVE_INFINITY, pose: "" };
-    const blanks: string[] = [];
-    const captured = shots.splice(0, shots.length);
-    let primed = false;
-    for (const shot of captured) {
-      if (shot.stamp < captureStart - 30) continue;
-      const decoded = decodePng(shot.png);
-      if (decoded.width !== reference.width || decoded.height !== reference.height) {
-        styleProblems.push(`frame ${decoded.width}x${decoded.height}`);
-        break;
-      }
-      const sample = nearestCastFrame(samples, shot.stamp);
-      const gap = Math.abs(sample.t - shot.stamp);
-      if (gap > worstGap) worstGap = gap;
-      if (!primed) {
-        const painted = sample.rows.some(
-          (row) => meanChannelDiff(reference, decoded, row, width, height) >= 10,
-        );
-        if (!painted) continue;
-        primed = true;
-      }
-      frames += 1;
-      for (const row of sample.rows) {
-        const diff = meanChannelDiff(reference, decoded, row, width, height);
-        if (diff < worst.diff) worst = { who: row.who, diff, pose: row.pose };
-        if (diff < 10) {
-          const name = `${row.who}-${row.pose}-${frames}`;
-          blanks.push(`${name} diff ${diff.toFixed(2)}`);
-          if (blanks.length <= 4) {
-            fs.mkdirSync("verify-results", { recursive: true });
-            fs.writeFileSync(path.join("verify-results", `blank-${name}.png`), shot.png);
-          }
-        }
-      }
-    }
-    expect(worstGap, "frame clock").toBeLessThan(80);
-    expect(styleProblems.slice(0, 8)).toEqual([]);
-
-    expect(pageErrors).toEqual([]);
-    expect(frames, "compositor frames").toBeGreaterThan(seconds * 20);
-    for (const who of castWho) {
-      expect(seen.get(who)?.has("walk"), `${who} walked`).toBe(true);
-      expect(seen.get(who)?.has("idle"), `${who} idled`).toBe(true);
-    }
-    expect(blanks, `empty sprite frames (lowest diff ${worst.who} ${worst.pose} ${worst.diff.toFixed(2)})`).toEqual([]);
-  });
-});
-
-type PngImage = { width: number; height: number; channels: number; pixels: Buffer };
-
-function decodePng(png: Buffer): PngImage {
-  let offset = 8;
-  let width = 0;
-  let height = 0;
-  let colorType = 6;
-  const chunks: Buffer[] = [];
-  while (offset + 8 <= png.length) {
-    const length = png.readUInt32BE(offset);
-    const type = png.toString("ascii", offset + 4, offset + 8);
-    const data = png.subarray(offset + 8, offset + 8 + length);
-    if (type === "IHDR") {
-      width = data.readUInt32BE(0);
-      height = data.readUInt32BE(4);
-      colorType = data[9];
-    } else if (type === "IDAT") {
-      chunks.push(Buffer.from(data));
-    } else if (type === "IEND") {
-      break;
-    }
-    offset += 12 + length;
-  }
-  const channels = colorType === 2 ? 3 : 4;
-  const inflated = inflateSync(Buffer.concat(chunks));
-  const rowSize = width * channels;
-  const pixels = Buffer.alloc(width * height * channels);
-  let src = 0;
-  for (let y = 0; y < height; y += 1) {
-    const filter = inflated[src];
-    src += 1;
-    const rowStart = y * rowSize;
-    if (filter === 0) {
-      inflated.copy(pixels, rowStart, src, src + rowSize);
-      src += rowSize;
-      continue;
-    }
-    for (let i = 0; i < rowSize; i += 1) {
-      const raw = inflated[src];
-      src += 1;
-      const left = i >= channels ? pixels[rowStart + i - channels] : 0;
-      const up = y > 0 ? pixels[rowStart - rowSize + i] : 0;
-      const upLeft = y > 0 && i >= channels ? pixels[rowStart - rowSize + i - channels] : 0;
-      let value = raw;
-      if (filter === 1) value = (raw + left) & 255;
-      else if (filter === 2) value = (raw + up) & 255;
-      else if (filter === 3) value = (raw + Math.floor((left + up) / 2)) & 255;
-      else if (filter === 4) {
-        const guess = left + up - upLeft;
-        const leftDist = Math.abs(guess - left);
-        const upDist = Math.abs(guess - up);
-        const upLeftDist = Math.abs(guess - upLeft);
-        const predicted = leftDist <= upDist && leftDist <= upLeftDist ? left : upDist <= upLeftDist ? up : upLeft;
-        value = (raw + predicted) & 255;
-      }
-      pixels[rowStart + i] = value;
-    }
-  }
-  return { width, height, channels, pixels };
-}
-
-type CastFrame = {
-  t: number;
-  rows: {
-    who: string;
-    pose: string;
-    left: number;
-    top: number;
-    width: number;
-    height: number;
-    sheet: number;
-    pos: number;
-    cell: number;
-    image: string;
-  }[];
-};
-
-function nearestCastFrame(samples: CastFrame[], stamp: number) {
-  let low = 0;
-  let high = samples.length - 1;
-  while (low < high) {
-    const mid = Math.floor((low + high) / 2);
-    if (samples[mid].t < stamp) low = mid + 1;
-    else high = mid;
-  }
-  const next = samples[low];
-  const prev = samples[Math.max(0, low - 1)];
-  return Math.abs(prev.t - stamp) <= Math.abs(next.t - stamp) ? prev : next;
-}
-
-function meanChannelDiff(
-  reference: PngImage,
-  frame: PngImage,
-  rect: { left: number; top: number; width: number; height: number },
-  viewportWidth: number,
-  viewportHeight: number,
-) {
-  const scaleX = frame.width / viewportWidth;
-  const scaleY = frame.height / viewportHeight;
-  const x0 = Math.max(0, Math.floor(rect.left * scaleX));
-  const y0 = Math.max(0, Math.floor(rect.top * scaleY));
-  const x1 = Math.min(frame.width, Math.ceil((rect.left + rect.width) * scaleX));
-  const y1 = Math.min(frame.height, Math.ceil((rect.top + rect.height) * scaleY));
-  let sum = 0;
-  let count = 0;
-  const channels = frame.channels;
-  for (let y = y0; y < y1; y += 2) {
-    for (let x = x0; x < x1; x += 2) {
-      const frameAt = (y * frame.width + x) * channels;
-      const refAt = (y * reference.width + x) * reference.channels;
-      sum += Math.abs(frame.pixels[frameAt] - reference.pixels[refAt]);
-      sum += Math.abs(frame.pixels[frameAt + 1] - reference.pixels[refAt + 1]);
-      sum += Math.abs(frame.pixels[frameAt + 2] - reference.pixels[refAt + 2]);
-      count += 3;
-    }
-  }
-  return count ? sum / count : 0;
-}
-
-for (const dpr of [1.25, 1.5, 2]) {
-  test.describe(`quillhaven cast at devicePixelRatio ${dpr}`, () => {
-    test.use({
-      reducedMotion: "no-preference",
-      deviceScaleFactor: dpr,
-      viewport: { width: 1440, height: 900 },
-    });
-
-    test(`all seven stay inside the crop at pixel ratio ${dpr}`, async ({ page }) => {
-      await page.clock.install();
-      await page.goto(`/worlds.html?dpr=${dpr}`);
-      await waitForCast(page);
-      await showPoster(page);
-      await page.clock.fastForward(17_000);
-      await expectCastInCrop(page, ".play-fit", ".play-panorama", `dpr ${dpr} laptop`);
-      await page.setViewportSize({ width: 853, height: 480 });
-      await page.evaluate(() => window.dispatchEvent(new Event("resize")));
-      await showPoster(page);
-      await expectCastInCrop(page, ".play-fit", ".play-panorama", `dpr ${dpr} zoom`);
-      await page.setViewportSize({ width: 1280, height: 720 });
-      await page.evaluate(() => window.dispatchEvent(new Event("resize")));
-      await showPoster(page);
-      await expectCastInCrop(page, ".play-fit", ".play-panorama", `dpr ${dpr} restored`);
-    });
-  });
-}
-
 function creamPixelCount(png: Buffer) {
   let offset = 8;
   let width = 0;
@@ -1096,64 +508,6 @@ async function forceVisited(page: Page, selector: string) {
   });
 }
 
-test("every quillhaven demo link opens play.griffinandquill.com in a new tab", async ({ page }) => {
-  await page.route("https://play.griffinandquill.com/**", (route) => route.abort());
-  for (const width of [1280, 768, 390, 375]) {
-    await page.setViewportSize({ width, height: 800 });
-    await page.goto(`/worlds.html?view=${width}#play`);
-    const stage = page.locator("[data-play-stage]");
-    await expect(stage).toBeVisible();
-    await expect(stage.locator("iframe")).toHaveCount(0);
-    const layout = await stage.evaluate((el) => {
-      const stageBox = el.getBoundingClientRect();
-      const button = el.querySelector(".play-poster .btn");
-      if (!button) throw new Error("missing play button");
-      const btn = button.getBoundingClientRect();
-      const npcs = Array.from(el.querySelectorAll(".play-panorama .qh-npc")).map((node) => {
-        const box = node.getBoundingClientRect();
-        return { top: box.top, right: box.right, bottom: box.bottom, left: box.left, width: box.width, height: box.height };
-      });
-      return {
-        stage: { top: stageBox.top, right: stageBox.right, bottom: stageBox.bottom, left: stageBox.left, height: stageBox.height },
-        btn: { top: btn.top, right: btn.right, bottom: btn.bottom, left: btn.left },
-        npcs,
-      };
-    });
-    expect(layout.npcs, `poster cast at ${width}`).toHaveLength(7);
-    expect(layout.btn.top - layout.stage.top, `play button top at ${width}`).toBeLessThan(layout.stage.height * 0.22);
-    expect(layout.btn.bottom, `play button stays high at ${width}`).toBeLessThan(layout.stage.top + layout.stage.height * 0.45);
-    for (const npc of layout.npcs) {
-      expect(npc.height, `poster sprite height at ${width}`).toBeGreaterThan(10);
-      expect(npc.top, `poster sprite top at ${width}`).toBeGreaterThanOrEqual(layout.stage.top - 1);
-      expect(npc.bottom, `poster sprite bottom at ${width}`).toBeLessThanOrEqual(layout.stage.bottom + 1);
-      expect(npc.left, `poster sprite left at ${width}`).toBeGreaterThanOrEqual(layout.stage.left - 1);
-      expect(npc.right, `poster sprite right at ${width}`).toBeLessThanOrEqual(layout.stage.right + 1);
-      const overlaps = npc.left < layout.btn.right && npc.right > layout.btn.left && npc.top < layout.btn.bottom && npc.bottom > layout.btn.top;
-      expect(overlaps, `play button covers a character at ${width}`).toBe(false);
-    }
-    const ratio = await stage.evaluate((el) => {
-      const box = el.getBoundingClientRect();
-      return box.width / box.height;
-    });
-    expect(ratio, `stage ratio at ${width}`).toBeCloseTo(16 / 9, 1);
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    );
-    expect(overflow, `horizontal overflow at ${width}`).toBeLessThanOrEqual(1);
-    for (const link of [
-      page.getByRole("link", { name: "Open full screen" }),
-      stage.locator("[data-play-load]"),
-      page.locator("main a", { hasText: "Play the demo" }).first(),
-    ]) {
-      await expect(link).toHaveAttribute("href", "https://play.griffinandquill.com");
-      await expect(link).toHaveAttribute("target", "_blank");
-      await expect(link).toHaveAttribute("rel", /noopener/);
-    }
-    await expect(page.getByText("It plays best on a computer or tablet with a keyboard.")).toBeVisible();
-    await expect(stage.locator("iframe")).toHaveCount(0);
-  }
-});
-
 test("visited current nav item keeps its label on the desktop bar", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/worlds.html");
@@ -1166,15 +520,123 @@ test("visited current nav item keeps its label on the desktop bar", async ({ pag
   expect(after).toBeGreaterThan(before * 0.5);
 });
 
-test("the home hero logo has no navy plate", async ({ page, request }) => {
+test("the header uses the wordmark and the home chart is a sample", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 800 });
   await page.goto("/index.html");
-  const hero = page.locator(".logo-hero");
-  await expect(hero).toHaveAttribute("src", "assets/logo-hero.svg");
-  await expect(page.locator(".brand .logo")).toHaveAttribute("src", "assets/logo-icon.svg");
-  const svg = await (await request.get("/assets/logo-hero.svg")).text();
-  expect(svg).not.toContain("#1f2a44");
-  expect(svg).toContain("#fff");
-  expect(svg).toContain("#b8860b");
+  await expect(page.locator(".brand .logo")).toHaveCount(0);
+  await expect(page.locator(".logo-hero")).toHaveCount(0);
+  await expect(page.locator(".brand")).toContainText("Griffin & Quill");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Write your");
+  await expect(page.locator(".legend-tag")).toContainText("Learn it. Live it.");
+  await expect(page.locator(".legend-tag")).toContainText("PROVE IT!");
+  await expect(page.locator(".worktable-art")).toHaveAttribute("alt", "");
+  await expect(page.getByText("Gryff")).toHaveCount(0);
+  await expect(page.getByText("Tahne")).toHaveCount(0);
+  const story = page.locator("#chart-story");
+  await expect(page.getByText("Sample interaction")).toBeVisible();
+  await expect(story).toContainText("The key says a dashed line marks a ford");
+  await expect(page.locator("#chart-skill")).toHaveText("Skill: using map evidence to make an inference");
+  await page.getByRole("button", { name: "Choose: cross at the ford" }).click();
+  await expect(story).toContainText("so the key was right");
+  await expect(page.locator(".chart-route.is-chosen")).toHaveCount(1);
+  await page.getByRole("button", { name: "Choose: take the close-lined trail" }).click();
+  await expect(story).toContainText("Inference checked: close lines, steep slope.");
+  await expect(page.locator(".chart-route.is-chosen")).toHaveCount(2);
+  await page.getByRole("button", { name: "Reset the chart" }).click();
+  await expect(story).toContainText("The key says a dashed line marks a ford");
+  await expect(page.getByRole("button", { name: "Choose: climb the tower first" })).toBeVisible();
+  await page.getByRole("button", { name: "Choose: climb the tower first" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(story).toContainText("From the top you compare the chart to the land");
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Enter");
+  await expect(story).toContainText("the inference held");
+});
+
+test("every chart choice stays inside the stage", async ({ page }) => {
+  const routes = [
+    { clicks: [] as string[], names: ["Choose: cross at the ford", "Choose: climb the tower first"] },
+    { clicks: ["Choose: cross at the ford"], names: ["Choose: take the close-lined trail", "Choose: take the wide-lined trail"] },
+    { clicks: ["Choose: cross at the ford", "Choose: take the close-lined trail"], names: [] },
+    { clicks: ["Choose: cross at the ford", "Choose: take the wide-lined trail"], names: [] },
+    { clicks: ["Choose: climb the tower first"], names: ["Choose: note the clue on the chart", "Choose: climb down and cross"] },
+    { clicks: ["Choose: climb the tower first", "Choose: note the clue on the chart"], names: [] },
+    { clicks: ["Choose: climb the tower first", "Choose: climb down and cross"], names: [] },
+  ];
+  for (const width of [1366, 768, 481, 375]) {
+    await page.setViewportSize({ width, height: width === 1366 ? 768 : 900 });
+    for (const route of routes) {
+      const label = `${width} ${route.clicks.join(" > ") || "start"}`;
+      await page.goto(`/index.html?chart=${encodeURIComponent(label)}`);
+      for (const name of route.clicks) {
+        await page.getByRole("button", { name, exact: true }).click();
+      }
+      await expect(page.locator(".chart-choice"), label).toHaveCount(route.names.length);
+      const fit = await page.evaluate(() => {
+        const stage = document.getElementById("chart-stage");
+        if (!stage) return null;
+        const stageBox = stage.getBoundingClientRect();
+        const view = document.documentElement.clientWidth;
+        return {
+          overflow: document.documentElement.scrollWidth - view,
+          view,
+          buttons: Array.from(document.querySelectorAll(".chart-choice")).map((button) => {
+            const box = button.getBoundingClientRect();
+            return {
+              name: (button.textContent || "").trim(),
+              left: box.left,
+              right: box.right,
+              top: box.top,
+              bottom: box.bottom,
+              stageLeft: stageBox.left,
+              stageRight: stageBox.right,
+              stageTop: stageBox.top,
+              stageBottom: stageBox.bottom,
+            };
+          }),
+        };
+      });
+      if (!fit) throw new Error(`missing chart at ${label}`);
+      expect(fit.overflow, `${label} overflow`).toBeLessThanOrEqual(1);
+      expect(fit.buttons.map((button) => button.name), label).toEqual(route.names);
+      for (const button of fit.buttons) {
+        expect(button.left, `${label} ${button.name} left`).toBeGreaterThanOrEqual(button.stageLeft - 0.5);
+        expect(button.right, `${label} ${button.name} right`).toBeLessThanOrEqual(button.stageRight + 0.5);
+        expect(button.top, `${label} ${button.name} top`).toBeGreaterThanOrEqual(button.stageTop - 0.5);
+        expect(button.bottom, `${label} ${button.name} bottom`).toBeLessThanOrEqual(button.stageBottom + 0.5);
+        expect(button.right, `${label} ${button.name} viewport`).toBeLessThanOrEqual(fit.view + 0.5);
+        expect(button.left, `${label} ${button.name} viewport left`).toBeGreaterThanOrEqual(-0.5);
+      }
+    }
+  }
+});
+
+test.describe("sample chart on a touch screen", () => {
+  test.use({ hasTouch: true });
+
+  test("the sample chart accepts a tap and stays inside the viewport", async ({ page }) => {
+  for (const width of [1366, 768, 481, 375]) {
+    await page.setViewportSize({ width, height: width === 1366 ? 768 : 900 });
+    await page.goto(`/index.html?width=${width}`);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, `home overflow at ${width}`).toBeLessThanOrEqual(1);
+    const choice = page.getByRole("button", { name: "Choose: climb the tower first" });
+    await choice.scrollIntoViewIfNeeded();
+    const box = await choice.boundingBox();
+    if (!box) throw new Error(`missing choice at ${width}`);
+    expect(box.width, `choice width at ${width}`).toBeGreaterThanOrEqual(44);
+    expect(box.height, `choice height at ${width}`).toBeGreaterThanOrEqual(40);
+    await choice.tap();
+    await expect(page.locator("#chart-story")).toContainText("From the top you compare the chart to the land");
+    await page.goto(`/worlds.html?width=${width}`);
+    const worldsOverflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(worldsOverflow, `quillhaven overflow at ${width}`).toBeLessThanOrEqual(1);
+  }
+  });
 });
 
 test("the home page has no flying gryphon", async ({ page }) => {
@@ -1234,4 +696,199 @@ test("internal links and assets answer", async ({ page, request }) => {
     }
   }
   expect(failures).toEqual([]);
+});
+
+test("the quillhaven page leads with value, uses status chips, and has no empty mark slot", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 800 });
+  await page.goto("/worlds.html");
+  await expect(page.locator(".mark-slot")).toHaveCount(0);
+  await expect(page.getByText("Quillhaven mark")).toHaveCount(0);
+  await expect(page.locator(".lib-lede")).toContainText("learning game for academic skills");
+  await expect(page.locator("#forge .chip")).toHaveText(/Planned/);
+  await expect(page.locator("#command-center .chip")).toHaveText(/Planned/);
+  await expect(page.getByRole("heading", { name: "Privacy, by design" })).toHaveCount(1);
+  await expect(page.getByText("never sent to an AI")).toHaveCount(1);
+  await expect(page.getByRole("link", { name: "Join the demo waitlist" })).toHaveAttribute("href", "#waitlist");
+  const sizes = await page.locator("main p, main li").evaluateAll((nodes) =>
+    nodes
+      .filter((node) => !node.classList.contains("chip") && !node.classList.contains("eyebrow") && !node.closest(".visually-hidden"))
+      .map((node) => parseFloat(getComputedStyle(node).fontSize)),
+  );
+  expect(Math.min(...sizes)).toBeGreaterThanOrEqual(16);
+  const bg = await page.locator("main").evaluate((node) => getComputedStyle(node).backgroundColor);
+  const [r, g, b] = (bg.match(/\d+/g) || []).map(Number);
+  expect(r + g + b, "quillhaven main is a dark section").toBeLessThan(120);
+});
+
+test("the chart shows the whole faint map, anchors choices on stars, and stays local", async ({ page }) => {
+  const requests: string[] = [];
+  page.on("request", (request) => requests.push(request.url()));
+  for (const width of [1366, 768, 481, 375]) {
+    await page.setViewportSize({ width, height: width === 1366 ? 768 : 900 });
+    await page.goto(`/index.html?anchor=${width}`);
+    await page.waitForLoadState("load");
+    requests.length = 0;
+    for (const step of [[], ["Choose: cross at the ford"], ["Choose: climb the tower first"]]) {
+      await page.getByRole("button", { name: "Reset the chart" }).click();
+      for (const name of step) await page.getByRole("button", { name, exact: true }).click();
+      await expect(page.locator(".chart-route")).toHaveCount(6);
+      await expect(page.locator(".chart-route.is-chosen")).toHaveCount(step.length);
+      expect(await page.locator(".chart-web-star").count()).toBeGreaterThanOrEqual(40);
+      const fit = await page.evaluate(() =>
+        Array.from(document.querySelectorAll<HTMLElement>(".chart-choice")).map((button) => {
+          const star = document.querySelector(`.chart-node[data-node="${button.dataset.node}"]`);
+          const b = button.getBoundingClientRect();
+          const s = star ? star.getBoundingClientRect() : null;
+          return {
+            name: button.textContent,
+            box: { left: b.left, right: b.right, top: b.top, bottom: b.bottom },
+            star: s ? { x: s.left + s.width / 2, y: s.top + s.height / 2 } : null,
+          };
+        }),
+      );
+      for (const item of fit) {
+        expect(item.star, `${width} ${item.name} has a star`).not.toBeNull();
+        if (!item.star) continue;
+        const dx = Math.max(item.box.left - item.star.x, 0, item.star.x - item.box.right);
+        const dy = Math.max(item.box.top - item.star.y, 0, item.star.y - item.box.bottom);
+        expect(Math.hypot(dx, dy), `${width} ${item.name} sits by its star`).toBeLessThanOrEqual(48);
+      }
+      if (fit.length === 2) {
+        const [a, b] = fit.map((item) => item.box);
+        const overlap = a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+        expect(overlap, `${width} choices overlap after ${step.join(" > ") || "start"}`).toBe(false);
+      }
+    }
+    expect(requests, `chart use makes no requests at ${width}`).toEqual([]);
+  }
+  const stored = await page.evaluate(() => ({ cookie: document.cookie, local: localStorage.length, session: sessionStorage.length }));
+  expect(stored).toEqual({ cookie: "", local: 0, session: 0 });
+});
+
+test("home actions name their destinations and the waitlist comes first", async ({ page }) => {
+  await page.goto("/index.html");
+  await expect(page.getByText("Start exploring")).toHaveCount(0);
+  const actions = page.locator(".worktable-copy .hero-actions a");
+  await expect(actions).toHaveCount(2);
+  await expect(actions.nth(0)).toHaveText("Join the demo waitlist");
+  await expect(actions.nth(0)).toHaveAttribute("href", "worlds.html#waitlist");
+  await expect(actions.nth(0)).toHaveClass(/btn-gold/);
+  await expect(actions.nth(1)).toHaveText("Try the sample chart");
+  await expect(actions.nth(1)).toHaveAttribute("href", "#story-chart");
+  await expect(page.locator(".hero-more a")).toHaveAttribute("href", "worlds.html");
+  await expect(page.locator(".hero-more a")).toHaveText("Explore Quillhaven");
+});
+
+test("the stylesheet's braces balance and no rule block is left open", () => {
+  const css = fs.readFileSync(path.join(ROOT, "css", "styles.css"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  let depth = 0;
+  let line = 1;
+  let problem = "";
+  for (const ch of css) {
+    if (ch === "\n") line += 1;
+    else if (ch === "{") depth += 1;
+    else if (ch === "}") depth -= 1;
+    if (!problem && depth < 0) problem = `brace depth went negative near line ${line}`;
+    if (!problem && depth > 2) problem = `rules nested more than two deep near line ${line}`;
+  }
+  expect(problem).toBe("");
+  expect(depth, "an unclosed block in css/styles.css").toBe(0);
+});
+
+test("the tutoring planner updates the plan and fills only existing booking fields", async ({ page }) => {
+  const posts: Record<string, string>[] = [];
+  await page.route("https://formsubmit.co/**", async (route) => {
+    posts.push(route.request().postDataJSON() as Record<string, string>);
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ success: "true" }) });
+  });
+  const requests: string[] = [];
+  page.on("request", (request) => requests.push(request.url()));
+  for (const width of [1366, 375]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`/tutoring.html?planner=${width}`);
+    await page.waitForLoadState("load");
+    requests.length = 0;
+    await page.getByRole("radio", { name: /Economics/ }).check();
+    await page.getByRole("radio", { name: /Test prep/ }).check();
+    await page.getByRole("radio", { name: /In person · \$50/ }).check();
+    const plan = page.locator(".planner-plan");
+    await expect(plan.getByRole("heading", { level: 3 })).toHaveText("Economics · Test prep");
+    await expect(plan).toContainText("A quick skills check in Economics");
+    await expect(plan).toContainText("In person, at $50 per hour.");
+    await page.getByRole("button", { name: "Put this in the booking form" }).click();
+    await expect(page.locator("#plan-status")).toContainText("Added to the booking form");
+    await expect(page.locator("#tutor-subject")).toHaveValue("History and social studies");
+    await expect(page.locator('#book input[name="meeting"][value="In person"]')).toBeChecked();
+    await expect(page.locator("#tutor-message")).toHaveValue("Course: Economics. What feels stuck: Test prep.");
+    await expect(page.locator("#tutor-name")).toBeFocused();
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, `tutoring overflow at ${width}`).toBeLessThanOrEqual(1);
+    expect(requests, `the planner makes no requests at ${width}`).toEqual([]);
+  }
+  await page.getByLabel("Parent or guardian name (required)").fill("Ada Lovelace");
+  await page.getByLabel("Email (required)").fill("qa@example.com");
+  await page.getByLabel("Student grade (required)").selectOption({ label: "Grade 9" });
+  await page.locator("#book").getByRole("button", { name: "Book with us", exact: true }).click();
+  await expect(page.locator("#book [data-thanks]")).toBeVisible();
+  expect(Object.keys(posts[0]).sort()).toEqual(
+    ["_captcha", "_subject", "email", "grade", "meeting", "message", "parent_name", "phone", "preferred_times", "subject"].sort(),
+  );
+});
+
+test("the about journal turns pages and values open to where they show up", async ({ page }) => {
+  for (const width of [1366, 375]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`/about.html?journal=${width}`);
+    const pagesShown = page.locator(".journal-page:visible");
+    await expect(pagesShown).toHaveCount(1);
+    await expect(pagesShown).toContainText("Griffin & Quill LLC is formed.");
+    await expect(page.locator("#journal-count")).toHaveText("Page 1 of 5");
+    await expect(page.getByRole("button", { name: "Previous page" })).toBeDisabled();
+    await page.getByRole("button", { name: "Next page" }).click();
+    await page.getByRole("button", { name: "Next page" }).click();
+    await expect(pagesShown).toContainText("October 12, 2026");
+    await expect(page.locator("#journal-count")).toHaveText("Page 3 of 5");
+    for (let i = 0; i < 4; i += 1) await page.getByRole("button", { name: "Next page" }).click({ force: true });
+    await expect(page.locator("#journal-count")).toHaveText("Page 5 of 5");
+    await expect(page.getByRole("button", { name: "Next page" })).toBeDisabled();
+    const value = page.locator("details.value").filter({ hasText: "Teacher-built rigor" });
+    await value.locator("summary").click();
+    await expect(value).toHaveJSProperty("open", true);
+    await expect(value.getByRole("link", { name: "Browse the shelf" })).toHaveAttribute("href", "store.html#shelf");
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, `about overflow at ${width}`).toBeLessThanOrEqual(1);
+  }
+  await expect(page.getByText("empty slot")).toHaveCount(0);
+});
+
+test("the about journal lists every entry when JavaScript is off", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto("/about.html");
+  await expect(page.locator(".journal-page:visible")).toHaveCount(5);
+  await expect(page.locator(".journal-controls")).toBeHidden();
+  await context.close();
+});
+
+test("the contact letter desk shows the right inbox and only sets the existing topic", async ({ page }) => {
+  for (const width of [1366, 375]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`/contact.html?desk=${width}`);
+    await expect(page.locator(".letter:visible")).toHaveCount(1);
+    await expect(page.locator(".letter:visible")).toContainText("hello@griffinandquill.com");
+    await page.getByRole("radio", { name: /Partnerships and press/ }).check();
+    const letter = page.locator(".letter:visible");
+    await expect(letter).toContainText("partners@griffinandquill.com");
+    await expect(letter.getByRole("link", { name: "Open the Families inquiry" })).toHaveAttribute("href", "schools.html#inquiry");
+    await letter.getByRole("button", { name: "Write it below" }).click();
+    await expect(page.locator("#contact-topic")).toHaveValue("Partnerships");
+    await expect(page.locator("#desk-status")).toContainText("This form goes to hello@griffinandquill.com.");
+    await expect(page.locator("#contact-name")).toBeFocused();
+    await page.getByRole("radio", { name: /^T Tutoring|Tutoring tutoring@/ }).check();
+    await expect(page.locator(".letter:visible")).toContainText("tutoring@griffinandquill.com");
+    await expect(page.locator(".letter:visible").getByRole("link", { name: "Go to tutoring booking" })).toHaveAttribute("href", "tutoring.html#book");
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, `contact overflow at ${width}`).toBeLessThanOrEqual(1);
+  }
+  await expect(page.locator('form[data-form="hello"] [name]')).toHaveCount(8);
 });
