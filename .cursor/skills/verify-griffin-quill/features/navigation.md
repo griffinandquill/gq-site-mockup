@@ -1,6 +1,6 @@
 # Navigation
 
-The header lists the same eight pages on every screen. Wide windows show the row. Narrow windows show a Menu button that opens the list.
+The header lists the same eight links on every screen: Home, Quillhaven, Forge, Command Center, Tutoring, Store, About, and Contact. FAQ and Families stay in the footer. Wide windows show the row. Narrow windows show a Menu button that opens the list.
 
 ## Sub-features
 
