@@ -3204,3 +3204,131 @@ body.page-library main .value-seen {
 body.page-library main .value-seen span { color: #f0d48a; font-weight: 700; }
 
 body.page-library main .lib-panel h2 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); }
+
+/* Contact: letter desk */
+
+.desk {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .desk { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 2.25rem; }
+}
+
+body.page-library main .envelopes {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+body.page-library main .envelope {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 4.2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(224, 180, 90, 0.35);
+  border-radius: 3px;
+  background:
+    linear-gradient(160deg, rgba(246, 241, 228, 0.07) 0 49.6%, transparent 50%),
+    linear-gradient(20deg, rgba(246, 241, 228, 0.045) 0 49.6%, transparent 50%),
+    #241b13;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+  color: var(--lib-text);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.page-library main .envelope input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+body.page-library main .envelope:hover { border-color: #e0b45a; transform: translateX(4px); }
+
+body.page-library main .envelope:has(input:checked) {
+  border-color: #f0d48a;
+  box-shadow: 0 0 0 1px #f0d48a, 0 14px 30px rgba(0, 0, 0, 0.45);
+  transform: translateX(8px);
+}
+
+body.page-library main .envelope:focus-within { outline: 3px solid #f6f1e4; outline-offset: 2px; }
+
+.envelope-seal {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #9b3b3b, #6b2222 70%);
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.5);
+  color: #f6e2a8;
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.envelope-name { font-weight: 700; font-size: 1.05rem; }
+
+body.page-library main .envelope-to {
+  color: #f0d48a;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.letters { display: grid; gap: 1rem; }
+
+body.page-library main .letter {
+  padding: clamp(1.3rem, 3vw, 2rem);
+  border: 1px solid rgba(224, 180, 90, 0.5);
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 2.05rem, rgba(224, 180, 90, 0.08) 2.05rem 2.1rem),
+    radial-gradient(ellipse at 50% 0%, rgba(224, 180, 90, 0.14), transparent 70%),
+    #1e1711;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5);
+}
+
+body.page-library main .letter h3 { font-size: clamp(1.35rem, 2.3vw, 1.75rem); }
+body.page-library main .letter p { color: var(--lib-muted); }
+
+body.page-library main .letter-to {
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+body.page-library main .letter .lib-actions { margin-top: 0.5rem; }
+body.page-library main .letter > .btn { margin-top: 0.5rem; }
+
+.desk.is-live .letter[hidden] { display: none; }
+
+body.page-library main .desk-status {
+  min-height: 1.5em;
+  color: #f0d48a;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  body.page-library main .envelope { grid-template-columns: 2.6rem minmax(0, 1fr); }
+  body.page-library main .envelope-to { grid-column: 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-library main .envelope,
+  body.page-library main .envelope:hover,
+  body.page-library main .envelope:has(input:checked) { transform: none; transition: none; }
+}

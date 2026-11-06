@@ -850,3 +850,26 @@ test("the about journal lists every entry when JavaScript is off", async ({ brow
   await expect(page.locator(".journal-controls")).toBeHidden();
   await context.close();
 });
+
+test("the contact letter desk shows the right inbox and only sets the existing topic", async ({ page }) => {
+  for (const width of [1366, 375]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`/contact.html?desk=${width}`);
+    await expect(page.locator(".letter:visible")).toHaveCount(1);
+    await expect(page.locator(".letter:visible")).toContainText("hello@griffinandquill.com");
+    await page.getByRole("radio", { name: /Partnerships and press/ }).check();
+    const letter = page.locator(".letter:visible");
+    await expect(letter).toContainText("partners@griffinandquill.com");
+    await expect(letter.getByRole("link", { name: "Open the Families inquiry" })).toHaveAttribute("href", "schools.html#inquiry");
+    await letter.getByRole("button", { name: "Write it below" }).click();
+    await expect(page.locator("#contact-topic")).toHaveValue("Partnerships");
+    await expect(page.locator("#desk-status")).toContainText("This form goes to hello@griffinandquill.com.");
+    await expect(page.locator("#contact-name")).toBeFocused();
+    await page.getByRole("radio", { name: /^T Tutoring|Tutoring tutoring@/ }).check();
+    await expect(page.locator(".letter:visible")).toContainText("tutoring@griffinandquill.com");
+    await expect(page.locator(".letter:visible").getByRole("link", { name: "Go to tutoring booking" })).toHaveAttribute("href", "tutoring.html#book");
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, `contact overflow at ${width}`).toBeLessThanOrEqual(1);
+  }
+  await expect(page.locator('form[data-form="hello"] [name]')).toHaveCount(8);
+});
