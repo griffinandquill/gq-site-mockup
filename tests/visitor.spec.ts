@@ -745,3 +745,17 @@ test("the chart shows the whole faint map, anchors choices on stars, and stays l
   const stored = await page.evaluate(() => ({ cookie: document.cookie, local: localStorage.length, session: sessionStorage.length }));
   expect(stored).toEqual({ cookie: "", local: 0, session: 0 });
 });
+
+test("home actions name their destinations and the waitlist comes first", async ({ page }) => {
+  await page.goto("/index.html");
+  await expect(page.getByText("Start exploring")).toHaveCount(0);
+  const actions = page.locator(".worktable-copy .hero-actions a");
+  await expect(actions).toHaveCount(2);
+  await expect(actions.nth(0)).toHaveText("Join the demo waitlist");
+  await expect(actions.nth(0)).toHaveAttribute("href", "worlds.html#waitlist");
+  await expect(actions.nth(0)).toHaveClass(/btn-gold/);
+  await expect(actions.nth(1)).toHaveText("Try the sample chart");
+  await expect(actions.nth(1)).toHaveAttribute("href", "#story-chart");
+  await expect(page.locator(".hero-more a")).toHaveAttribute("href", "worlds.html");
+  await expect(page.locator(".hero-more a")).toHaveText("Explore Quillhaven");
+});

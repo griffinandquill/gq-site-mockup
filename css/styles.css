@@ -3339,4 +3339,37 @@ body.page-library main .lib-form .form-error a { color: var(--cream); }
 
 @media (min-width: 1001px) and (max-height: 760px) {
   .chart-sheet { top: 22%; bottom: 3%; }
+
+/* Home hero actions: waitlist first, then the sample, then Quillhaven. */
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 0 0 0.9rem;
+}
+
+.hero-actions .btn { min-width: 0; }
+
+.worktable-copy a.btn-ghost,
+.worktable-copy a.btn-ghost:visited { color: #f6f1e4; }
+
+.worktable-copy a.btn-ghost:hover { color: #1a1208; }
+
+.hero-more {
+  margin: 0;
+  color: #f6f1e4;
+  font-size: 1rem;
+}
+
+.hero-more a { font-weight: 700; }
+
+.hero-more-note {
+  display: block;
+  color: #ddd3bf;
+  font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+  .hero-actions .btn { width: 100%; }
 }
