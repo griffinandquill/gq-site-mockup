@@ -815,3 +815,38 @@ test("the tutoring planner updates the plan and fills only existing booking fiel
     ["_captcha", "_subject", "email", "grade", "meeting", "message", "parent_name", "phone", "preferred_times", "subject"].sort(),
   );
 });
+
+test("the about journal turns pages and values open to where they show up", async ({ page }) => {
+  for (const width of [1366, 375]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`/about.html?journal=${width}`);
+    const pagesShown = page.locator(".journal-page:visible");
+    await expect(pagesShown).toHaveCount(1);
+    await expect(pagesShown).toContainText("Griffin & Quill LLC is formed.");
+    await expect(page.locator("#journal-count")).toHaveText("Page 1 of 5");
+    await expect(page.getByRole("button", { name: "Previous page" })).toBeDisabled();
+    await page.getByRole("button", { name: "Next page" }).click();
+    await page.getByRole("button", { name: "Next page" }).click();
+    await expect(pagesShown).toContainText("October 12, 2026");
+    await expect(page.locator("#journal-count")).toHaveText("Page 3 of 5");
+    for (let i = 0; i < 4; i += 1) await page.getByRole("button", { name: "Next page" }).click({ force: true });
+    await expect(page.locator("#journal-count")).toHaveText("Page 5 of 5");
+    await expect(page.getByRole("button", { name: "Next page" })).toBeDisabled();
+    const value = page.locator("details.value").filter({ hasText: "Teacher-built rigor" });
+    await value.locator("summary").click();
+    await expect(value).toHaveJSProperty("open", true);
+    await expect(value.getByRole("link", { name: "Browse the shelf" })).toHaveAttribute("href", "store.html#shelf");
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, `about overflow at ${width}`).toBeLessThanOrEqual(1);
+  }
+  await expect(page.getByText("empty slot")).toHaveCount(0);
+});
+
+test("the about journal lists every entry when JavaScript is off", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto("/about.html");
+  await expect(page.locator(".journal-page:visible")).toHaveCount(5);
+  await expect(page.locator(".journal-controls")).toBeHidden();
+  await context.close();
+});
