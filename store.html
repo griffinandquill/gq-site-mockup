@@ -39,7 +39,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
 </head>
-<body id="top">
+<body id="top" class="page-store page-library">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="header-bar">
@@ -90,15 +90,37 @@
       </div>
     </noscript>
 
-    <div class="container page-hero">
-      <p class="eyebrow">Store</p>
-      <h1>Classroom units and simulations.</h1>
-      <p class="lede">Homeschool families, co-ops, and teachers can browse Griffin &amp; Quill units here. Simulations are separate buys, grouped by unit topic. Griffin &amp; Quill is a Teachers Pay Teachers Exclusive Seller, so checkout happens on TPT. This site does not take payment.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="https://www.teacherspayteachers.com/store/griffin-quill" target="_blank" rel="noopener noreferrer">Visit our TPT store<span class="visually-hidden"> (opens in a new tab)</span></a>
+    <section class="lib-hero lib-hero-plain" aria-labelledby="store-title">
+      <div class="container lib-hero-inner">
+        <p class="eyebrow">Store</p>
+        <h1 id="store-title">Classroom units and simulations.</h1>
+        <p class="lib-lede">Homeschool families, co-ops, and teachers can browse Griffin &amp; Quill units here. Simulations are separate buys, grouped by unit topic. Griffin &amp; Quill is a Teachers Pay Teachers Exclusive Seller, so checkout happens on TPT. This site does not take payment.</p>
+        <div class="lib-actions">
+          <a class="btn btn-gold" href="#shelf">Browse the archive shelf</a>
+          <a class="btn btn-ghost" href="https://www.teacherspayteachers.com/store/griffin-quill" target="_blank" rel="noopener noreferrer">Visit our TPT store<span class="visually-hidden"> (opens in a new tab)</span></a>
+        </div>
+        <p class="note">Store help: <a href="mailto:support@griffinandquill.com">support@griffinandquill.com</a>.</p>
       </div>
-      <p>Store help: <a href="mailto:support@griffinandquill.com">support@griffinandquill.com</a>.</p>
-    </div>
+    </section>
+
+    <section class="lib-section shelf-section" id="shelf" aria-labelledby="shelf-title" hidden>
+      <div class="container">
+        <h2 id="shelf-title">The archive shelf</h2>
+        <p class="lib-intro">Every U.S. History unit, in the order the history happens. Walk the timeline, or pull a book off the shelf.</p>
+        <div class="shelf-room">
+          <div class="shelf-case">
+            <div class="shelf" id="shelf-books" role="group" aria-label="U.S. History units, oldest to newest"></div>
+            <div class="shelf-board" aria-hidden="true"></div>
+          </div>
+          <div class="shelf-timeline">
+            <label for="shelf-range">Walk the timeline</label>
+            <input id="shelf-range" type="range" min="0" max="0" step="1" value="0">
+            <div class="shelf-ends" aria-hidden="true"><span>Before 1492</span><span>Today</span></div>
+          </div>
+          <div class="shelf-pick" id="shelf-pick" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
 
     <div class="store-layout" data-mode="browse">
       <section class="section" aria-labelledby="find-title">

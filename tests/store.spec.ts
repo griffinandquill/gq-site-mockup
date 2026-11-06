@@ -418,3 +418,52 @@ test("the store fits a phone and a desktop window", async ({ page }) => {
   }
   expect(errors).toEqual([]);
 });
+
+test("the archive shelf walks the units in order and opens the same details and TPT links", async ({ page }) => {
+  const errors = await quiet(page);
+  for (const width of [1280, 375]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`/store.html?shelf=${width}`);
+    const books = page.locator("#shelf-books .shelf-book");
+    await expect(books).toHaveCount(14);
+    await expect(books.nth(0)).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#shelf-pick h3")).toHaveText("Colonial America Unit Bundle");
+    await expect(page.locator("#shelf-pick")).toContainText("$36");
+
+    const range = page.getByLabel("Walk the timeline");
+    await range.fill("8");
+    await expect(page.locator("#shelf-pick h3")).toHaveText("World War I Unit Bundle");
+    await expect(books.nth(8)).toHaveAttribute("aria-pressed", "true");
+    await expect(range).toHaveAttribute("aria-valuetext", "9 of 14: World War I Unit Bundle");
+
+    await books.nth(3).click();
+    await expect(page.locator("#shelf-pick h3")).toHaveText("The Early Republic");
+    await expect(page.locator("#shelf-pick")).toContainText("1789–1815");
+    await expect(page.locator("#shelf-pick")).toContainText("$28");
+    await expect(range).toHaveValue("3");
+
+    await books.nth(3).focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(books.nth(4)).toBeFocused();
+    await expect(page.locator("#shelf-pick h3")).toHaveText("Expansion & Sectionalism Unit Bundle");
+    await page.keyboard.press("End");
+    await expect(page.locator("#shelf-pick h3")).toHaveText("Modern America: Late Cold War to Today");
+
+    const buy = page.locator("#shelf-pick").getByRole("link", { name: "Buy on TPT" });
+    await expect(buy).toHaveAttribute(
+      "href",
+      "https://www.teacherspayteachers.com/Product/Modern-America-Unit-US-History-1968-to-Today-Watergate-911-DBQ-9-12-18091106",
+    );
+    await expect(buy).toHaveAttribute("target", "_blank");
+    await page.locator("#shelf-pick").getByRole("button", { name: "Open this unit" }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByRole("heading", { name: "Modern America: Late Cold War to Today" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, `store overflow at ${width}`).toBeLessThanOrEqual(1);
+    await expect(page.locator("article.unit-card")).toHaveCount(0);
+  }
+  expect(errors).toEqual([]);
+});

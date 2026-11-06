@@ -447,6 +447,146 @@
     render();
   });
 
+
+  // The archive shelf: every unit as a book spine, in history order, with a
+  // timeline slider. It uses the same data, the same details dialog and the
+  // same TPT links as the list below. Nothing is sent or stored.
+  var shelfSection = document.querySelector("#shelf");
+  var shelfBooks = document.querySelector("#shelf-books");
+  var shelfRange = document.querySelector("#shelf-range");
+  var shelfPick = document.querySelector("#shelf-pick");
+  var shelfItems = [];
+  var shelfIndex = 0;
+
+  function spineLabel(title) {
+    return String(title || "")
+      .replace(/\s+Unit Bundle$/, "")
+      .replace(/:\s.*$/, "");
+  }
+
+  function paintShelf(index, moveFocus) {
+    if (!shelfItems.length) return;
+    shelfIndex = Math.max(0, Math.min(shelfItems.length - 1, index));
+    var item = shelfItems[shelfIndex];
+    Array.prototype.forEach.call(shelfBooks.querySelectorAll(".shelf-book"), function (book, i) {
+      var on = i === shelfIndex;
+      book.setAttribute("aria-pressed", on ? "true" : "false");
+      book.tabIndex = on ? 0 : -1;
+      if (on && moveFocus) book.focus();
+    });
+    var chosen = shelfBooks.querySelectorAll(".shelf-book")[shelfIndex];
+    if (chosen && chosen.scrollIntoView && !moveFocus) {
+      var box = chosen.getBoundingClientRect();
+      var frame = shelfBooks.getBoundingClientRect();
+      if (box.left < frame.left || box.right > frame.right) {
+        shelfBooks.scrollLeft += box.left - frame.left - (frame.width - box.width) / 2;
+      }
+    }
+    shelfRange.value = String(shelfIndex);
+    shelfRange.setAttribute("aria-valuetext", (shelfIndex + 1) + " of " + shelfItems.length + ": " + item.title);
+
+    shelfPick.replaceChildren();
+    if (item.cover) {
+      var image = document.createElement("img");
+      image.src = item.cover;
+      image.alt = item.coverAlt || item.title;
+      image.width = 800;
+      image.height = 800;
+      image.className = "shelf-pick-cover";
+      shelfPick.appendChild(image);
+    }
+    var text = document.createElement("div");
+    text.className = "shelf-pick-text";
+    var where = document.createElement("p");
+    where.className = "shelf-pick-where";
+    where.textContent = "Book " + (shelfIndex + 1) + " of " + shelfItems.length + (item.years ? " · " + item.years.replace("-", "–") : "");
+    text.appendChild(where);
+    var title = document.createElement("h3");
+    title.textContent = item.title;
+    text.appendChild(title);
+    if (item.summary) {
+      var summary = document.createElement("p");
+      summary.textContent = item.summary;
+      text.appendChild(summary);
+    }
+    var includes = document.createElement("ul");
+    includes.className = "unit-includes";
+    (item.included || []).forEach(function (line) {
+      var li = document.createElement("li");
+      li.textContent = line;
+      includes.appendChild(li);
+    });
+    text.appendChild(includes);
+    var row = document.createElement("div");
+    row.className = "shelf-pick-row";
+    var price = document.createElement("p");
+    price.className = "unit-price";
+    price.textContent = money(item.price);
+    row.appendChild(price);
+    var details = document.createElement("button");
+    details.type = "button";
+    details.className = "btn btn-ghost";
+    details.textContent = "Open this unit";
+    details.setAttribute("aria-haspopup", "dialog");
+    details.addEventListener("click", function () { openDialog(item, details); });
+    row.appendChild(details);
+    var buy = externalLink(item.tptUrl || tptStore(), "Buy on TPT");
+    buy.classList.add("btn", "btn-primary");
+    row.appendChild(buy);
+    text.appendChild(row);
+    shelfPick.appendChild(text);
+  }
+
+  function buildShelf() {
+    if (!shelfSection || !shelfBooks || !shelfRange || !shelfPick) return;
+    shelfItems = items().filter(function (item) {
+      return item && item.kind === "unit" && item.subject === "us-history" && item.title;
+    });
+    shelfBooks.replaceChildren();
+    if (!shelfItems.length) {
+      shelfSection.hidden = true;
+      return;
+    }
+    shelfItems.forEach(function (item, i) {
+      var book = document.createElement("button");
+      book.type = "button";
+      book.className = "shelf-book";
+      book.dataset.tone = String(i % 4);
+      book.style.setProperty("--book-h", (82 + ((i * 7) % 5) * 4) + "%");
+      book.setAttribute("aria-pressed", "false");
+      book.setAttribute("aria-label", item.title + (item.years ? ", " + item.years : ""));
+      var label = document.createElement("span");
+      label.className = "shelf-book-title";
+      label.textContent = spineLabel(item.title);
+      book.appendChild(label);
+      if (item.years) {
+        var years = document.createElement("span");
+        years.className = "shelf-book-years";
+        years.textContent = item.years.replace("-present", "–").replace("-", "–");
+        book.appendChild(years);
+      }
+      book.addEventListener("click", function () { paintShelf(i, false); });
+      shelfBooks.appendChild(book);
+    });
+    shelfRange.max = String(shelfItems.length - 1);
+    shelfSection.hidden = false;
+    paintShelf(0, false);
+  }
+
+  if (shelfBooks) {
+    shelfBooks.addEventListener("keydown", function (event) {
+      var step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+      if (event.key === "Home") step = -shelfItems.length;
+      if (event.key === "End") step = shelfItems.length;
+      if (!step) return;
+      event.preventDefault();
+      paintShelf(shelfIndex + step, true);
+    });
+  }
+  if (shelfRange) {
+    shelfRange.addEventListener("input", function () { paintShelf(Number(shelfRange.value), false); });
+  }
+
   window.addEventListener("popstate", render);
   window.addEventListener("hashchange", render);
 
@@ -460,6 +600,7 @@
     catalog = data || {};
     loadState = "ready";
     render();
+    buildShelf();
   }).catch(function () {
     loadState = "error";
     render();
