@@ -3301,3 +3301,42 @@ body.page-library main .lib-form .form-error a { color: var(--cream); }
 @media (min-width: 1001px) {
   .chart-story { min-height: calc(1.45em * 3 + 1.2rem); }
 }
+
+/* The chart is its own sheet on the table. The desk photo crops differently
+   at every window size, so the chart no longer relies on lining up with the
+   dark paper in the picture. */
+
+@media (min-width: 1001px) {
+  .chart-sheet {
+    left: 6%;
+    top: 29%;
+    width: 86%;
+    height: auto;
+    bottom: 5%;
+    padding: 1rem 1.15rem 1.05rem;
+    border: 1px solid rgba(224, 180, 90, 0.38);
+    border-radius: 3px;
+    background:
+      radial-gradient(ellipse at 50% 18%, rgba(224, 180, 90, 0.1), transparent 60%),
+      radial-gradient(ellipse at 50% 40%, #1e2b4a 0%, #152038 55%, #0f182b 100%);
+    box-shadow:
+      0 34px 70px rgba(0, 0, 0, 0.7),
+      0 8px 18px rgba(0, 0, 0, 0.45),
+      inset 0 0 70px rgba(0, 0, 0, 0.45);
+  }
+
+  .chart-sheet::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px solid rgba(224, 180, 90, 0.16);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .chart-stage { min-height: 13rem; }
+}
+
+@media (min-width: 1001px) and (max-height: 760px) {
+  .chart-sheet { top: 22%; bottom: 3%; }
+}
