@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
 </head>
-<body id="top">
+<body id="top" class="page-tutoring page-library">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="header-bar">
@@ -59,67 +59,90 @@
       <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. The booking form needs JavaScript to send, or you can email tutoring@griffinandquill.com.</p>
     </noscript>
 
-    <div class="container page-hero">
-      <p class="eyebrow">Tutoring</p>
-      <h1>One-to-one tutoring.</h1>
-      <p class="lede">One-to-one tutoring is $40 per hour online and $50 per hour in person. Sessions teach, grow, and maintain the academic skills a student needs to strengthen understanding in the courses they are taking.</p>
-      <div class="cluster">
-        <a class="btn btn-primary" href="#book">Book with us</a>
-      </div>
-      <p class="note">Book a free 15-minute consult on this page. This site does not take payment.</p>
-    </div>
-
-    <section class="section" id="subjects" aria-labelledby="subjects-title">
-      <div class="container">
-        <h2 id="subjects-title">Subjects</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">Tutoring builds academic skills in whatever course a student is taking. Ryan Mayer currently teaches these courses:</p>
-        <div class="card-grid cols-4">
-          <article class="card"><h3>U.S. History</h3><p>U.S. History and the Constitution (USHC): reading a source and explaining a claim, from colonial arguments through modern policy.</p></article>
-          <article class="card"><h3>Government</h3><p>How rules get made, who holds power, and how to read a founding text.</p></article>
-          <article class="card"><h3>Economics</h3><p>Scarcity, markets, and the choices a household actually has.</p></article>
-          <article class="card"><h3>AP Human Geography</h3><p>Why people move, where they settle, and how a map argues. Often called APHG.</p></article>
+    <section class="lib-hero lib-hero-plain" aria-labelledby="tutor-title">
+      <div class="container lib-hero-inner">
+        <p class="eyebrow">Tutoring</p>
+        <h1 id="tutor-title"><span class="nowrap">One-to-one</span> tutoring.</h1>
+        <p class="lib-lede">One-to-one tutoring is $40 per hour online and $50 per hour in person. Sessions teach, grow, and maintain the academic skills a student needs to strengthen understanding in the courses they are taking.</p>
+        <ul class="lib-chips" aria-label="At a glance">
+          <li class="chip">$40 / hour online</li>
+          <li class="chip">$50 / hour in person</li>
+          <li class="chip">Free 15-minute consult</li>
+        </ul>
+        <div class="lib-actions">
+          <a class="btn btn-gold" href="#book">Book with us</a>
+          <a class="btn btn-ghost" href="#planner">Plan your first session</a>
         </div>
-        <p class="section-intro space-top">A session can focus on the course a student is taking, including World History, study skills, and test prep when they belong to that course. Study skills means notes, reading a prompt, and turning a source into a paragraph. Test prep explains why an answer works.</p>
+        <p class="note">Book a free 15-minute consult on this page. This site does not take payment.</p>
       </div>
     </section>
 
-    <section class="section" id="steps" aria-labelledby="steps-title">
+    <section class="lib-section" id="planner" aria-labelledby="planner-title">
       <div class="container">
-        <h2 id="steps-title">How tutoring starts</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <ol class="steps grid-3">
-          <li class="card">
-            <p class="step-num" aria-hidden="true">1</p>
-            <h3>Skills check</h3>
-            <p>The first session starts with a quick skills check: the course, the sticking point, and what the student can already do.</p>
-          </li>
-          <li class="card">
-            <p class="step-num" aria-hidden="true">2</p>
-            <h3>A plan</h3>
-            <p>You get a short written plan: the skills to work on, how often to meet, and what to practice between sessions.</p>
-          </li>
-          <li class="card">
-            <p class="step-num" aria-hidden="true">3</p>
-            <h3>Sessions</h3>
-            <p>We meet online. Each session has one goal, time to try it, and a note you can reread later.</p>
-          </li>
-        </ol>
+        <h2 id="planner-title">Plan your first session</h2>
+        <p class="lib-intro">Pick a course and the part that feels stuck. The plan shows how the first sessions would go. Nothing is sent until you book.</p>
+        <div class="planner">
+          <form class="planner-picks" id="planner-form" aria-describedby="planner-hint">
+            <p class="visually-hidden" id="planner-hint">Choices update the plan right away. They stay on this page.</p>
+            <fieldset class="lib-picks" id="pick-course">
+              <legend>1. Which course?</legend>
+              <label class="lib-pick"><input type="radio" name="course" value="ushc" checked><span class="lib-pick-name">U.S. History</span><span class="lib-pick-note">U.S. History and the Constitution (USHC): reading a source and explaining a claim.</span></label>
+              <label class="lib-pick"><input type="radio" name="course" value="gov"><span class="lib-pick-name">Government</span><span class="lib-pick-note">How rules get made, who holds power, and how to read a founding text.</span></label>
+              <label class="lib-pick"><input type="radio" name="course" value="econ"><span class="lib-pick-name">Economics</span><span class="lib-pick-note">Scarcity, markets, and the choices a household actually has.</span></label>
+              <label class="lib-pick"><input type="radio" name="course" value="aphg"><span class="lib-pick-name">AP Human Geography</span><span class="lib-pick-note">Why people move, where they settle, and how a map argues.</span></label>
+              <label class="lib-pick"><input type="radio" name="course" value="world"><span class="lib-pick-name">World History</span><span class="lib-pick-note">When it belongs to the course a student is taking.</span></label>
+            </fieldset>
+            <fieldset class="lib-picks" id="pick-need">
+              <legend>2. What feels stuck?</legend>
+              <label class="lib-pick"><input type="radio" name="need" value="source" checked><span class="lib-pick-name">Reading a source</span><span class="lib-pick-note">Finding the claim and explaining it.</span></label>
+              <label class="lib-pick"><input type="radio" name="need" value="writing"><span class="lib-pick-name">Essays and DBQs</span><span class="lib-pick-note">Turning a source into a paragraph.</span></label>
+              <label class="lib-pick"><input type="radio" name="need" value="study"><span class="lib-pick-name">Study skills</span><span class="lib-pick-note">Notes and reading a prompt.</span></label>
+              <label class="lib-pick"><input type="radio" name="need" value="test"><span class="lib-pick-name">Test prep</span><span class="lib-pick-note">Why an answer works, not just which one.</span></label>
+            </fieldset>
+            <fieldset class="lib-picks" id="pick-meet">
+              <legend>3. Where do you meet?</legend>
+              <label class="lib-pick"><input type="radio" name="meet" value="Online" checked><span class="lib-pick-name">Online · $40 / hour</span><span class="lib-pick-note">Online first, by video.</span></label>
+              <label class="lib-pick"><input type="radio" name="meet" value="In person"><span class="lib-pick-name">In person · $50 / hour</span><span class="lib-pick-note">Say so when you book. We will tell you if we can do it.</span></label>
+            </fieldset>
+          </form>
+
+          <aside class="planner-plan" aria-labelledby="plan-title">
+            <p class="eyebrow">Your first sessions</p>
+            <h3 id="plan-title"><span data-plan="course">U.S. History</span> · <span data-plan="need">Reading a source</span></h3>
+            <ol class="plan-steps" aria-live="polite">
+              <li>
+                <span class="plan-num" aria-hidden="true">1</span>
+                <div>
+                  <h4>Skills check</h4>
+                  <p data-plan="check">A quick skills check in U.S. History: what the student can already do with a source, and where the claim gets lost.</p>
+                </div>
+              </li>
+              <li>
+                <span class="plan-num" aria-hidden="true">2</span>
+                <div>
+                  <h4>A plan</h4>
+                  <p data-plan="plan">You get a short written plan: the reading skills to work on, how often to meet, and what to practice between sessions.</p>
+                </div>
+              </li>
+              <li>
+                <span class="plan-num" aria-hidden="true">3</span>
+                <div>
+                  <h4>Sessions</h4>
+                  <p data-plan="sessions">Each session has one goal, time to try it, and a note you can reread later. Online, by video, at $40 per hour.</p>
+                </div>
+              </li>
+            </ol>
+            <p class="plan-when">Weekday evenings and weekend afternoons.</p>
+            <button type="button" class="btn btn-gold" id="plan-use">Put this in the booking form</button>
+            <p class="plan-status" id="plan-status" role="status"></p>
+          </aside>
+        </div>
       </div>
     </section>
 
-    <section class="section" id="pricing" aria-labelledby="pricing-title">
-      <div class="container">
-        <h2 id="pricing-title">Rate and availability</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="section-intro">One-to-one tutoring is $40 per hour online and $50 per hour in person. Sessions are available on weekday evenings and weekend afternoons. Book on this page first. This site does not take payment.</p>
-      </div>
-    </section>
-
-    <section class="section" id="tutoring-questions" aria-labelledby="tfaq-title">
+    <section class="lib-section lib-section-deep" id="tutoring-questions" aria-labelledby="tfaq-title">
       <div class="container">
         <h2 id="tfaq-title">Questions</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
         <div class="form-wrap">
           <details class="faq">
             <summary>Is tutoring online?</summary>
@@ -146,9 +169,9 @@
       </div>
     </section>
 
-    <section class="section" id="book" aria-labelledby="book-title">
+    <section class="lib-section lib-section-glow" id="book" aria-labelledby="book-title">
       <div class="container">
-        <div class="form-card form-wrap">
+        <div class="form-card form-wrap lib-form">
           <h2 id="book-title">Book with us</h2>
           <p>A free 15-minute consult. Weekday evenings and weekend afternoons. Questions: <a href="mailto:tutoring@griffinandquill.com">tutoring@griffinandquill.com</a>.</p>
           <form data-form="tutoring" method="POST" action="#">
@@ -262,5 +285,6 @@
   </footer>
   <script src="js/form-config.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/tutoring.js"></script>
 </body>
 </html>

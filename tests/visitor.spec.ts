@@ -775,3 +775,43 @@ test("the stylesheet's braces balance and no rule block is left open", () => {
   expect(problem).toBe("");
   expect(depth, "an unclosed block in css/styles.css").toBe(0);
 });
+
+test("the tutoring planner updates the plan and fills only existing booking fields", async ({ page }) => {
+  const posts: Record<string, string>[] = [];
+  await page.route("https://formsubmit.co/**", async (route) => {
+    posts.push(route.request().postDataJSON() as Record<string, string>);
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ success: "true" }) });
+  });
+  const requests: string[] = [];
+  page.on("request", (request) => requests.push(request.url()));
+  for (const width of [1366, 375]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`/tutoring.html?planner=${width}`);
+    await page.waitForLoadState("load");
+    requests.length = 0;
+    await page.getByRole("radio", { name: /Economics/ }).check();
+    await page.getByRole("radio", { name: /Test prep/ }).check();
+    await page.getByRole("radio", { name: /In person · \$50/ }).check();
+    const plan = page.locator(".planner-plan");
+    await expect(plan.getByRole("heading", { level: 3 })).toHaveText("Economics · Test prep");
+    await expect(plan).toContainText("A quick skills check in Economics");
+    await expect(plan).toContainText("In person, at $50 per hour.");
+    await page.getByRole("button", { name: "Put this in the booking form" }).click();
+    await expect(page.locator("#plan-status")).toContainText("Added to the booking form");
+    await expect(page.locator("#tutor-subject")).toHaveValue("History and social studies");
+    await expect(page.locator('#book input[name="meeting"][value="In person"]')).toBeChecked();
+    await expect(page.locator("#tutor-message")).toHaveValue("Course: Economics. What feels stuck: Test prep.");
+    await expect(page.locator("#tutor-name")).toBeFocused();
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, `tutoring overflow at ${width}`).toBeLessThanOrEqual(1);
+    expect(requests, `the planner makes no requests at ${width}`).toEqual([]);
+  }
+  await page.getByLabel("Parent or guardian name (required)").fill("Ada Lovelace");
+  await page.getByLabel("Email (required)").fill("qa@example.com");
+  await page.getByLabel("Student grade (required)").selectOption({ label: "Grade 9" });
+  await page.locator("#book").getByRole("button", { name: "Book with us", exact: true }).click();
+  await expect(page.locator("#book [data-thanks]")).toBeVisible();
+  expect(Object.keys(posts[0]).sort()).toEqual(
+    ["_captcha", "_subject", "email", "grade", "meeting", "message", "parent_name", "phone", "preferred_times", "subject"].sort(),
+  );
+});
