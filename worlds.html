@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Quillhaven is Griffin &amp; Quill’s gamified academic skill practice. A demo is planned for December 2, 2026. Forge and Command Center are planned, not live.">
+  <meta name="description" content="Quillhaven is Griffin &amp; Quill’s learning game for academic skills: learn a skill, use it in a short quest, then prove it. A demo is planned for December 2, 2026.">
   <meta name="theme-color" content="#1F2A44">
   <title>Quillhaven | Griffin &amp; Quill</title>
   <meta property="og:title" content="Quillhaven | Griffin &amp; Quill">
-  <meta property="og:description" content="Quillhaven is Griffin &amp; Quill’s gamified academic skill practice. A demo is planned for December 2, 2026. Forge and Command Center are planned, not live.">
+  <meta property="og:description" content="Quillhaven is Griffin &amp; Quill’s learning game for academic skills: learn a skill, use it in a short quest, then prove it. A demo is planned for December 2, 2026.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.griffinandquill.com/worlds.html">
   <link rel="canonical" href="https://www.griffinandquill.com/worlds.html">
@@ -58,103 +58,103 @@
       <p class="container note">JavaScript is off, so the menu button will not run. Page links still work. A form on this page needs JavaScript to send, or you can email the address in the footer.</p>
     </noscript>
 
-    <section class="library-hero">
-      <div class="container">
+    <section class="lib-hero" aria-labelledby="qh-title">
+      <img class="lib-hero-art" src="assets/worktable.jpg" alt="" width="1152" height="864">
+      <div class="container lib-hero-inner">
         <p class="eyebrow">Quillhaven</p>
-        <h1>Write your own legend.</h1>
+        <h1 id="qh-title">Write your own legend.</h1>
         <p class="legend-tag">Learn it. Live it. <strong>PROVE IT!</strong></p>
-        <p class="lede">Quillhaven is gamified practice for academic skills. Students learn a skill, use it, and then prove they can carry it. The home-page chart is a sample story on this website. It is not the game, and it is not Quillhaven Forge.</p>
-        <p>A demo is planned for December 2, 2026. The current rebuild is TypeScript and Phaser 4. This page does not launch a game.</p>
+        <p class="lib-lede">Quillhaven is a learning game for academic skills. A student learns one skill, uses it inside a short quest, and then proves it on something new.</p>
+        <p class="lib-status"><span class="chip">Planned</span> A demo is planned for December 2, 2026.</p>
+        <div class="lib-actions">
+          <a class="btn btn-gold" href="#waitlist">Join the demo waitlist</a>
+          <a class="btn btn-ghost" href="index.html#story-chart">Try the sample on the home page</a>
+        </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="practice-title">
+    <section class="lib-section" aria-labelledby="practice-title">
       <div class="container">
-        <h2 id="practice-title">What practice means</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <div class="grid-3">
-          <article class="card">
+        <h2 id="practice-title">How a quest works</h2>
+        <p class="lib-intro">Every quest follows the same three steps, so a student always knows what the skill is and when they have shown it.</p>
+        <ol class="lib-steps">
+          <li class="lib-card">
+            <span class="lib-step-num" aria-hidden="true">1</span>
             <h3>Learn it</h3>
-            <p>A skill is named in plain language: the idea a student needs in a real subject, not a costume for the idea.</p>
-          </article>
-          <article class="card">
+            <p>The quest names one academic skill in plain language: the real idea a student needs in a real subject.</p>
+          </li>
+          <li class="lib-card">
+            <span class="lib-step-num" aria-hidden="true">2</span>
             <h3>Live it</h3>
-            <p>The student uses that skill in a short activity. The activity is practice, not a claim that a finished game is open.</p>
-          </article>
-          <article class="card">
+            <p>The student uses that skill to make choices in a short story, and the story answers back.</p>
+          </li>
+          <li class="lib-card">
+            <span class="lib-step-num" aria-hidden="true">3</span>
             <h3>Prove it</h3>
-            <p>The student shows the skill on something new. That check is the point of the legend line. It is not live in a game on this site yet.</p>
-          </article>
-        </div>
+            <p>The student shows the skill again on something new. That check is the point of the legend.</p>
+          </li>
+        </ol>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="mark-title">
-      <div class="container split">
+    <section class="lib-section lib-section-deep" aria-labelledby="family-title">
+      <div class="container">
+        <h2 id="family-title">Two tools for the adults</h2>
+        <p class="lib-intro">Quillhaven is planned alongside two tools for parents and teachers. Neither one is open yet.</p>
+        <div class="lib-panels">
+          <article class="lib-panel" id="forge" aria-labelledby="forge-title">
+            <p class="chip">Planned · MVP spring 2027</p>
+            <h3 id="forge-title">Quillhaven Forge</h3>
+            <p>Build skill practice for any topic. An adult picks a topic and an academic skill, Forge fills a fixed template, and the adult approves what a student will see before the student sees it.</p>
+          </article>
+          <article class="lib-panel" id="command-center" aria-labelledby="command-title">
+            <p class="chip">Planned</p>
+            <h3 id="command-title">Command Center</h3>
+            <p>See student progress in one place. A teacher or parent would check how practice is going across Quillhaven and Forge.</p>
+          </article>
+        </div>
+        <p class="lib-small">The three are planned as one system with one adult login later. This site does not offer that login or sell a subscription. The current game rebuild is TypeScript and Phaser 4.</p>
+      </div>
+    </section>
+
+    <section class="lib-section" aria-labelledby="privacy-title">
+      <div class="container lib-privacy">
         <div>
-          <h2 id="mark-title">The Quillhaven mark</h2>
-          <div class="rule" aria-hidden="true"><span></span></div>
-          <p>The pixel-art mark is still being drawn. This frame is the empty slot for it. No stand-in character is shown.</p>
+          <h2 id="privacy-title">Privacy, by design</h2>
+          <p class="lib-intro">How accounts are planned to work when they exist. None of this storage is on this website, and this site does not collect student work.</p>
         </div>
-        <div class="mark-slot">
-          <p class="mark-slot-label">Quillhaven mark</p>
-          <p>Empty until the mark is ready.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="forge" aria-labelledby="forge-title">
-      <div class="container">
-        <h2 id="forge-title">Quillhaven Forge</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="stamp">Planned · MVP spring 2027</p>
-        <p class="section-intro">Forge is a simulation maker for any subject. An adult enters a topic and an academic skill. The maker uses fixed templates. An adult approves what a student will see before the student sees it.</p>
-        <p>Forge is not open. The branching chart on the home page is a fixed sample with prewritten choices. It does not build a simulation, and it does not send anything to a model.</p>
-      </div>
-    </section>
-
-    <section class="section" id="command-center" aria-labelledby="command-title">
-      <div class="container">
-        <h2 id="command-title">Command Center</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <p class="stamp">Planned · not live</p>
-        <p class="section-intro">Command Center is the progress hub for a teacher or a parent. It is where an adult would see how practice is going. It is not a product you can sign in to.</p>
-        <p>Quillhaven, Forge, and Command Center are planned as one ecosystem with one login later. This site does not offer that login and does not sell a subscription.</p>
-        <h3>Accounts, when they exist</h3>
-        <ul class="plain-list">
+        <ul class="lib-checks">
           <li>Adult accounts only.</li>
-          <li>A student would get a generated username with no personal information.</li>
-          <li>Written answers would stay in the adult account.</li>
-          <li>Those answers would not be sent to an AI.</li>
+          <li>Students get a system-made username with no personal information.</li>
+          <li>Written answers stay with the adult account and can be deleted.</li>
+          <li>Written answers are never sent to an AI.</li>
         </ul>
-        <p>None of that storage is on this website. This page does not collect student work.</p>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="beside-title">
+    <section class="lib-section lib-section-deep" aria-labelledby="beside-title">
       <div class="container">
-        <h2 id="beside-title">Already open</h2>
-        <div class="rule" aria-hidden="true"><span></span></div>
-        <div class="grid-2">
-          <article class="card">
+        <h2 id="beside-title">Open today</h2>
+        <div class="lib-panels">
+          <article class="lib-panel">
             <h3>Tutoring</h3>
-            <p>One-to-one tutoring is $40 per hour online and $50 per hour in person. Book on the tutoring page. This site does not take payment.</p>
-            <p><a class="btn btn-secondary" href="tutoring.html#book">Book tutoring</a></p>
+            <p>One-to-one tutoring is $40 per hour online and $50 per hour in person. This site does not take payment.</p>
+            <p class="lib-panel-action"><a class="btn btn-ghost" href="tutoring.html#book">Book tutoring</a></p>
           </article>
-          <article class="card">
+          <article class="lib-panel">
             <h3>Classroom resources</h3>
-            <p>Paid curriculum is sold only on Teachers Pay Teachers. The store lists the units and links to that checkout.</p>
-            <p><a class="btn btn-secondary" href="store.html">Visit the store</a></p>
+            <p>Paid curriculum is sold on Teachers Pay Teachers. The store lists the units and links to that checkout.</p>
+            <p class="lib-panel-action"><a class="btn btn-ghost" href="store.html">Visit the store</a></p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section" id="waitlist" aria-labelledby="wait-title">
+    <section class="lib-section lib-section-glow" id="waitlist" aria-labelledby="wait-title">
       <div class="container">
-        <div class="form-card form-wrap">
-          <h2 id="wait-title">A note when the demo is ready</h2>
-          <p>Leave an adult email if you want a note when the December 2, 2026 demo is ready to try. Use a parent or teacher address, not a child’s.</p>
+        <div class="form-card form-wrap lib-form">
+          <h2 id="wait-title">Get a note when the demo opens</h2>
+          <p>Leave an adult email and we will write once when the December 2, 2026 demo is ready to try. Use a parent or teacher address, not a child’s.</p>
           <form data-form="hello" method="POST" action="#">
             <p class="thanks" data-thanks tabindex="-1" hidden>Thanks. Your note is on its way.</p>
             <p class="form-error" data-form-error tabindex="-1" hidden>That note did not send. Write to <a href="mailto:hello@griffinandquill.com">hello@griffinandquill.com</a>.</p>
@@ -176,7 +176,7 @@
                 <option>Lifelong learner</option>
               </select>
             </div>
-            <button class="btn btn-primary" type="submit">Join the waitlist</button>
+            <button class="btn btn-gold" type="submit">Join the waitlist</button>
             <p class="note">Do not include a child’s name. This note goes to hello@griffinandquill.com.</p>
           </form>
         </div>
@@ -220,7 +220,7 @@
       </div>
     </div>
     <div class="container">
-      <p class="fineprint">© 2026 Griffin &amp; Quill LLC.</p>
+      <p class="fineprint">The desk picture is original atmosphere made for this preview. © 2026 Griffin &amp; Quill LLC.</p>
     </div>
   </footer>
   <script src="js/form-config.js"></script>

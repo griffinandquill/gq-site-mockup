@@ -677,3 +677,25 @@ test("internal links and assets answer", async ({ page, request }) => {
   }
   expect(failures).toEqual([]);
 });
+
+test("the quillhaven page leads with value, uses status chips, and has no empty mark slot", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 800 });
+  await page.goto("/worlds.html");
+  await expect(page.locator(".mark-slot")).toHaveCount(0);
+  await expect(page.getByText("Quillhaven mark")).toHaveCount(0);
+  await expect(page.locator(".lib-lede")).toContainText("learning game for academic skills");
+  await expect(page.locator("#forge .chip")).toHaveText(/Planned/);
+  await expect(page.locator("#command-center .chip")).toHaveText(/Planned/);
+  await expect(page.getByRole("heading", { name: "Privacy, by design" })).toHaveCount(1);
+  await expect(page.getByText("never sent to an AI")).toHaveCount(1);
+  await expect(page.getByRole("link", { name: "Join the demo waitlist" })).toHaveAttribute("href", "#waitlist");
+  const sizes = await page.locator("main p, main li").evaluateAll((nodes) =>
+    nodes
+      .filter((node) => !node.classList.contains("chip") && !node.classList.contains("eyebrow") && !node.closest(".visually-hidden"))
+      .map((node) => parseFloat(getComputedStyle(node).fontSize)),
+  );
+  expect(Math.min(...sizes)).toBeGreaterThanOrEqual(16);
+  const bg = await page.locator("main").evaluate((node) => getComputedStyle(node).backgroundColor);
+  const [r, g, b] = (bg.match(/\d+/g) || []).map(Number);
+  expect(r + g + b, "quillhaven main is a dark section").toBeLessThan(120);
+});

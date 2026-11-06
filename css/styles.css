@@ -2777,118 +2777,6 @@ button.btn-reset:hover {
   border-color: #f6f1e4;
 }
 
-.library-hero {
-  padding: 3.1rem 0 2.5rem;
-  color: #f6f1e4;
-  background:
-    radial-gradient(ellipse at 85% 0%, rgba(224, 180, 90, 0.22), transparent 26rem),
-    linear-gradient(165deg, #120e0b 0%, #1a2236 72%, #243044 100%);
-}
-
-.library-hero h1 {
-  max-width: 16ch;
-  color: #f6f1e4;
-  font-size: clamp(2.7rem, 5vw, 4.5rem);
-  line-height: 1.02;
-}
-
-.library-hero p,
-.library-hero .lede,
-.library-hero .legend-tag,
-.library-hero .eyebrow { color: #f6f1e4; }
-
-.library-hero .legend-tag { margin-top: 0.35rem; }
-
-.mark-slot {
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 0.35rem;
-  min-height: 16rem;
-  padding: 1.25rem;
-  text-align: center;
-  border: 1px dashed rgba(31, 42, 68, 0.4);
-  background:
-    linear-gradient(rgba(31, 42, 68, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(31, 42, 68, 0.05) 1px, transparent 1px),
-    #fffdf8;
-  background-size: 18px 18px, 18px 18px, auto;
-}
-
-.mark-slot p { margin: 0; }
-
-.mark-slot-label {
-  font-family: var(--serif);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.82rem;
-}
-
-body.page-library.page-quillhaven main {
-  background: #f3ead7;
-  background-image: none;
-  color: var(--charcoal);
-}
-
-body.page-library.page-quillhaven main h1,
-body.page-library.page-quillhaven main h2,
-body.page-library.page-quillhaven main h3,
-body.page-library.page-quillhaven main p,
-body.page-library.page-quillhaven main li,
-body.page-library.page-quillhaven main .eyebrow {
-  color: var(--navy);
-}
-
-body.page-library.page-quillhaven .library-hero h1,
-body.page-library.page-quillhaven .library-hero h2,
-body.page-library.page-quillhaven .library-hero p,
-body.page-library.page-quillhaven .library-hero .eyebrow,
-body.page-library.page-quillhaven .library-hero .legend-tag,
-body.page-library.page-quillhaven .library-hero strong {
-  color: #f6f1e4;
-}
-
-body.page-library.page-quillhaven main .card,
-body.page-library.page-quillhaven main .form-card,
-body.page-library.page-quillhaven main .mark-slot {
-  border: 1px solid rgba(31, 42, 68, 0.16);
-  border-radius: 2px;
-  box-shadow: 0 14px 34px rgba(28, 18, 8, 0.08);
-  background: #fffdf8;
-  color: var(--charcoal);
-}
-
-body.page-library.page-quillhaven main .card h3,
-body.page-library.page-quillhaven main .card p,
-body.page-library.page-quillhaven main .form-card h2,
-body.page-library.page-quillhaven main .form-card p,
-body.page-library.page-quillhaven main .form-card label,
-body.page-library.page-quillhaven main .form-card legend,
-body.page-library.page-quillhaven main .mark-slot p {
-  color: var(--navy);
-}
-
-body.page-library.page-quillhaven main .stamp {
-  color: var(--burgundy);
-  background: var(--white);
-}
-
-body.page-library.page-quillhaven main a.btn-secondary,
-body.page-library.page-quillhaven main a.btn-secondary:visited {
-  background: transparent;
-  color: var(--navy);
-  border-color: var(--navy);
-  border-radius: 2px;
-}
-
-body.page-library.page-quillhaven main a.btn-secondary:hover {
-  background: var(--navy);
-  color: var(--cream);
-}
-
-body.page-library.page-quillhaven main .btn { border-radius: 2px; }
-
 @media (max-width: 1000px) {
   .page-home .site-header {
     position: sticky;
@@ -2948,4 +2836,361 @@ body.page-library.page-quillhaven main .btn { border-radius: 2px; }
   .worktable-art { height: 11.5rem; }
   .chart-choice { max-width: 8.1rem; font-size: 0.82rem; }
   .chart-sheet { min-height: 34rem; padding-inline: 0.7rem; }
+}
+
+/* ---------------------------------------------------------------
+   Library inner pages (Quillhaven first).
+   Dark, warm, lamplit sections that carry the home worktable mood
+   inward. Used by any page whose body has class page-library.
+   --------------------------------------------------------------- */
+
+body.page-library {
+  --lib-bg: #120e0b;
+  --lib-deep: #18120d;
+  --lib-text: #f6f1e4;
+  --lib-muted: #ddd3bf;
+  --lib-gold: #e0b45a;
+  --lib-gold-soft: #f0d48a;
+  --lib-line: rgba(224, 180, 90, 0.32);
+  background: var(--lib-bg);
+}
+
+body.page-library main {
+  background: var(--lib-bg);
+  background-image: none;
+  color: var(--lib-text);
+  font-size: 1.0625rem;
+}
+
+body.page-library main :focus-visible { outline-color: var(--lib-text); }
+
+body.page-library main h1,
+body.page-library main h2,
+body.page-library main h3,
+body.page-library main p,
+body.page-library main li,
+body.page-library main label,
+body.page-library main legend,
+body.page-library main .eyebrow { color: var(--lib-text); }
+
+body.page-library main a:not(.btn) { color: var(--lib-gold-soft); }
+body.page-library main a:not(.btn):hover { color: var(--lib-text); }
+
+/* Hero */
+
+body.page-library main .lib-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: min(40rem, 82svh);
+  display: flex;
+  align-items: center;
+  padding: 4rem 0 3.5rem;
+  background:
+    radial-gradient(ellipse at 78% 18%, rgba(224, 180, 90, 0.2), transparent 30rem),
+    linear-gradient(160deg, #0d0a08 0%, #140f0b 55%, #1a1410 100%);
+}
+
+.lib-hero-art {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 62%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 40% 45%;
+  opacity: 0.78;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 42%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 42%);
+  pointer-events: none;
+}
+
+.lib-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.lib-hero-inner > * { max-width: 34rem; }
+
+body.page-library main .lib-hero .eyebrow {
+  color: var(--lib-gold-soft);
+  letter-spacing: 0.16em;
+  font-size: 0.85rem;
+}
+
+body.page-library main .lib-hero h1 {
+  font-size: clamp(2.9rem, 6vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.8rem;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+}
+
+body.page-library main .lib-hero .legend-tag strong { color: var(--lib-gold-soft); }
+
+body.page-library main .lib-lede {
+  font-size: clamp(1.12rem, 1.5vw, 1.25rem);
+  line-height: 1.6;
+  margin-bottom: 1.1rem;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
+}
+
+body.page-library main .lib-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.lib-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Status chip: one short label, never a paragraph of caveats */
+
+body.page-library main .chip {
+  display: inline-block;
+  margin: 0;
+  padding: 0.18rem 0.6rem;
+  border: 1px solid var(--lib-gold);
+  border-radius: 999px;
+  background: rgba(224, 180, 90, 0.12);
+  color: var(--lib-gold-soft);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Buttons on dark */
+
+a.btn-ghost,
+a.btn-ghost:visited,
+button.btn-ghost {
+  background: transparent;
+  color: #f6f1e4;
+  border-color: rgba(246, 241, 228, 0.82);
+}
+
+a.btn-ghost:hover,
+button.btn-ghost:hover {
+  background: #f6f1e4;
+  color: #1a1208;
+  border-color: #f6f1e4;
+}
+
+body.page-library main a.btn-gold,
+body.page-library main a.btn-gold:visited,
+body.page-library main button.btn-gold { color: #1a1208; }
+
+/* Sections */
+
+body.page-library main .lib-section {
+  padding: clamp(3rem, 6vw, 4.75rem) 0;
+  border-top: 1px solid rgba(224, 180, 90, 0.14);
+}
+
+body.page-library main .lib-section-deep {
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(224, 180, 90, 0.08), transparent 26rem),
+    var(--lib-deep);
+}
+
+body.page-library main .lib-section-glow {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(224, 180, 90, 0.16), transparent 32rem),
+    var(--lib-bg);
+}
+
+body.page-library main .lib-section h2 {
+  font-size: clamp(1.85rem, 3vw, 2.5rem);
+  margin-bottom: 0.6rem;
+}
+
+body.page-library main .lib-intro {
+  max-width: 40rem;
+  color: var(--lib-muted);
+  font-size: 1.12rem;
+  margin-bottom: 1.8rem;
+}
+
+body.page-library main .lib-small {
+  max-width: 46rem;
+  margin-top: 1.5rem;
+  color: var(--lib-muted);
+  font-size: 1rem;
+}
+
+/* Steps */
+
+.lib-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 760px) {
+  .lib-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+}
+
+body.page-library main .lib-card,
+body.page-library main .lib-panel {
+  position: relative;
+  margin: 0;
+  padding: 1.5rem 1.4rem 1.45rem;
+  border: 1px solid var(--lib-line);
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(246, 241, 228, 0.055), rgba(246, 241, 228, 0.02));
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+body.page-library main .lib-card h3,
+body.page-library main .lib-panel h3 {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+
+body.page-library main .lib-card p,
+body.page-library main .lib-panel p { color: var(--lib-muted); }
+
+.lib-step-num {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-bottom: 0.9rem;
+  border: 1px solid #e0b45a;
+  border-radius: 50%;
+  color: #f0d48a;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 0 18px rgba(224, 180, 90, 0.35);
+}
+
+/* Panels (Forge, Command Center, open-today) */
+
+.lib-panels {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 760px) {
+  .lib-panels { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+}
+
+body.page-library main .lib-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  scroll-margin-top: 5.5rem;
+}
+
+body.page-library main .lib-panel .chip { align-self: flex-start; margin-bottom: 0.55rem; }
+
+body.page-library main .lib-panel-action { margin-top: auto; padding-top: 0.75rem; }
+
+/* Privacy block */
+
+.lib-privacy {
+  display: grid;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (min-width: 860px) {
+  .lib-privacy { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 3rem; }
+}
+
+.lib-checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+body.page-library main .lib-checks li {
+  position: relative;
+  padding: 0.85rem 1rem 0.85rem 2.75rem;
+  border: 1px solid rgba(224, 180, 90, 0.22);
+  border-radius: 4px;
+  background: rgba(246, 241, 228, 0.035);
+}
+
+body.page-library main .lib-checks li::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 1.25rem;
+  width: 0.7rem;
+  height: 0.4rem;
+  border-left: 2px solid #e0b45a;
+  border-bottom: 2px solid #e0b45a;
+  transform: rotate(-45deg);
+}
+
+/* Waitlist form on dark */
+
+body.page-library main .lib-form {
+  margin-inline: auto;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border: 1px solid rgba(224, 180, 90, 0.5);
+  border-top: 3px solid #e0b45a;
+  border-radius: 4px;
+  background: #1c1610;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+body.page-library main .lib-form h2,
+body.page-library main .lib-form p,
+body.page-library main .lib-form label { color: var(--lib-text); }
+
+body.page-library main .lib-form .note { color: var(--lib-muted); font-size: 1rem; }
+
+body.page-library main .lib-form input,
+body.page-library main .lib-form select {
+  border-color: #e0b45a;
+  background: #fffdf8;
+  color: var(--charcoal);
+}
+
+body.page-library main .lib-form input:user-invalid,
+body.page-library main .lib-form select:user-invalid { border-color: #ff9b8a; }
+
+body.page-library main .lib-form .thanks {
+  background: #2a2216;
+  color: var(--lib-text);
+  border-left: 3px solid #e0b45a;
+}
+
+body.page-library main .lib-form .form-error,
+body.page-library main .lib-form .form-error a { color: var(--cream); }
+
+@media (max-width: 759px) {
+  body.page-library main .lib-hero {
+    display: block;
+    min-height: 0;
+    padding: 0 0 2.5rem;
+  }
+
+  .lib-hero-art {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 13rem;
+    opacity: 0.85;
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  }
+
+  .lib-hero-inner { margin-top: -2.5rem; }
+
+  .lib-actions .btn { width: 100%; }
 }
