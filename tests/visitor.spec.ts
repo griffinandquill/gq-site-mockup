@@ -759,3 +759,19 @@ test("home actions name their destinations and the waitlist comes first", async 
   await expect(page.locator(".hero-more a")).toHaveAttribute("href", "worlds.html");
   await expect(page.locator(".hero-more a")).toHaveText("Explore Quillhaven");
 });
+
+test("the stylesheet's braces balance and no rule block is left open", () => {
+  const css = fs.readFileSync(path.join(ROOT, "css", "styles.css"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  let depth = 0;
+  let line = 1;
+  let problem = "";
+  for (const ch of css) {
+    if (ch === "\n") line += 1;
+    else if (ch === "{") depth += 1;
+    else if (ch === "}") depth -= 1;
+    if (!problem && depth < 0) problem = `brace depth went negative near line ${line}`;
+    if (!problem && depth > 2) problem = `rules nested more than two deep near line ${line}`;
+  }
+  expect(problem).toBe("");
+  expect(depth, "an unclosed block in css/styles.css").toBe(0);
+});
